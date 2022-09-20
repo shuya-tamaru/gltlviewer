@@ -22,7 +22,9 @@ export default function BuildingLink({building}:Building) {
           <Text fontSize="15px" w="100% - 20px" h="30%" lineHeight="30px" m="auto" fontWeight="800" color="#555555" ml="20px">CreatedAt : 2022-09-11</Text>
         </Box>
         <Box position="relative" >
-          <InfoOutlineIcon mr="20px" fontSize="20px" cursor="pointer" />
+          <Link href="/buildings/buildingEditForm">
+            <InfoOutlineIcon mr="20px" fontSize="20px" cursor="pointer" />
+          </Link>
         </Box>
       </Flex>
     </>
