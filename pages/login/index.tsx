@@ -1,7 +1,10 @@
 import { Flex, Text, Box, Button } from "@chakra-ui/react";
 
+import Link from "next/link";
+
 import Header from "../../components/header";
 import RegisterInputForm from "../../components/registerInputForm";
+
 
 export default function Login() {
 
@@ -22,7 +25,9 @@ export default function Login() {
               <RegisterInputForm key={form} form={form}/>
             ))}
             <Button type="submit" w="90%" h="50" py="5" ml="5" mt="5" color="#ffffff" colorScheme="red" fontWeight="800" >ログイン</Button>
-            <Text color="blue" mt="5" textAlign="center" cursor="pointer">パスワードを忘れた方はこちら</Text>
+            <Link href="/login/forgetPassword">
+              <Text color="blue" mt="5" textAlign="center" cursor="pointer">パスワードを忘れた方はこちら</Text>
+            </Link>
           </form>
         </Box>
       </Flex>
