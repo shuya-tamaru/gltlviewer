@@ -1,4 +1,5 @@
-import { Box, Button, Flex, Input, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Text } from "@chakra-ui/react";
+
 import Link from "next/link";
 import { useDropzone } from "react-dropzone";
 import { BiImageAdd } from "react-icons/bi";
