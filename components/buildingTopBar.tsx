@@ -7,7 +7,11 @@ import { BiUserPlus } from 'react-icons/bi';
 import { BsGraphUp } from 'react-icons/bs';
 import { HiInformationCircle } from 'react-icons/hi';
 
-export default function BuildingTopBar() {
+type Props = {
+  buildingName: string;
+};
+
+export default function BuildingTopBar({ buildingName }: Props) {
   type buildingMenu = {
     menu: string;
     path: string;
@@ -42,7 +46,7 @@ export default function BuildingTopBar() {
       <Box w='100%' h='8%' px='20px' position='relative' borderBottom='2px' borderColor='#999'>
         <Link href='/buildings/building'>
           <Text fontSize='30px' fontWeight='750' color='#666666' position='absolute' bottom='0' left='20px' cursor='pointer'>
-            BuildingName
+            {buildingName}
           </Text>
         </Link>
         <Box position='absolute' bottom='0' right='20px'>

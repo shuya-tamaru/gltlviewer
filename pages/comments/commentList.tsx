@@ -22,7 +22,16 @@ export default function CommentList() {
           <SimpleGrid w='100%' h='92%' columns={3} spacing={10} overflowY='scroll' py='5' px='5'>
             {posts.map((post) => (
               <Link href='/comments/commentDetail' key={post}>
-                <Box cursor='pointer' h='300px' overflow='hidden' boxShadow='dark-lg' borderRadius='3' p='3'>
+                <Box
+                  cursor='pointer'
+                  h='300px'
+                  overflow='hidden'
+                  boxShadow='2xl'
+                  borderRadius='3'
+                  p='3'
+                  transition='all 0.5s ease'
+                  _hover={{ transform: 'scale(1.05)' }}
+                >
                   <Post />
                 </Box>
               </Link>

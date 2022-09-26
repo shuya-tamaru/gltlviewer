@@ -49,8 +49,8 @@ export default function UserName() {
   return (
     <>
       <Box display='flex' justifyContent='center' alignItems='center' position='relative'>
-        <Image src='/images/pika.jpeg' objectFit='cover' boxSize='60px' borderRadius='50%' />
-        <Text ml='10px' fontSize='25px' fontWeight='550'>
+        <Image src='/images/pika.jpeg' objectFit='cover' boxSize='60px' borderRadius='50%' mx='2' />
+        <Text fontSize='xl' fontWeight='550' textAlign='center'>
           Shuya Tamaru
         </Text>
         <HamburgerIcon ml='10px' fontSize='40px' cursor='pointer' ref={clickedElement} />
