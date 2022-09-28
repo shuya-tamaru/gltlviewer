@@ -1,6 +1,6 @@
 import { Box, Flex, Button } from '@chakra-ui/react';
-import axios from 'axios';
 import { BallTriangle } from 'react-loader-spinner';
+import axios from 'axios';
 
 import { GetStaticPropsContext } from 'next';
 import Link from 'next/link';
@@ -14,8 +14,6 @@ import CommentForm from '../../components/commentForm';
 import Post from '../../components/post';
 import { Building } from '../../types/Buildings';
 
-const LOCAL_PATH = `${process.env.NEXT_PUBLIC_LOCAL_PATH}`;
-
 type Props = {
   building: Building;
 };
@@ -25,18 +23,7 @@ export default function ({ building }: Props) {
   const posts: number[] = [0, 1, 2];
 
   if (router.isFallback) {
-    return (
-      <BallTriangle
-        height='80'
-        width='80'
-        color='#4fa94d'
-        ariaLabel='tail-spin-loading'
-        radius='1'
-        wrapperStyle={{}}
-        wrapperClass=''
-        visible={true}
-      />
-    );
+    return <BallTriangle height='80' width='80' color='#4fa94d' ariaLabel='tail-spin-loading' radius='1' wrapperStyle={{}} wrapperClass='' visible={true} />;
   }
 
   return (
@@ -70,7 +57,7 @@ export default function ({ building }: Props) {
 }
 
 export async function getStaticPaths() {
-  const result = await axios.get(`${LOCAL_PATH}/buildings/buildingList/224bb556-d42c-4908-b531-bf2c86983376`).then((res) => res.data);
+  const result = await axios.get(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/buildings/buildingList/224bb556-d42c-4908-b531-bf2c86983376`).then((res) => res.data);
   if (!result) return;
   const paths: [{ params: { buildingId: string } }] = result.map((building: Building) => ({ params: { buildingId: `${building.id}` } }));
 
@@ -78,6 +65,6 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }: GetStaticPropsContext) {
-  const result: Building = await axios.get(`${LOCAL_PATH}/buildings/${params!.buildingId}`).then((res) => res.data);
+  const result: Building = await axios.get(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/buildings/${params!.buildingId}`).then((res) => res.data);
   return { props: { building: result } };
 }

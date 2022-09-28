@@ -1,16 +1,18 @@
 import { Box, Image, Text, Button } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
+import axios from 'axios';
 
 import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { useCurrentUser, useCurrentUserUpdate } from '../context/CurrentUserContext';
 
 export default function UserName() {
-  type userMenu = {
-    menu: string;
-    path: string;
-  };
+  const router = useRouter();
+  const currentUser = useCurrentUser();
+  const setCurrentUser = useCurrentUserUpdate();
 
-  const userMenu: userMenu[] = [
+  const userMenu = [
     {
       menu: 'ユーザー情報編集',
       path: '/users/userEditForm',
@@ -27,10 +29,6 @@ export default function UserName() {
       menu: 'ユーザーリスト',
       path: '/',
     },
-    {
-      menu: 'ログアウト',
-      path: '/login',
-    },
   ];
 
   const [menuState, setMenuState] = useState<string>('none');
@@ -46,24 +44,54 @@ export default function UserName() {
     document.addEventListener('click', hundleClickOutside);
   }, [clickedElement]);
 
+  const signout = async () => {
+    await axios.post(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/users/auth/signout`);
+    setCurrentUser(null);
+    router.push('/login');
+  };
+
   return (
     <>
       <Box display='flex' justifyContent='center' alignItems='center' position='relative'>
         <Image src='/images/pika.jpeg' objectFit='cover' boxSize='60px' borderRadius='50%' mx='2' />
         <Text fontSize='xl' fontWeight='550' textAlign='center'>
-          Shuya Tamaru
+          {!currentUser ? 'unknownUser' : currentUser.lastName + currentUser.firstName}
         </Text>
         <HamburgerIcon ml='10px' fontSize='40px' cursor='pointer' ref={clickedElement} />
-        <Box display={menuState} flexDirection='column' bg='#fff' position='absolute' right='-10px' top='70px' zIndex='100000000'>
+        <Box
+          display={menuState}
+          flexDirection='column'
+          bg='#fff'
+          position='absolute'
+          right='-10px'
+          top='70px'
+          zIndex='100000000'
+        >
           {userMenu.map((userMenu) => {
             return (
               <Link href={userMenu.path} key={userMenu.menu}>
-                <Button w='200px' colorScheme='#fff' borderRadius='0' color='#666' _hover={{ background: 'red', color: '#fff' }}>
+                <Button
+                  w='200px'
+                  colorScheme='#fff'
+                  borderRadius='0'
+                  color='#666'
+                  _hover={{ background: 'red', color: '#fff' }}
+                >
                   {userMenu.menu}
                 </Button>
               </Link>
             );
           })}
+          <Button
+            onClick={signout}
+            w='200px'
+            colorScheme='#fff'
+            borderRadius='0'
+            color='#666'
+            _hover={{ background: 'red', color: '#fff' }}
+          >
+            ログアウト
+          </Button>
         </Box>
       </Box>
     </>

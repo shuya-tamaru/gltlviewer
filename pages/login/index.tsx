@@ -1,32 +1,93 @@
-import { Flex, Text, Box, Button } from "@chakra-ui/react";
+import { Flex, Text, Box, Button, Input } from '@chakra-ui/react';
+import axios from 'axios';
 
-import Link from "next/link";
+import { useRouter } from 'next/router';
+import { useRef } from 'react';
+import Link from 'next/link';
 
-import Header from "../../components/header";
-import RegisterInputForm from "../../components/registerInputForm";
-
+import Header from '../../components/header';
+import { User } from '../../types/Users';
+import { useCurrentUserUpdate } from '../../context/CurrentUserContext';
 
 export default function Login() {
+  const router = useRouter();
+  const setCurrentUser = useCurrentUserUpdate();
 
-  const inputForms = ["メールアドレス", "パスワード"]
+  const email = useRef<HTMLInputElement | null>(null);
+  const password = useRef<HTMLInputElement | null>(null);
 
-  const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    try {
+      const loginUser = {
+        email: email.current!.value,
+        password: password.current!.value,
+      };
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/users/auth/signin`, loginUser);
+      const user: User = res.data;
+      setCurrentUser(user);
+
+      const companyId: string = user.companyId;
+      router.push(`/topPage/${companyId}`);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-	return (
+  return (
     <>
-      <Header/>
-      <Flex w="100vw" h="calc(100vh - 80px)" display="flex" justify="center" alignItems="center" margin="auto">
-        <Box w="30%" bg="#ffffff" p="10px 10px 20px 10px" boxShadow= "0px 0px 15px -5px #777777" borderRadius="5px">
+      <Header />
+      <Flex w='100vw' h='calc(100vh - 80px)' display='flex' justify='center' alignItems='center' margin='auto'>
+        <Box w='30%' bg='#ffffff' p='10px 10px 20px 10px' boxShadow='0px 0px 15px -5px #777777' borderRadius='5px'>
           <form onSubmit={(e) => handleSubmit(e)}>
-            <Text fontSize="30px" fontWeight="800" color="#666666" textAlign="center" >Login Form</Text>
-            {inputForms.map((form:string) => (
-              <RegisterInputForm key={form} form={form}/>
-            ))}
-            <Button type="submit" w="90%" h="50" py="5" ml="5" mt="5" color="#ffffff" colorScheme="red" fontWeight="800" >ログイン</Button>
-            <Link href="/login/forgetPassword">
-              <Text color="blue" mt="5" textAlign="center" cursor="pointer">パスワードを忘れた方はこちら</Text>
+            <Text fontSize='30px' fontWeight='800' color='#666666' textAlign='center'>
+              Login Form
+            </Text>
+            <Input
+              type='email'
+              ref={email}
+              placeholder={'メールアドレス'}
+              required
+              w='90%'
+              h='50'
+              py='5'
+              ml='5'
+              mt='5'
+              color='#333333'
+              borderColor='#999999'
+              borderWidth='2px'
+            />
+            <Input
+              type='password'
+              ref={password}
+              placeholder={'パスワード'}
+              required
+              w='90%'
+              h='50'
+              py='5'
+              ml='5'
+              mt='5'
+              color='#333333'
+              borderColor='#999999'
+              borderWidth='2px'
+            />
+            <Button
+              type='submit'
+              w='90%'
+              h='50'
+              py='5'
+              ml='5'
+              mt='5'
+              color='#ffffff'
+              colorScheme='red'
+              fontWeight='800'
+            >
+              ログイン
+            </Button>
+            <Link href='/login/forgetPassword'>
+              <Text color='blue' mt='5' textAlign='center' cursor='pointer'>
+                パスワードを忘れた方はこちら
+              </Text>
             </Link>
           </form>
         </Box>

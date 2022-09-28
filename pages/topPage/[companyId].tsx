@@ -2,12 +2,14 @@ import { Box, Text } from '@chakra-ui/react';
 import axios from 'axios';
 
 import React, { useEffect, useState } from 'react';
+import { GetStaticPropsContext } from 'next';
 
 import BuildingLink from '../../components/buildingLink';
 import TopBar from '../../components/topBar';
 import Pagination from '../../components/pagenation';
 import { SelectPage } from '../../types/SelectPage';
 import { Building } from '../../types/Buildings';
+import { Company } from '../../types/Companys';
 
 type GetBuildings = Building[] | null;
 type Props = {
@@ -42,7 +44,10 @@ export default function ({ getbuildings }: Props) {
           物件一覧
         </Text>
         <Box h='calc(100vh)' display='flex' flexDirection='column'>
-          {currentItems && currentItems.map((building: Building) => <BuildingLink key={building.id} building={building}></BuildingLink>)}
+          {currentItems &&
+            currentItems.map((building: Building) => (
+              <BuildingLink key={building.id} building={building}></BuildingLink>
+            ))}
         </Box>
         <Pagination pageCount={pageCount} handlePageClick={handlePageClick}></Pagination>
       </Box>
@@ -50,8 +55,18 @@ export default function ({ getbuildings }: Props) {
   );
 }
 
-export async function getStaticProps() {
-  const ENDPOINT = `${process.env.NEXT_PUBLIC_LOCAL_PATH}/buildings/buildingList/224bb556-d42c-4908-b531-bf2c86983376`;
+export async function getStaticPaths() {
+  const result = await axios.get(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/companys`).then((res) => res.data);
+  if (!result) return;
+  const paths: [{ params: { companyId: string } }] = result.map((company: Company) => ({
+    params: { companyId: `${company.id}` },
+  }));
+
+  return { paths, fallback: true };
+}
+
+export async function getStaticProps({ params }: GetStaticPropsContext) {
+  const ENDPOINT = `${process.env.NEXT_PUBLIC_LOCAL_PATH}/buildings/buildingList/${params!.companyId}`;
   const result: GetBuildings = await axios.get(ENDPOINT).then((res) => res.data);
   return { props: { getbuildings: result } };
 }
