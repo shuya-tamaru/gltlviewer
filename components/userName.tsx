@@ -1,10 +1,16 @@
 import { Box, Image, Text, Button } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
+import { MdLogout } from 'react-icons/md';
+import { FaUserEdit } from 'react-icons/fa';
+import { HiOfficeBuilding } from 'react-icons/hi';
+import { BiUserPlus } from 'react-icons/bi';
+import { CgUserList } from 'react-icons/cg';
 import axios from 'axios';
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+
 import { useCurrentUser, useCurrentUserUpdate } from '../context/CurrentUserContext';
 
 export default function UserName() {
@@ -14,20 +20,24 @@ export default function UserName() {
 
   const userMenu = [
     {
+      icon: <FaUserEdit style={{ fontSize: '20px' }} />,
       menu: 'ユーザー情報編集',
       path: '/users/userEditForm',
     },
     {
+      icon: <HiOfficeBuilding style={{ fontSize: '20px' }} />,
       menu: '会社情報編集',
       path: '/company/companyEditForm',
     },
     {
+      icon: <BiUserPlus style={{ fontSize: '20px' }} />,
       menu: '新規ユーザーの招待',
       path: '/users/inviteUser',
     },
     {
+      icon: <CgUserList style={{ fontSize: '20px' }} />,
       menu: 'ユーザーリスト',
-      path: '/',
+      path: '/users/usersList',
     },
   ];
 
@@ -66,6 +76,7 @@ export default function UserName() {
           right='-10px'
           top='70px'
           zIndex='100000000'
+          shadow='xl'
         >
           {userMenu.map((userMenu) => {
             return (
@@ -76,6 +87,7 @@ export default function UserName() {
                   borderRadius='0'
                   color='#666'
                   _hover={{ background: 'red', color: '#fff' }}
+                  leftIcon={userMenu.icon}
                 >
                   {userMenu.menu}
                 </Button>
@@ -89,6 +101,7 @@ export default function UserName() {
             borderRadius='0'
             color='#666'
             _hover={{ background: 'red', color: '#fff' }}
+            leftIcon={<MdLogout style={{ fontSize: '20px' }} />}
           >
             ログアウト
           </Button>
