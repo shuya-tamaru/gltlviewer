@@ -34,7 +34,7 @@ const authOptions: NextAuthOptions = {
       return session;
     },
   },
-  secret: 'test',
+  secret: `${process.env.NEXT_PUBLIC_LOCAL_SESSION_KEY}`,
   pages: {
     signIn: '/login/index',
     // error: '/registration/index',

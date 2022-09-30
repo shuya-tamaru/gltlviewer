@@ -30,6 +30,7 @@ export default function Login() {
         const response = await axios.post(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/users/auth/signin`, loginUser);
         const user: User = response.data;
         setCurrentUser(user);
+        localStorage.setItem('loginState', 'login');
 
         const companyId: string = user.companyId;
         router.push(`/topPage/${companyId}`);

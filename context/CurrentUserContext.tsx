@@ -1,4 +1,5 @@
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 import React, { createContext, useState, Dispatch, SetStateAction, ReactNode, useContext, useEffect } from 'react';
 import { User } from '../types/Users';
 
@@ -11,15 +12,20 @@ export const CurrnetUserUpdateContext = createContext<CurrnetUserUpdateContextTy
 export const CurrentUserProvider = (props: { children: ReactNode }) => {
   const { children } = props;
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
   //check user login state
   useEffect(() => {
-    if (session) {
-      const user: User | null = session.userData ? (session.userData as User) : null;
+    if (status === 'loading') {
+      return;
+    } else if (status === 'authenticated') {
+      const user = session.userData as User;
       user && setCurrentUser(user);
+    } else {
+      router.push('/login');
     }
-  }, [session]);
+  }, [status]);
 
   return (
     <CurrnetUserUpdateContext.Provider value={setCurrentUser}>
