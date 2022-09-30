@@ -10,32 +10,35 @@ import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { signOut } from 'next-auth/react';
 
 import { useCurrentUser, useCurrentUserUpdate } from '../context/CurrentUserContext';
 
 export default function UserName() {
   const router = useRouter();
+
   const currentUser = useCurrentUser();
   const setCurrentUser = useCurrentUserUpdate();
 
+  const fontSize = '20px';
   const userMenu = [
     {
-      icon: <FaUserEdit style={{ fontSize: '20px' }} />,
+      icon: <FaUserEdit style={{ fontSize }} />,
       menu: 'ユーザー情報編集',
       path: '/users/userEditForm',
     },
     {
-      icon: <HiOfficeBuilding style={{ fontSize: '20px' }} />,
+      icon: <HiOfficeBuilding style={{ fontSize }} />,
       menu: '会社情報編集',
       path: '/company/companyEditForm',
     },
     {
-      icon: <BiUserPlus style={{ fontSize: '20px' }} />,
+      icon: <BiUserPlus style={{ fontSize }} />,
       menu: '新規ユーザーの招待',
       path: '/users/inviteUser',
     },
     {
-      icon: <CgUserList style={{ fontSize: '20px' }} />,
+      icon: <CgUserList style={{ fontSize }} />,
       menu: 'ユーザーリスト',
       path: '/users/usersList',
     },
@@ -57,6 +60,7 @@ export default function UserName() {
   const signout = async () => {
     await axios.post(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/users/auth/signout`);
     setCurrentUser(null);
+    signOut({ redirect: false });
     router.push('/login');
   };
 

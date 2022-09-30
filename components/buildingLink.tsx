@@ -2,6 +2,8 @@ import { InfoOutlineIcon } from '@chakra-ui/icons';
 import { Box, Flex, Image, Text } from '@chakra-ui/react';
 
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useCurrentBuilding, useCurrentBuildingUpdate } from '../context/CurrentBuildingContext';
 
 import { Building } from '../types/Buildings';
 
@@ -10,6 +12,8 @@ type Props = {
 };
 
 export default function BuildingLink({ building }: Props) {
+  const setCurrentBuilding = useCurrentBuildingUpdate();
+
   return (
     <>
       <Flex
@@ -22,24 +26,51 @@ export default function BuildingLink({ building }: Props) {
         borderRadius='3px'
         justify='space-between'
         transition='all 0.5s ease'
-        _hover={{ transform: 'scale(1.02)' }}
+        _hover={{ transform: 'scale(1.005)' }}
       >
         <Link href={`/buildings/${building.id}`}>
-          <Image src='/images/building.jpeg' objectFit='cover' boxSize='80px' ml='10px' cursor='pointer' />
+          <Image
+            onClick={() => setCurrentBuilding(building)}
+            src='/images/building.jpeg'
+            objectFit='cover'
+            boxSize='80px'
+            ml='10px'
+            cursor='pointer'
+          />
         </Link>
         <Box h='100%' w='100%'>
           <Link href={`/buildings/${building.id}`}>
-            <Text fontSize='3xl' w='100% - 20px' h='70%' lineHeight='70px' m='auto' fontWeight='800' color='#555555' ml='20px' cursor='pointer'>
+            <Text
+              onClick={() => setCurrentBuilding(building)}
+              fontSize='3xl'
+              w='100% - 20px'
+              h='70%'
+              lineHeight='70px'
+              m='auto'
+              fontWeight='800'
+              color='#555555'
+              ml='20px'
+              cursor='pointer'
+            >
               {building.name}
             </Text>
           </Link>
-          <Text fontSize='xl' w='100% - 20px' h='30%' lineHeight='30px' m='auto' fontWeight='800' color='#555555' ml='20px'>
+          <Text
+            fontSize='xl'
+            w='100% - 20px'
+            h='30%'
+            lineHeight='30px'
+            m='auto'
+            fontWeight='800'
+            color='#555555'
+            ml='20px'
+          >
             CreatedAt : {building.createdAt.substring(0, 10)}
           </Text>
         </Box>
         <Box position='relative'>
           <Link href='/buildings/buildingEditForm'>
-            <InfoOutlineIcon mr='20px' fontSize='20px' cursor='pointer' />
+            <InfoOutlineIcon onClick={() => setCurrentBuilding(building)} mr='20px' fontSize='20px' cursor='pointer' />
           </Link>
         </Box>
       </Flex>

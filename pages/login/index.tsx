@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useRef } from 'react';
 import Link from 'next/link';
+import { signIn } from 'next-auth/react';
 
 import Header from '../../components/header';
 import { User } from '../../types/Users';
@@ -18,17 +19,21 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const loginUser = {
+      email: email.current!.value,
+      password: password.current!.value,
+      redirect: false,
+    };
+    const authResponse = await signIn('credentials', loginUser);
     try {
-      const loginUser = {
-        email: email.current!.value,
-        password: password.current!.value,
-      };
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/users/auth/signin`, loginUser);
-      const user: User = res.data;
-      setCurrentUser(user);
+      if (authResponse!.status >= 200 && authResponse!.status < 300) {
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/users/auth/signin`, loginUser);
+        const user: User = response.data;
+        setCurrentUser(user);
 
-      const companyId: string = user.companyId;
-      router.push(`/topPage/${companyId}`);
+        const companyId: string = user.companyId;
+        router.push(`/topPage/${companyId}`);
+      }
     } catch (error) {
       console.log(error);
     }

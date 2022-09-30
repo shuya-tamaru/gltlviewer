@@ -1,24 +1,26 @@
-import { Box, Button, Flex, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Input, Text } from '@chakra-ui/react';
 
-import Link from 'next/link';
 import { useDropzone } from 'react-dropzone';
 import { BiImageAdd } from 'react-icons/bi';
 
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 
-import RegisterInputForm from './registerInputForm';
+import { CurrnetBuildingContextType } from '../context/CurrentBuildingContext';
+import { useRouter } from 'next/router';
 
 type inputForms = {
   inputForms?: string[];
   title: string;
-  buttonText: string;
-  redirectPath: string;
-  redirectPage: boolean;
+  data?: CurrnetBuildingContextType;
+  endPoint: string;
 };
 
-export default function ({ inputForms, title, buttonText, redirectPath, redirectPage }: inputForms) {
+export default function ({ inputForms, title, data, endPoint }: inputForms) {
+  const router = useRouter();
+  const [buildingName, setBuildingName] = useState<string>(data!.name);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    router.push(`/topPage/${data?.companyId}`);
   };
 
   const onDrop = useCallback((acceptedFiles: any) => {
@@ -34,7 +36,25 @@ export default function ({ inputForms, title, buttonText, redirectPath, redirect
             <Text fontSize='25px' fontWeight='800' color='#666666' textAlign='center'>
               {title}
             </Text>
-            {inputForms && inputForms.map((form: string) => <RegisterInputForm key={form} form={form} />)}
+            {inputForms &&
+              inputForms.map((form: string) => (
+                <Input
+                  key={form}
+                  value={buildingName}
+                  onChange={(e) => setBuildingName(e.target.value)}
+                  type='text'
+                  placeholder={form}
+                  required
+                  w='90%'
+                  h='50'
+                  py='5'
+                  ml='5'
+                  mt='5'
+                  color='#333333'
+                  borderColor='#999999'
+                  borderWidth='2px'
+                />
+              ))}
             <Box
               {...getRootProps()}
               w='200px'
@@ -60,27 +80,19 @@ export default function ({ inputForms, title, buttonText, redirectPath, redirect
                 />
               )}
             </Box>
-            {redirectPage ? (
-              <Link href={redirectPath}>
-                <Button type='submit' w='90%' h='50' py='5' ml='5' color='#ffffff' colorScheme='red' fontWeight='800'>
-                  {buttonText}
-                </Button>
-              </Link>
-            ) : (
-              <Button
-                type='submit'
-                w='90%'
-                h='50'
-                py='5'
-                ml='5'
-                mt='5'
-                color='#ffffff'
-                colorScheme='red'
-                fontWeight='800'
-              >
-                {buttonText}
-              </Button>
-            )}
+            <Button
+              type='submit'
+              w='90%'
+              h='50'
+              py='5'
+              ml='5'
+              mt='5'
+              color='#ffffff'
+              colorScheme='red'
+              fontWeight='800'
+            >
+              更新
+            </Button>
           </form>
         </Box>
       </Flex>
