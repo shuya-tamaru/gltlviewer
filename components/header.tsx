@@ -10,7 +10,17 @@ type Props = {
 export default function Header({ children }: Props) {
   return (
     <>
-      <Box bg='#6b48ff' w='100%' h='80px' p={4} color='white' alignItems='center' display='flex' justifyContent='space-between' position='sticky'>
+      <Box
+        bg='#6b48ff'
+        w='100%'
+        h='80px'
+        p={4}
+        color='white'
+        alignItems='center'
+        display='flex'
+        justifyContent='space-between'
+        position='sticky'
+      >
         <Link href='/'>
           <Text fontWeight='800' fontSize='4xl' cursor='pointer' mx='2'>
             ServiceName

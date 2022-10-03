@@ -1,10 +1,8 @@
 import { Box, Flex, Button } from '@chakra-ui/react';
-import { BallTriangle } from 'react-loader-spinner';
 import axios from 'axios';
 
 import { GetStaticPropsContext } from 'next';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 
 import BuildingTopBar from '../../components/buildingTopBar';
 import Header from '../../components/header';
@@ -19,23 +17,7 @@ type Props = {
 };
 
 export default function ({ building }: Props) {
-  const router = useRouter();
   const posts: number[] = [0, 1, 2];
-
-  if (router.isFallback) {
-    return (
-      <BallTriangle
-        height='80'
-        width='80'
-        color='#4fa94d'
-        ariaLabel='tail-spin-loading'
-        radius='1'
-        wrapperStyle={{}}
-        wrapperClass=''
-        visible={true}
-      />
-    );
-  }
 
   return (
     <>

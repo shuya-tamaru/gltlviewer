@@ -2,12 +2,24 @@ import { Flex, Text, Box, Button, Input } from '@chakra-ui/react';
 import axios from 'axios';
 
 import { useRouter } from 'next/router';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 import Header from '../../components/header';
 
+const styles = {
+  w: '90%',
+  h: '50',
+  py: '5',
+  ml: '5',
+  mt: '5',
+  color: '#333333',
+  borderColor: '#999999',
+  borderWidth: '2px',
+};
+
 export default function Registration() {
   const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const lastName = useRef<HTMLInputElement | null>(null);
   const firstName = useRef<HTMLInputElement | null>(null);
@@ -31,12 +43,13 @@ export default function Registration() {
           companyId: companyId.current!.value,
           userState: userState.current!.value,
         };
+        setLoading(true);
         await axios.post(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/users/auth/signup`, newUser);
         await axios.post(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/users/auth/signin`, {
           email: newUser.email,
           password: newUser.password,
         });
-        router.push('/topPage');
+        router.push(`/topPage/${newUser.companyId}`);
       } catch (error) {
         console.log(error);
       }
@@ -52,42 +65,32 @@ export default function Registration() {
             <Text fontSize='30px' fontWeight='800' color='#666666' textAlign='center'>
               Create Account
             </Text>
-            <Input type='text' ref={lastName} placeholder={'姓'} required w='90%' h='50' py='5' ml='5' mt='5' color='#333333' borderColor='#999999' borderWidth='2px' />
-            <Input type='text' ref={firstName} placeholder={'名'} required w='90%' h='50' py='5' ml='5' mt='5' color='#333333' borderColor='#999999' borderWidth='2px' />
-            <Input type='email' ref={email} placeholder={'メールアドレス'} required w='90%' h='50' py='5' ml='5' mt='5' color='#333333' borderColor='#999999' borderWidth='2px' />
-            <Input type='password' ref={password} placeholder={'パスワード'} required w='90%' h='50' py='5' ml='5' mt='5' color='#333333' borderColor='#999999' borderWidth='2px' />
-            <Input type='password' ref={passwordConfirmation} placeholder={'パスワード確認'} required w='90%' h='50' py='5' ml='5' mt='5' color='#333333' borderColor='#999999' borderWidth='2px' />
+            <Input type='text' ref={lastName} placeholder={'姓'} required sx={styles} />
+            <Input type='text' ref={firstName} placeholder={'名'} required sx={styles} />
+            <Input type='email' ref={email} placeholder={'メールアドレス'} required sx={styles} />
+            <Input type='password' ref={password} placeholder={'パスワード'} required sx={styles} />
+            <Input type='password' ref={passwordConfirmation} placeholder={'パスワード確認'} required sx={styles} />
             <Input
               type='text'
               ref={companyId}
               placeholder={'会社ID'}
               defaultValue={'224bb556-d42c-4908-b531-bf2c86983376'}
               required
+              sx={styles}
+            />
+            <Input type='text' ref={userState} placeholder={'ユーザー権限'} required defaultValue={'OnlyWatch'} sx={styles} />
+            <Button
+              isLoading={loading}
+              type='submit'
               w='90%'
               h='50'
               py='5'
               ml='5'
               mt='5'
-              color='#333333'
-              borderColor='#999999'
-              borderWidth='2px'
-            />
-            <Input
-              type='text'
-              ref={userState}
-              placeholder={'ユーザー権限'}
-              required
-              defaultValue={'OnlyWatch'}
-              w='90%'
-              h='50'
-              py='5'
-              ml='5'
-              mt='5'
-              color='#333333'
-              borderColor='#999999'
-              borderWidth='2px'
-            />
-            <Button type='submit' w='90%' h='50' py='5' ml='5' mt='5' color='#ffffff' colorScheme='red' fontWeight='600'>
+              color='#ffffff'
+              colorScheme='red'
+              fontWeight='600'
+            >
               新規登録
             </Button>
           </form>

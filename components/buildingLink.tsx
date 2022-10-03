@@ -2,8 +2,7 @@ import { InfoOutlineIcon } from '@chakra-ui/icons';
 import { Box, Flex, Image, Text } from '@chakra-ui/react';
 
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useCurrentBuilding, useCurrentBuildingUpdate } from '../context/CurrentBuildingContext';
+import { useCurrentBuildingUpdate } from '../context/CurrentBuildingContext';
 
 import { Building } from '../types/Buildings';
 
@@ -13,6 +12,10 @@ type Props = {
 
 export default function BuildingLink({ building }: Props) {
   const setCurrentBuilding = useCurrentBuildingUpdate();
+
+  const handleSubmit = (building: Building) => {
+    setCurrentBuilding(building);
+  };
 
   return (
     <>
@@ -30,7 +33,7 @@ export default function BuildingLink({ building }: Props) {
       >
         <Link href={`/buildings/${building.id}`}>
           <Image
-            onClick={() => setCurrentBuilding(building)}
+            onClick={() => handleSubmit(building)}
             src='/images/building.jpeg'
             objectFit='cover'
             boxSize='80px'
@@ -41,7 +44,7 @@ export default function BuildingLink({ building }: Props) {
         <Box h='100%' w='100%'>
           <Link href={`/buildings/${building.id}`}>
             <Text
-              onClick={() => setCurrentBuilding(building)}
+              onClick={() => handleSubmit(building)}
               fontSize='3xl'
               w='100% - 20px'
               h='70%'
@@ -55,22 +58,13 @@ export default function BuildingLink({ building }: Props) {
               {building.name}
             </Text>
           </Link>
-          <Text
-            fontSize='xl'
-            w='100% - 20px'
-            h='30%'
-            lineHeight='30px'
-            m='auto'
-            fontWeight='800'
-            color='#555555'
-            ml='20px'
-          >
+          <Text fontSize='xl' w='100% - 20px' h='30%' lineHeight='30px' m='auto' fontWeight='800' color='#555555' ml='20px'>
             CreatedAt : {building.createdAt.substring(0, 10)}
           </Text>
         </Box>
         <Box position='relative'>
           <Link href='/buildings/buildingEditForm'>
-            <InfoOutlineIcon onClick={() => setCurrentBuilding(building)} mr='20px' fontSize='20px' cursor='pointer' />
+            <InfoOutlineIcon onClick={() => handleSubmit(building)} mr='20px' fontSize='20px' cursor='pointer' />
           </Link>
         </Box>
       </Flex>

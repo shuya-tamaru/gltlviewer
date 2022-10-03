@@ -45,9 +45,7 @@ export default function ({ getbuildings }: Props) {
         </Text>
         <Box h='calc(100vh)' display='flex' flexDirection='column'>
           {currentItems &&
-            currentItems.map((building: Building) => (
-              <BuildingLink key={building.id} building={building}></BuildingLink>
-            ))}
+            currentItems.map((building: Building) => <BuildingLink key={building.id} building={building}></BuildingLink>)}
         </Box>
         <Pagination pageCount={pageCount} handlePageClick={handlePageClick}></Pagination>
       </Box>
