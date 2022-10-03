@@ -9,15 +9,28 @@ import Header from '../../components/header';
 import UserName from '../../components/userName';
 import IframeArea from '../../components/iframeArea';
 import CommentForm from '../../components/commentForm';
-import Post from '../../components/post';
+import SideBarComment from '../../components/sideBarComment';
 import { Building } from '../../types/Buildings';
+import { useEffect, useState } from 'react';
+import { Comments } from '../../types/Comments';
 
 type Props = {
   building: Building;
 };
 
 export default function ({ building }: Props) {
-  const posts: number[] = [0, 1, 2];
+  const commentRoomId = '44566bcc-8959-4ac8-ada7-49c2c8662b0d';
+  const [comments, setComments] = useState<Comments[] | []>([]);
+
+  useEffect(() => {
+    const getComments = async () => {
+      const response: Comments[] | [] = await axios
+        .get(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/comments/comments/${commentRoomId}`)
+        .then((res) => res.data);
+      setComments(response);
+    };
+    getComments();
+  }, []);
 
   return (
     <>
@@ -32,8 +45,8 @@ export default function ({ building }: Props) {
         <Box w='20%' h='calc(100vh - 80px)' boxShadow='0px 0px 15px -5px #777777'>
           <Box w='100%' h='70%' px='3' pt='3' display='flex' flexDirection='column' alignItems='center'>
             <Box w='100%' h='calc(100% - 40px)' mb='2' overflowY='scroll' border='2px solid' borderColor='#999'>
-              {posts.map((post) => (
-                <Post key={post} />
+              {comments.map((comment) => (
+                <SideBarComment key={comment.id} comment={comment} />
               ))}
             </Box>
             <Link href='/comments/commentDetail'>

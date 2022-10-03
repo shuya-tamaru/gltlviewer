@@ -8,7 +8,7 @@ import { BsGraphUp } from 'react-icons/bs';
 import { HiInformationCircle } from 'react-icons/hi';
 
 type Props = {
-  buildingName: string;
+  buildingName: string | undefined;
 };
 
 export default function BuildingTopBar({ buildingName }: Props) {

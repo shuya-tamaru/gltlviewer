@@ -49,7 +49,7 @@ export default function CommentList({ building }: Props) {
                   borderRadius='3'
                   p='3'
                   transition='all 0.5s ease'
-                  _hover={{ transform: 'scale(1.01)' }}
+                  _hover={{ transform: 'scale(1.01)', opacity: 0.7 }}
                 >
                   <Post commentRoomId={commentRoom.id} />
                 </Box>

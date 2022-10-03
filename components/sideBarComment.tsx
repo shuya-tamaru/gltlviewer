@@ -7,27 +7,18 @@ import { Comments } from '../types/Comments';
 import { User } from '../types/Users';
 
 type Props = {
-  commentRoomId?: string;
+  comment: Comments;
 };
 
-export default function ({ commentRoomId }: Props) {
-  const [comment, setComment] = useState<Comments | null>(null);
+export default function Post({ comment }: Props) {
   const [commentUser, setCommentUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const getComment = async () => {
-      try {
-        const response: Comments = await axios
-          .get(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/comments/firstComment/${commentRoomId}`)
-          .then((res) => res.data);
-        const user = await axios.get(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/users/${response.userId}`).then((res) => res.data);
-        user && setCommentUser(user);
-        response && setComment(response);
-      } catch (error) {
-        console.log(error);
-      }
+    const getUser = async () => {
+      const user: User = await axios.get(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/users/${comment.userId}`).then((res) => res.data);
+      setCommentUser(user);
     };
-    getComment();
+    getUser();
   }, []);
 
   return (
