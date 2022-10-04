@@ -24,6 +24,7 @@ export default function Login() {
   const router = useRouter();
   const setCurrentUser = useCurrentUserUpdate();
   const [loading, setLoading] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
 
   const email = useRef<HTMLInputElement | null>(null);
   const password = useRef<HTMLInputElement | null>(null);
@@ -41,12 +42,14 @@ export default function Login() {
         const session = await getSession();
         const user = session ? (session.userData as User) : null;
         setLoading(true);
+        setIsError(false);
         setCurrentUser(user);
         const companyId: string = user!.companyId;
         router.push(`/topPage/${companyId}`);
       });
     } catch (error) {
-      console.log(error);
+      setIsError(true);
+      setLoading(false);
     }
   };
 
@@ -57,10 +60,15 @@ export default function Login() {
         <Box w='30%' bg='#ffffff' p='10px 10px 20px 10px' boxShadow='0px 0px 15px -5px #777777' borderRadius='5px'>
           <form onSubmit={(e) => handleSubmit(e)}>
             <Text fontSize='30px' fontWeight='800' color='#666666' textAlign='center'>
-              Login Form
+              ログインフォーム
             </Text>
             <Input type='email' ref={email} placeholder={'メールアドレス'} sx={styles} required />
             <Input type='password' ref={password} placeholder={'パスワード'} sx={styles} required />
+            {isError && (
+              <Text fontWeight='800' color='orange.300' textAlign='center' mt='5'>
+                Eメール又はパスワードが間違ってます。
+              </Text>
+            )}
             <Button
               type='submit'
               w='90%'

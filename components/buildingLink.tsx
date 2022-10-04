@@ -13,10 +13,6 @@ type Props = {
 export default function BuildingLink({ building }: Props) {
   const setCurrentBuilding = useCurrentBuildingUpdate();
 
-  const handleSubmit = (building: Building) => {
-    setCurrentBuilding(building);
-  };
-
   return (
     <>
       <Flex
@@ -29,22 +25,14 @@ export default function BuildingLink({ building }: Props) {
         borderRadius='3px'
         justify='space-between'
         transition='all 0.5s ease'
-        _hover={{ transform: 'scale(1.005)' }}
+        _hover={{ transform: 'scale(1.005)', opacity: 0.7 }}
       >
         <Link href={`/buildings/${building.id}`}>
-          <Image
-            onClick={() => handleSubmit(building)}
-            src='/images/building.jpeg'
-            objectFit='cover'
-            boxSize='80px'
-            ml='10px'
-            cursor='pointer'
-          />
+          <Image src='/images/building.jpeg' objectFit='cover' boxSize='80px' ml='10px' cursor='pointer' />
         </Link>
         <Box h='100%' w='100%'>
           <Link href={`/buildings/${building.id}`}>
             <Text
-              onClick={() => handleSubmit(building)}
               fontSize='3xl'
               w='100% - 20px'
               h='70%'
@@ -64,7 +52,7 @@ export default function BuildingLink({ building }: Props) {
         </Box>
         <Box position='relative'>
           <Link href='/buildings/buildingEditForm'>
-            <InfoOutlineIcon onClick={() => handleSubmit(building)} mr='20px' fontSize='20px' cursor='pointer' />
+            <InfoOutlineIcon mr='20px' fontSize='20px' cursor='pointer' />
           </Link>
         </Box>
       </Flex>

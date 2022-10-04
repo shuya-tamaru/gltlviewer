@@ -6,12 +6,13 @@ import { AiOutlineComment } from 'react-icons/ai';
 import { BiUserPlus } from 'react-icons/bi';
 import { BsGraphUp } from 'react-icons/bs';
 import { HiInformationCircle } from 'react-icons/hi';
+import { Building } from '../types/Buildings';
 
 type Props = {
-  buildingName: string | undefined;
+  building?: Building | null;
 };
 
-export default function BuildingTopBar({ buildingName }: Props) {
+export default function BuildingTopBar({ building }: Props) {
   type buildingMenu = {
     menu: string;
     path: string;
@@ -36,7 +37,7 @@ export default function BuildingTopBar({ buildingName }: Props) {
     },
     {
       menu: 'コメント検索',
-      path: '/comments/commentList',
+      path: `/comments/commentList/${building?.id}`,
       icon: <AiOutlineComment size={25} />,
     },
   ];
@@ -44,9 +45,9 @@ export default function BuildingTopBar({ buildingName }: Props) {
   return (
     <>
       <Box w='100%' h='8%' px='20px' position='relative' borderBottom='2px' borderColor='#999'>
-        <Link href='/buildings/building'>
+        <Link href={building ? `/buildings/${building.id}` : ''}>
           <Text fontSize='30px' fontWeight='750' color='#666666' position='absolute' bottom='0' left='20px' cursor='pointer'>
-            {buildingName}
+            {building?.name}
           </Text>
         </Link>
         <Box position='absolute' bottom='0' right='20px'>

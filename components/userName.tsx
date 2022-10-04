@@ -69,7 +69,7 @@ export default function UserName() {
       <Box display='flex' justifyContent='center' alignItems='center' position='relative'>
         <Image src='/images/pika.jpeg' objectFit='cover' boxSize='60px' borderRadius='50%' mx='2' />
         <Text fontSize='xl' fontWeight='550' textAlign='center'>
-          {!currentUser ? 'unknownUser' : currentUser.lastName + currentUser.firstName}
+          {!currentUser ? '' : currentUser.lastName + currentUser.firstName}
         </Text>
         <HamburgerIcon ml='10px' fontSize='40px' cursor='pointer' ref={clickedElement} />
         <Box

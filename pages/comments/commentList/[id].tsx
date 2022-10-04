@@ -37,10 +37,10 @@ export default function CommentList({ building }: Props) {
       </Header>
       <Flex>
         <Box w='80%' h='calc(100vh - 80px)'>
-          <BuildingTopBar buildingName={building.name} />
+          <BuildingTopBar building={building} />
           <SimpleGrid w='100%' h='92%' columns={3} spacing={10} overflowY='scroll' py='5' px='5'>
             {commentRooms.map((commentRoom) => (
-              <Link href='/comments/commentDetail' key={commentRoom.id}>
+              <Link href={`/comments/commentDetail/${commentRoom.id}`} key={commentRoom.id}>
                 <Box
                   cursor='pointer'
                   h='300px'

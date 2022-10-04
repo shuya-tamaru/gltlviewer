@@ -1,19 +1,17 @@
-import { Box, Flex, Button, Text, Image } from '@chakra-ui/react';
+import { Box, Flex, Button } from '@chakra-ui/react';
+import axios from 'axios';
 
 import BuildingTopBar from '../../../components/buildingTopBar';
 import CommentForm from '../../../components/commentForm';
 import Header from '../../../components/header';
-import Post from '../../../components/post';
 import UserName from '../../../components/userName';
 import Comment from '../../../components/comment';
-import axios from 'axios';
 import { CommentRooms } from '../../../types/CommentRooms';
 import { GetStaticPropsContext } from 'next';
 import { Comments } from '../../../types/Comments';
 import { useEffect, useState } from 'react';
 import SideBarCommentSingle from '../../../components/sideBarCommentSingle';
 import { Building } from '../../../types/Buildings';
-import { useRouter } from 'next/router';
 
 type Props = {
   comments: Comments[] | [];
@@ -46,7 +44,7 @@ export default function CommentDetail({ comments }: Props) {
       </Header>
       <Flex>
         <Box w='80%' h='calc(100vh - 80px)'>
-          <BuildingTopBar buildingName={building?.name} />
+          <BuildingTopBar building={building} />
           <Box p='5' w='100%' h='92%' overflowY='scroll' color='#333'>
             {comments.map((comment) => (
               <Comment key={comment.id} comment={comment} setfocusComment={setfocusComment} />

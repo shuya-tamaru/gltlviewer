@@ -1,13 +1,17 @@
 import { Box, Text } from '@chakra-ui/react';
-import Link from 'next/link';
 
+import Link from 'next/link';
 import { ReactNode } from 'react';
+
+import { useCurrentUser } from '../context/CurrentUserContext';
 
 type Props = {
   children?: ReactNode;
 };
 
 export default function Header({ children }: Props) {
+  const currentUser = useCurrentUser();
+
   return (
     <>
       <Box
@@ -21,7 +25,7 @@ export default function Header({ children }: Props) {
         justifyContent='space-between'
         position='sticky'
       >
-        <Link href='/'>
+        <Link href={currentUser ? `/topPage/${currentUser.companyId}` : ''}>
           <Text fontWeight='800' fontSize='4xl' cursor='pointer' mx='2'>
             ServiceName
           </Text>

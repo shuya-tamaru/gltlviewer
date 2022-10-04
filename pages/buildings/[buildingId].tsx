@@ -39,7 +39,7 @@ export default function ({ building }: Props) {
       </Header>
       <Flex>
         <Box w='80%' h='calc(100vh - 80px)'>
-          <BuildingTopBar buildingName={building.name} />
+          <BuildingTopBar building={building} />
           <IframeArea />
         </Box>
         <Box w='20%' h='calc(100vh - 80px)' boxShadow='0px 0px 15px -5px #777777'>

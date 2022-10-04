@@ -1,10 +1,14 @@
 import { Flex, Text, Box, Button, Input } from '@chakra-ui/react';
 import axios from 'axios';
 
+import { getSession, signIn } from 'next-auth/react';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
 
 import Header from '../../components/header';
+import { useCurrentUserUpdate } from '../../context/CurrentUserContext';
+import { User } from '../../types/Users';
 
 const styles = {
   w: '90%',
@@ -19,7 +23,9 @@ const styles = {
 
 export default function Registration() {
   const router = useRouter();
+  const setCurrentUser = useCurrentUserUpdate();
   const [loading, setLoading] = useState<boolean>(false);
+  const [isError, setIsError] = useState<string>('');
 
   const lastName = useRef<HTMLInputElement | null>(null);
   const firstName = useRef<HTMLInputElement | null>(null);
@@ -45,13 +51,24 @@ export default function Registration() {
         };
         setLoading(true);
         await axios.post(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/users/auth/signup`, newUser);
-        await axios.post(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/users/auth/signin`, {
+
+        await signIn('credentials', {
           email: newUser.email,
           password: newUser.password,
+          redirect: false,
+        }).then(async () => {
+          const session = await getSession();
+          const user = session ? (session.userData as User) : null;
+          setLoading(true);
+          setIsError('');
+          setCurrentUser(user);
+          const companyId: string = user!.companyId;
+          router.push(`/topPage/${companyId}`);
         });
-        router.push(`/topPage/${newUser.companyId}`);
-      } catch (error) {
-        console.log(error);
+      } catch (error: any) {
+        const errorMessage: string = error.response.data.message;
+        setLoading(false);
+        setIsError(errorMessage);
       }
     }
   };
@@ -63,7 +80,7 @@ export default function Registration() {
         <Box w='30%' bg='#ffffff' p='10px 10px 20px 10px' boxShadow='0px 0px 15px -5px #777777' borderRadius='5px'>
           <form onSubmit={(e) => handleSubmit(e)}>
             <Text fontSize='30px' fontWeight='800' color='#666666' textAlign='center'>
-              Create Account
+              新規ユーザー登録
             </Text>
             <Input type='text' ref={lastName} placeholder={'姓'} required sx={styles} />
             <Input type='text' ref={firstName} placeholder={'名'} required sx={styles} />
@@ -79,6 +96,11 @@ export default function Registration() {
               sx={styles}
             />
             <Input type='text' ref={userState} placeholder={'ユーザー権限'} required defaultValue={'OnlyWatch'} sx={styles} />
+            {isError && (
+              <Text fontWeight='800' color='orange.300' textAlign='center' mt='5'>
+                {isError}
+              </Text>
+            )}
             <Button
               isLoading={loading}
               type='submit'
@@ -94,6 +116,11 @@ export default function Registration() {
               新規登録
             </Button>
           </form>
+          <Link href='/login'>
+            <Text color='blue' mt='5' textAlign='center' cursor='pointer'>
+              登録済みの方はこちら
+            </Text>
+          </Link>
         </Box>
       </Flex>
     </>

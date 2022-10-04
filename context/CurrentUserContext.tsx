@@ -19,6 +19,8 @@ export const CurrentUserProvider = (props: { children: ReactNode }) => {
   useEffect(() => {
     if (status === 'loading') {
       return;
+    } else if (router.pathname === '/registration') {
+      return;
     } else if (status === 'authenticated') {
       const user = session.userData as User;
       user && setCurrentUser(user);
