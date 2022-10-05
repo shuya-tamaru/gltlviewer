@@ -7,7 +7,6 @@ import {
   ModalCloseButton,
   useDisclosure,
   Button,
-  Box,
 } from '@chakra-ui/react';
 import { FiEdit } from 'react-icons/fi';
 import { Tooltip } from '@chakra-ui/react';

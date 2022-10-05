@@ -27,7 +27,6 @@ export default function ({ getbuildings, companyId }: Props) {
 
   const itemsPerPage = 6;
   const searchText = 'Search Building';
-  const path = `/topPage/${companyId}`;
 
   useEffect(() => {
     const endOffset = itemOffset + itemsPerPage;
