@@ -13,6 +13,8 @@ import Link from 'next/link';
 import { signOut } from 'next-auth/react';
 
 import { useCurrentUser, useCurrentUserUpdate } from '../context/CurrentUserContext';
+import ModalUserUpdate from './modalUserUpdate';
+import ModalCompanyUpdate from './modalCompanyUpdate';
 
 export default function UserName() {
   const router = useRouter();
@@ -22,16 +24,6 @@ export default function UserName() {
 
   const fontSize = '20px';
   const userMenu = [
-    {
-      icon: <FaUserEdit style={{ fontSize }} />,
-      menu: 'ユーザー情報編集',
-      path: '/users/userEditForm',
-    },
-    {
-      icon: <HiOfficeBuilding style={{ fontSize }} />,
-      menu: '会社情報編集',
-      path: '/company/companyEditForm',
-    },
     {
       icon: <BiUserPlus style={{ fontSize }} />,
       menu: '新規ユーザーの招待',
@@ -80,24 +72,24 @@ export default function UserName() {
           right='-10px'
           top='70px'
           zIndex='100000000'
-          shadow='xl'
+          shadow='md'
         >
-          {userMenu.map((userMenu) => {
-            return (
-              <Link href={userMenu.path} key={userMenu.menu}>
-                <Button
-                  w='200px'
-                  colorScheme='#fff'
-                  borderRadius='0'
-                  color='#666'
-                  _hover={{ background: 'red', color: '#fff' }}
-                  leftIcon={userMenu.icon}
-                >
-                  {userMenu.menu}
-                </Button>
-              </Link>
-            );
-          })}
+          <ModalUserUpdate />
+          <ModalCompanyUpdate />
+          {userMenu.map((userMenu) => (
+            <Link href={userMenu.path} key={userMenu.menu}>
+              <Button
+                w='200px'
+                colorScheme='#fff'
+                borderRadius='0'
+                color='#666'
+                _hover={{ background: 'red', color: '#fff' }}
+                leftIcon={userMenu.icon}
+              >
+                {userMenu.menu}
+              </Button>
+            </Link>
+          ))}
           <Button
             onClick={signout}
             w='200px'

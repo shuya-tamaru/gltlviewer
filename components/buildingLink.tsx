@@ -1,18 +1,15 @@
-import { InfoOutlineIcon } from '@chakra-ui/icons';
 import { Box, Flex, Image, Text } from '@chakra-ui/react';
 
 import Link from 'next/link';
-import { useCurrentBuildingUpdate } from '../context/CurrentBuildingContext';
 
 import { Building } from '../types/Buildings';
+import ModalBuildingUpdate from './modalBuildingUpdate';
 
 type Props = {
   building: Building;
 };
 
 export default function BuildingLink({ building }: Props) {
-  const setCurrentBuilding = useCurrentBuildingUpdate();
-
   return (
     <>
       <Flex
@@ -25,7 +22,7 @@ export default function BuildingLink({ building }: Props) {
         borderRadius='3px'
         justify='space-between'
         transition='all 0.5s ease'
-        _hover={{ transform: 'scale(1.005)', opacity: 0.7 }}
+        _hover={{ transform: 'scale(1.001)', opacity: 0.7 }}
       >
         <Link href={`/buildings/${building.id}`}>
           <Image src='/images/building.jpeg' objectFit='cover' boxSize='80px' ml='10px' cursor='pointer' />
@@ -51,9 +48,7 @@ export default function BuildingLink({ building }: Props) {
           </Text>
         </Box>
         <Box position='relative'>
-          <Link href='/buildings/buildingEditForm'>
-            <InfoOutlineIcon mr='20px' fontSize='20px' cursor='pointer' />
-          </Link>
+          <ModalBuildingUpdate building={building} />
         </Box>
       </Flex>
     </>
