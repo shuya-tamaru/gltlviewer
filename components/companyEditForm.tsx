@@ -1,6 +1,8 @@
 import { Button, Input } from '@chakra-ui/react';
 import axios from 'axios';
+
 import { useEffect, useState } from 'react';
+
 import { useCurrentUser } from '../context/CurrentUserContext';
 import { Company } from '../types/Companys';
 
