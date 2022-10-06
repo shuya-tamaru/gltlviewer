@@ -13,6 +13,8 @@ import SideBarComment from '../../components/sideBarComment';
 import { Building } from '../../types/Buildings';
 import { useEffect, useState } from 'react';
 import { Comments } from '../../types/Comments';
+import { useCurrentIframeState, useCurrentIframeStateUpdate } from '../../context/CurrentIframeStateContext';
+import { CommentRooms } from '../../types/CommentRooms';
 
 type Props = {
   building: Building;
@@ -20,7 +22,10 @@ type Props = {
 
 export default function ({ building }: Props) {
   const commentRoomId = '44566bcc-8959-4ac8-ada7-49c2c8662b0d';
+  const [commentRooms, setCommentRooms] = useState<CommentRooms[] | []>([]);
   const [comments, setComments] = useState<Comments[] | []>([]);
+  const currentIframeState = useCurrentIframeState();
+  const setCurrentIframeState = useCurrentIframeStateUpdate();
 
   useEffect(() => {
     const getComments = async () => {
@@ -29,8 +34,37 @@ export default function ({ building }: Props) {
         .then((res) => res.data);
       setComments(response);
     };
+    const getCommentRooms = async () => {
+      const response: CommentRooms[] | [] = await axios
+        .get(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/comment-rooms/commet_rooms/${building.id}`)
+        .then((res) => res.data);
+      setCommentRooms(response);
+    };
     getComments();
+    getCommentRooms();
   }, []);
+
+  useEffect(() => {
+    if (currentIframeState) {
+      switch (currentIframeState.message) {
+        case 'initialMessage': {
+          const iframeDOM = document.getElementById('viewer') as HTMLIFrameElement;
+          iframeDOM &&
+            commentRooms.length > 0 &&
+            iframeDOM.contentWindow!.postMessage(
+              {
+                message: JSON.stringify(commentRooms),
+                action: 'submitInitialMessages',
+              },
+              'https://playcanv.as',
+            );
+          break;
+        }
+        default:
+          return;
+      }
+    }
+  }, [currentIframeState]);
 
   return (
     <>

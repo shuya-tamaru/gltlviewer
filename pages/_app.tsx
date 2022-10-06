@@ -1,13 +1,15 @@
-import '../styles/globals.css';
-import type { AppProps } from 'next/app';
-
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
-import { CurrentUserProvider } from '../context/CurrentUserContext';
+
+import type { AppProps } from 'next/app';
 import { SessionProvider } from 'next-auth/react';
 import Router, { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+
+import '../styles/globals.css';
 import Spiner from '../components/spiner';
+import { CurrentUserProvider } from '../context/CurrentUserContext';
 import { CurrentBuildingProvider } from '../context/CurrentBuildingContext';
+import { CurrentIframeStateProvider } from '../context/CurrentIframeStateContext';
 
 function Loading() {
   const router = useRouter();
@@ -43,9 +45,11 @@ function MyApp({ Component, pageProps }: AppProps) {
             },
           })}
         >
-          <CurrentBuildingProvider>
-            <CurrentUserProvider>{loadingState ? <Spiner /> : <Component {...pageProps} />}</CurrentUserProvider>
-          </CurrentBuildingProvider>
+          <CurrentIframeStateProvider>
+            <CurrentBuildingProvider>
+              <CurrentUserProvider>{loadingState ? <Spiner /> : <Component {...pageProps} />}</CurrentUserProvider>
+            </CurrentBuildingProvider>
+          </CurrentIframeStateProvider>
         </ChakraProvider>
       </SessionProvider>
     </>
