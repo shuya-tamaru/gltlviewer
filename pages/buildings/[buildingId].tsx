@@ -12,7 +12,6 @@ import CommentForm from '../../components/commentForm';
 import SideBarComment from '../../components/sideBarComment';
 import { Building } from '../../types/Buildings';
 import { useEffect, useState } from 'react';
-import { Comments } from '../../types/Comments';
 import { useCurrentIframeState, useCurrentIframeStateUpdate } from '../../context/CurrentIframeStateContext';
 import { CommentRooms } from '../../types/CommentRooms';
 
@@ -21,27 +20,17 @@ type Props = {
 };
 
 export default function ({ building }: Props) {
-  const commentRoomId = '44566bcc-8959-4ac8-ada7-49c2c8662b0d';
-  const [commentRooms, setCommentRooms] = useState<CommentRooms[] | []>([]);
-  const [comments, setComments] = useState<Comments[] | []>([]);
+  const [comments, setComments] = useState<CommentRooms[] | []>([]);
   const currentIframeState = useCurrentIframeState();
   const setCurrentIframeState = useCurrentIframeStateUpdate();
 
   useEffect(() => {
     const getComments = async () => {
-      const response: Comments[] | [] = await axios
-        .get(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/comments/comments/${commentRoomId}`)
-        .then((res) => res.data);
-      setComments(response);
-    };
-    const getCommentRooms = async () => {
-      const response: CommentRooms[] | [] = await axios
-        .get(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/comment-rooms/commet_rooms/${building.id}`)
-        .then((res) => res.data);
-      setCommentRooms(response);
+      await axios
+        .get(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/comments/firstCommentInRoom/${building.id}`)
+        .then((res) => setComments(res.data));
     };
     getComments();
-    getCommentRooms();
   }, []);
 
   useEffect(() => {
@@ -50,10 +39,10 @@ export default function ({ building }: Props) {
         case 'initialMessage': {
           const iframeDOM = document.getElementById('viewer') as HTMLIFrameElement;
           iframeDOM &&
-            commentRooms.length > 0 &&
+            comments.length > 0 &&
             iframeDOM.contentWindow!.postMessage(
               {
-                message: JSON.stringify(commentRooms),
+                message: JSON.stringify(comments),
                 action: 'submitInitialMessages',
               },
               'https://playcanv.as',
@@ -79,9 +68,9 @@ export default function ({ building }: Props) {
         <Box w='20%' h='calc(100vh - 80px)' boxShadow='0px 0px 15px -5px #777777'>
           <Box w='100%' h='70%' px='3' pt='3' display='flex' flexDirection='column' alignItems='center'>
             <Box w='100%' h='calc(100% - 40px)' mb='2' overflowY='scroll' border='2px solid' borderColor='#999'>
-              {comments.map((comment) => (
+              {/* {comments.map((comment) => (
                 <SideBarComment key={comment.id} comment={comment} />
-              ))}
+              ))} */}
             </Box>
             <Link href='/comments/commentDetail'>
               <Button colorScheme='red' w='90%' h='40px'>

@@ -6,4 +6,5 @@ export type Comments = {
   commentRoomId: string;
   createdAt: string;
   updatedAt: string;
+  coordinate?: string;
 };

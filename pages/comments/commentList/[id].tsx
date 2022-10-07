@@ -11,23 +11,23 @@ import Header from '../../../components/header';
 import Post from '../../../components/post';
 import UserName from '../../../components/userName';
 import { Building } from '../../../types/Buildings';
-import { CommentRooms } from '../../../types/CommentRooms';
+import { Comments } from '../../../types/Comments';
 
 type Props = {
   building: Building;
 };
 
 export default function CommentList({ building }: Props) {
-  const [commentRooms, setCommentRooms] = useState<CommentRooms[] | []>([]);
+  const [comments, setComments] = useState<Comments[] | []>([]);
 
   useEffect(() => {
-    const getCommentRooms = async () => {
-      const response: CommentRooms[] = await axios
-        .get(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/comment-rooms/commet_rooms/${building.id}`)
+    const getFirstCommentInRoom = async () => {
+      const response: Comments[] = await axios
+        .get(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/comments/firstCommentInRoom/${building.id}`)
         .then((res) => res.data);
-      setCommentRooms(response);
+      setComments(response);
     };
-    getCommentRooms();
+    getFirstCommentInRoom();
   }, []);
 
   return (
@@ -39,8 +39,8 @@ export default function CommentList({ building }: Props) {
         <Box w='80%' h='calc(100vh - 80px)'>
           <BuildingTopBar building={building} />
           <SimpleGrid w='100%' h='92%' columns={3} spacing={10} overflowY='scroll' py='5' px='5'>
-            {commentRooms.map((commentRoom) => (
-              <Link href={`/comments/commentDetail/${commentRoom.id}`} key={commentRoom.id}>
+            {comments.map((comment) => (
+              <Link href={`/comments/commentDetail/${comment.commentRoomId}`} key={comment.id}>
                 <Box
                   cursor='pointer'
                   h='300px'
@@ -51,7 +51,7 @@ export default function CommentList({ building }: Props) {
                   transition='all 0.5s ease'
                   _hover={{ transform: 'scale(1.01)', opacity: 0.7 }}
                 >
-                  <Post commentRoomId={commentRoom.id} />
+                  <Post comment={comment} />
                 </Box>
               </Link>
             ))}
