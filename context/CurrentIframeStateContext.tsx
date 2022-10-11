@@ -5,7 +5,7 @@ export type CurrnetIfameContextType = ReceavedData | null;
 export type CurrnetIfameUpdateContextType = Dispatch<SetStateAction<ReceavedData | null>>;
 
 export const CurrnetIframeStateContext = createContext<CurrnetIfameContextType>(null);
-export const CurrnetIframeStateUpdateContext = createContext<CurrnetIfameUpdateContextType>(() => {});
+export const CurrnetIframeStateUpdateContext = createContext<CurrnetIfameUpdateContextType>(() => { });
 
 export const CurrentIframeStateProvider = (props: { children: ReactNode }) => {
   const { children } = props;
@@ -14,6 +14,7 @@ export const CurrentIframeStateProvider = (props: { children: ReactNode }) => {
   useEffect(() => {
     window.addEventListener('message', (event) => {
       if (event.data) {
+        console.log(event.data)
         setCurrentIframeState(event.data);
       }
     });

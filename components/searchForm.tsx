@@ -1,9 +1,11 @@
 import { Box, Input } from '@chakra-ui/react';
 import { Search2Icon } from '@chakra-ui/icons';
 
-import { SearchText } from '../types/SearchText';
+type Props = {
+  searchText: string
+}
 
-export default function SearchForm({ searchText }: SearchText) {
+export default function SearchForm({ searchText }: Props) {
   return (
     <>
       <Box w='65%' bg='#ffffff' display='flex' py='5px' alignItems='center' borderRadius='5px'>

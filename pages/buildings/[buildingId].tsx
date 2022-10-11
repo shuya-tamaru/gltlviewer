@@ -13,14 +13,16 @@ import SideBarComment from '../../components/sideBarComment';
 import { Building } from '../../types/Buildings';
 import { useEffect, useState } from 'react';
 import { useCurrentIframeState, useCurrentIframeStateUpdate } from '../../context/CurrentIframeStateContext';
-import { CommentRooms } from '../../types/CommentRooms';
+import useTransmission from '../../hools/useTransmission';
+import { Comments } from '../../types/Comments';
 
 type Props = {
   building: Building;
 };
 
 export default function ({ building }: Props) {
-  const [comments, setComments] = useState<CommentRooms[] | []>([]);
+  const [comments, setComments] = useState<Comments[] | []>([]);
+  const [currentComment, setCurrentComment] = useState();
   const currentIframeState = useCurrentIframeState();
   const setCurrentIframeState = useCurrentIframeStateUpdate();
 
@@ -33,27 +35,45 @@ export default function ({ building }: Props) {
     getComments();
   }, []);
 
-  useEffect(() => {
-    if (currentIframeState) {
-      switch (currentIframeState.message) {
-        case 'initialMessage': {
-          const iframeDOM = document.getElementById('viewer') as HTMLIFrameElement;
-          iframeDOM &&
-            comments.length > 0 &&
-            iframeDOM.contentWindow!.postMessage(
-              {
-                message: JSON.stringify(comments),
-                action: 'submitInitialMessages',
-              },
-              'https://playcanv.as',
-            );
-          break;
-        }
-        default:
-          return;
-      }
-    }
-  }, [currentIframeState]);
+  comments.length > 0
+    && currentIframeState
+    && currentIframeState.message === 'initialMessage'
+    && useTransmission(comments, currentIframeState.message);
+
+  // useEffect(() => {
+  //   if (currentIframeState) {
+  //     switch (currentIframeState.message) {
+  //       case 'initialMessage': {
+  //         comments.length > 0 &&
+  //           iframeDOM.contentWindow!.postMessage(
+  //             {
+  //               message: JSON.stringify(comments),
+  //               action: 'submitInitialMessages',
+  //             },
+  //             'https://playcanv.as',
+  //           );
+  //         break;
+  //       }
+  //       case 'addPost': {
+  //         const recivedGuid: string = currentIframeState.guid!;
+  //         const recievedCoordinate: string = currentIframeState.coordinate!;
+  //         const textAreaDOM = document.getElementById('textArea') as HTMLTextAreaElement;
+  //         textAreaDOM.focus();
+
+  //         // iframeDOM.contentWindow!.postMessage(
+  //         //   {
+  //         //     message: JSON.stringify(comments),
+  //         //     action: 'submitInitialMessages',
+  //         //   },
+  //         //   'https://playcanv.as',
+  //         // );
+  //         break;
+  //       }
+  //       default:
+  //         return;
+  //     }
+  //   }
+  // }, [currentIframeState]);
 
   return (
     <>
@@ -78,7 +98,7 @@ export default function ({ building }: Props) {
               </Button>
             </Link>
           </Box>
-          <CommentForm />
+          <CommentForm building={building} />
         </Box>
       </Flex>
     </>
