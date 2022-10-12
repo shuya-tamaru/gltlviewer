@@ -22,9 +22,9 @@ type Props = {
 
 export default function ({ building }: Props) {
   const [comments, setComments] = useState<Comments[] | []>([]);
-  const [currentComment, setCurrentComment] = useState();
+  const [roomId, setRoomId] = useState<string>('');
+  const [displayState, setDisplayState] = useState<string>('none');
   const currentIframeState = useCurrentIframeState();
-  const setCurrentIframeState = useCurrentIframeStateUpdate();
 
   useEffect(() => {
     const getComments = async () => {
@@ -35,45 +35,33 @@ export default function ({ building }: Props) {
     getComments();
   }, []);
 
-  comments.length > 0
-    && currentIframeState
-    && currentIframeState.message === 'initialMessage'
-    && useTransmission(comments, currentIframeState.message);
+  useEffect(() => {
+    if (currentIframeState) {
+      switch (currentIframeState.message) {
+        case 'initialMessage': {
+          comments.length > 0 && useTransmission(comments, 'initialMessage');
+          break;
+        }
+        case 'addPost': {
+          setDisplayState('flex');
+          break;
+        }
+        case 'getSingleComment': {
+          const commentRoomId = currentIframeState.commentRoomId!;
+          setDisplayState('flex');
+          const getComments = async () => {
+            const commentsInRoom = await axios.get(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/comments/comments/${commentRoomId}`).then(res => res.data);
+            setComments(commentsInRoom);
+            setRoomId(commentRoomId);
+          }
+          getComments();
+          break;
+        }
 
-  // useEffect(() => {
-  //   if (currentIframeState) {
-  //     switch (currentIframeState.message) {
-  //       case 'initialMessage': {
-  //         comments.length > 0 &&
-  //           iframeDOM.contentWindow!.postMessage(
-  //             {
-  //               message: JSON.stringify(comments),
-  //               action: 'submitInitialMessages',
-  //             },
-  //             'https://playcanv.as',
-  //           );
-  //         break;
-  //       }
-  //       case 'addPost': {
-  //         const recivedGuid: string = currentIframeState.guid!;
-  //         const recievedCoordinate: string = currentIframeState.coordinate!;
-  //         const textAreaDOM = document.getElementById('textArea') as HTMLTextAreaElement;
-  //         textAreaDOM.focus();
+      }
+    }
+  }, [currentIframeState])
 
-  //         // iframeDOM.contentWindow!.postMessage(
-  //         //   {
-  //         //     message: JSON.stringify(comments),
-  //         //     action: 'submitInitialMessages',
-  //         //   },
-  //         //   'https://playcanv.as',
-  //         // );
-  //         break;
-  //       }
-  //       default:
-  //         return;
-  //     }
-  //   }
-  // }, [currentIframeState]);
 
   return (
     <>
@@ -86,13 +74,13 @@ export default function ({ building }: Props) {
           <IframeArea />
         </Box>
         <Box w='20%' h='calc(100vh - 80px)' boxShadow='0px 0px 15px -5px #777777'>
-          <Box w='100%' h='70%' px='3' pt='3' display='flex' flexDirection='column' alignItems='center'>
-            <Box w='100%' h='calc(100% - 40px)' mb='2' overflowY='scroll' border='2px solid' borderColor='#999'>
-              {/* {comments.map((comment) => (
+          <Box w='100%' h='70%' px='3' pt='3' display={displayState} flexDirection='column' alignItems='center'>
+            <Box w='100%' h='calc(100% - 40px)' mb='2' overflowY='scroll' border='2px solid' borderColor='#999' >
+              {comments.map((comment) => (
                 <SideBarComment key={comment.id} comment={comment} />
-              ))} */}
+              ))}
             </Box>
-            <Link href='/comments/commentDetail'>
+            <Link href={`/comments/commentDetail/${roomId}`}>
               <Button colorScheme='red' w='90%' h='40px'>
                 Read More
               </Button>

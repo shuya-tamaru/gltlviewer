@@ -1,10 +1,11 @@
-import { Box, Flex, Image, Text } from '@chakra-ui/react';
-import { BsThreeDotsVertical } from 'react-icons/bs';
+import { Box, Flex, Image, Text, Tooltip, Button } from '@chakra-ui/react';
+import { FaRegEdit } from 'react-icons/fa';
 import axios from 'axios';
 
 import { useEffect, useState } from 'react';
 import { Comments } from '../types/Comments';
 import { User } from '../types/Users';
+import { useCurrentUser } from '../context/CurrentUserContext';
 
 type Props = {
   comment: Comments;
@@ -12,6 +13,7 @@ type Props = {
 
 export default function Post({ comment }: Props) {
   const [commentUser, setCommentUser] = useState<User | null>(null);
+  const currentUser = useCurrentUser();
 
   useEffect(() => {
     const getUser = async () => {
@@ -33,7 +35,14 @@ export default function Post({ comment }: Props) {
               <Text fontSize='xs'>{comment ? comment.updatedAt : '更新日:2022-02-01'}</Text>
             </Box>
           </Flex>
-          <BsThreeDotsVertical style={{ color: '#333', cursor: 'pointer' }} size={20} />
+          {
+            currentUser?.id === commentUser?.id &&
+            <Tooltip hasArrow color='#fff' fontWeight='600' label='投稿の編集・削除' bg='orange.400' placement='top'>
+              <Button mr='5px' colorScheme='gray'>
+                <FaRegEdit style={{ color: '#333', cursor: 'pointer' }} size={20} />
+              </Button>
+            </Tooltip>
+          }
         </Flex>
         <Box alignItems='center'>
           <Flex my='2' mx='2' borderBottom='2px' borderColor='#999' borderStyle='dotted'>

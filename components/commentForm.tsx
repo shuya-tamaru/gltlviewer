@@ -1,8 +1,8 @@
-import { Box, Textarea, Button, Input } from "@chakra-ui/react";
+import { Box, Textarea, Button, Input, useToast, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody } from "@chakra-ui/react";
 import { BiImageAdd } from "react-icons/bi";
 import { GrDocumentPdf } from "react-icons/gr";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Building } from "../types/Buildings";
 import { useCurrentIframeState } from "../context/CurrentIframeStateContext";
 import axios from "axios";
@@ -20,17 +20,28 @@ type NewComment = {
 
 export default function CommentForm({ building }: Props) {
 
+  const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const [buttonToggle, setButtonToggle] = useState<boolean>(true);
   const [desc, setDesc] = useState<string>('');
   const [title, setTitle] = useState<string>('');
+  const [guid, setGuid] = useState<string>('');
+  const [coordinate, setCoordinate] = useState<string>('');
   const currentIframeState = useCurrentIframeState();
   const currentUser = useCurrentUser();
 
+  useEffect(() => {
+    if (currentIframeState) {
+      if (currentIframeState.message === 'addPost') {
+        onOpen();
+        setGuid(currentIframeState.guid as string);
+        setCoordinate(currentIframeState.coordinate as string);
+      }
+    }
+  }, [currentIframeState]);
 
-  const guid = currentIframeState?.guid;
-  const coordinate = currentIframeState?.coordinate;
-
-  const addComment = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const addComment = async (e: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => {
     e.preventDefault();
     try {
       const newComment: NewComment =
@@ -58,48 +69,69 @@ export default function CommentForm({ building }: Props) {
               coordinate
             }
           });
-      currentIframeState
-        && currentIframeState.message === 'addPost'
-        && useTransmission(postedComment, currentIframeState.message, guid);
-      alert('success');
 
+      useTransmission(postedComment, 'addPost', guid);
+      toast({
+        title: `コメントを投稿しました`,
+        status: 'success',
+        isClosable: true,
+      })
     } catch (error) {
       console.log(error)
+      toast({
+        title: 'コメント投稿に失敗しました',
+        status: 'error',
+        isClosable: true,
+      })
     }
   }
 
-  const cancelComment = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+  const cancelComment = (e?: React.MouseEvent<HTMLButtonElement>) => {
+    e?.preventDefault();
     useTransmission('', 'cancelPost', guid);
     setDesc('');
     setTitle('');
+    toast({
+      title: `コメント投稿をキャンセルしました`,
+      status: 'warning',
+      isClosable: true,
+    })
   }
 
   return (
     <>
-      <Box w="100%" h="30%" display="flex" alignItems="center" flexDirection="column" p="2.5">
-        <form style={{ width: "100%", height: "100%" }} >
-          <Input value={title} onChange={(e) => setTitle(e.target.value)} id="input" w="100%" h="15%" placeholder='タイトルを入力' borderColor="#999" border="2px" />
-          <Textarea value={desc} onChange={(e) => setDesc(e.target.value)} id="textArea" w="100%" h="60%" placeholder='コメントを入力' borderColor="#999" border="2px" />
-          <Box w="100%" h="20%" mt="2" display="flex" justifyContent="space-between">
-            <Box display="flex">
-              <BiImageAdd style={{ marginLeft: "5px", cursor: "pointer" }} size={30} />
-              <GrDocumentPdf style={{ marginLeft: "5px", cursor: "pointer" }} size={30} />
+      <Drawer onClose={onClose} isOpen={isOpen} size='lg' closeOnOverlayClick={false}>
+        <DrawerOverlay />
+        <DrawerContent >
+          <DrawerCloseButton onClick={(e) => { cancelComment(e); onClose() }} />
+          <DrawerHeader>コメントを投稿する</DrawerHeader>
+          <DrawerBody>
+            <Box w="100%" h="30%" display="flex" alignItems="center" flexDirection="column" p="2.5">
+              <form style={{ width: "100%", height: "100%" }} >
+                <Input required value={title} onChange={(e) => setTitle(e.target.value)} id="input" w="100%" h="15%" placeholder='タイトルを入力' borderColor="#999" border="2px" />
+                <Textarea required value={desc} onChange={(e) => setDesc(e.target.value)} id="textArea" w="100%" h="60%" placeholder='コメントを入力' borderColor="#999" border="2px" />
+                <Box w="100%" h="20%" mt="2" display="flex" justifyContent="space-between">
+                  <Box display="flex">
+                    <BiImageAdd style={{ marginLeft: "5px", cursor: "pointer" }} size={30} />
+                    <GrDocumentPdf style={{ marginLeft: "5px", cursor: "pointer" }} size={30} />
+                  </Box>
+                  <Box display="flex" >
+                    {buttonToggle ? (
+                      <Button onClick={(e) => { addComment(e); setDesc(''); setTitle(''); onClose() }} colorScheme='red' ml="2">Add</Button>
+                    ) : (
+                      <>
+                        <Button value={"Update"} colorScheme='red' ml="2">Update</Button>
+                        <Button value={"Delete"} colorScheme='red' ml="2">Delete</Button>
+                      </>
+                    )}
+                    <Button onClick={(e) => { cancelComment(e); onClose() }} colorScheme='red' ml="2">Cancel</Button>
+                  </Box>
+                </Box>
+              </form>
             </Box>
-            <Box display="flex">
-              {buttonToggle ? (
-                <Button onClick={(e) => { addComment(e); setDesc(''); setTitle(''); }} colorScheme='red' ml="2">Add</Button>
-              ) : (
-                <>
-                  <Button value={"Update"} colorScheme='red' ml="2">Update</Button>
-                  <Button value={"Delete"} colorScheme='red' ml="2">Delete</Button>
-                </>
-              )}
-              <Button onClick={(e) => cancelComment(e)} colorScheme='red' ml="2">Cancel</Button>
-            </Box>
-          </Box>
-        </form>
-      </Box>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
     </>
   );
 }

@@ -13,7 +13,6 @@ type AddComment = {
 
 
 const useTransmission = (comments: Comments[] | AddComment | '', currentState: string, guid?: string) => {
-
   if (currentState) {
     const iframeDOM = document.getElementById('viewer') as HTMLIFrameElement;
     switch (currentState) {

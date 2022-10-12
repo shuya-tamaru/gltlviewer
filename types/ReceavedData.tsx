@@ -4,4 +4,5 @@ export type ReceavedData = {
   postId?: string;
   guid?: string;
   coordinate?: string;
+  commentRoomId?: string;
 };
