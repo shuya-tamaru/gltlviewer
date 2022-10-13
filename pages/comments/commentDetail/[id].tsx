@@ -2,7 +2,7 @@ import { Box, Flex, Button } from '@chakra-ui/react';
 import axios from 'axios';
 
 import BuildingTopBar from '../../../components/buildingTopBar';
-import CommentForm from '../../../components/commentForm';
+import DrawerCommentAdd from '../../../components/drawerCommentAdd';
 import Header from '../../../components/header';
 import UserName from '../../../components/userName';
 import Comment from '../../../components/comment';
@@ -34,7 +34,7 @@ export default function CommentDetail({ comments }: Props) {
         setBuilding(building);
       };
       getBuilding();
-    } catch (error) {}
+    } catch (error) { }
   }, []);
 
   return (
@@ -60,7 +60,7 @@ export default function CommentDetail({ comments }: Props) {
               Read More
             </Button>
           </Box>
-          <CommentForm />
+          {/* <DrawerCommentAdd /> */}
         </Box>
       </Flex>
     </>

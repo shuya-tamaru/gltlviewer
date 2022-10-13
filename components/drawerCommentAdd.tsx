@@ -1,8 +1,8 @@
-import { Box, Textarea, Button, Input, useToast, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody } from "@chakra-ui/react";
+import { Box, Textarea, Button, Input, useToast, useDisclosure, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody } from "@chakra-ui/react";
 import { BiImageAdd } from "react-icons/bi";
 import { GrDocumentPdf } from "react-icons/gr";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Building } from "../types/Buildings";
 import { useCurrentIframeState } from "../context/CurrentIframeStateContext";
 import axios from "axios";
