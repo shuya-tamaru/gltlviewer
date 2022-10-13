@@ -19,7 +19,11 @@ type Props = {
 
 export default function Post({ comment, commentsLength, guid }: Props) {
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpenUpdate,
+    onOpen: onOpenUpdate,
+    onClose: onCloseUpdate
+  } = useDisclosure();
   const {
     isOpen: isOpenAlert,
     onOpen: onOpenAlert,
@@ -63,12 +67,12 @@ export default function Post({ comment, commentsLength, guid }: Props) {
                     <Flex justify="end">
                       <Tooltip hasArrow color='#fff' fontWeight='600' label='編集' bg='orange.400' placement='top'>
                         <Button p="0" colorScheme='white'>
-                          <FaRegEdit onClick={() => { onOpen(); }} style={{ color: '#333', cursor: 'pointer' }} size={20} />
+                          <FaRegEdit onClick={onOpenUpdate} style={{ color: '#333', cursor: 'pointer' }} size={20} />
                         </Button>
                       </Tooltip>
                       <Tooltip hasArrow color='#fff' fontWeight='600' label='削除' bg='orange.400' placement='top'>
                         <Button p="0" colorScheme='white'>
-                          <RiDeleteBinLine onClick={() => onOpenAlert()} style={{ color: '#333', cursor: 'pointer' }} size={20} />
+                          <RiDeleteBinLine onClick={onOpenAlert} style={{ color: '#333', cursor: 'pointer' }} size={20} />
                         </Button>
                       </Tooltip>
                     </Flex>
@@ -77,15 +81,15 @@ export default function Post({ comment, commentsLength, guid }: Props) {
               </Flex>
               <Box alignItems='center'>
                 <Flex my='2' mx='2' borderBottom='2px' borderColor='#999' borderStyle='dotted'>
-                  Title:<Text>&nbsp;{displayComment ? displayComment.title : 'デフォルトタイトル'}</Text>
+                  Title:<Text>&nbsp;{displayComment ? displayComment.title : ''}</Text>
                 </Flex>
                 <Text my='2' mx='2'>
-                  {displayComment ? displayComment.description : 'デフォルト本文'}
+                  {displayComment ? displayComment.description : ''}
                 </Text>
                 <Image src='/images/building.jpeg' objectFit='cover' boxSize='100%' />
               </Box>
             </Box>
-            <DrawerCommentUpdate comment={displayComment} commentsLength={commentsLength} guid={guid} setDisplayComemnt={setDisplayComemnt} isOpen={isOpen} onClose={onClose} />
+            <DrawerCommentUpdate comment={displayComment} commentsLength={commentsLength} guid={guid} setDisplayComemnt={setDisplayComemnt} isOpenUpdate={isOpenUpdate} onCloseUpdate={onCloseUpdate} />
             <AlertDialogDelete comment={displayComment} commentsLength={commentsLength} guid={guid} setDisplayComemnt={setDisplayComemnt} isOpenAlert={isOpenAlert} onCloseAlert={onCloseAlert} />
           </>
         )

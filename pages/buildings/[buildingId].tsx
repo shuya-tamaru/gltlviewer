@@ -1,4 +1,4 @@
-import { Box, Flex, Button } from '@chakra-ui/react';
+import { Box, Button, useDisclosure, Flex } from "@chakra-ui/react";
 import axios from 'axios';
 
 import { GetStaticPropsContext } from 'next';
@@ -15,12 +15,16 @@ import { Building } from '../../types/Buildings';
 import { useCurrentIframeState } from '../../context/CurrentIframeStateContext';
 import useTransmission from '../../hools/useTransmission';
 import { Comments } from '../../types/Comments';
+import DrawerCommentReply from "../../components/drawerCommentReply";
 
 type Props = {
   building: Building;
 };
 
 export default function ({ building }: Props) {
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const [initialComments, setInitialComments] = useState<Comments[] | []>([]);
   const [comments, setComments] = useState<Comments[] | []>([]);
   const [roomId, setRoomId] = useState<string>('');
@@ -66,7 +70,6 @@ export default function ({ building }: Props) {
     }
   }, [currentIframeState])
 
-
   return (
     <>
       <Header>
@@ -85,6 +88,10 @@ export default function ({ building }: Props) {
                   <SideBarComment key={comment.id} comment={comment} commentsLength={comments.length} guid={guid} />
                 ))}
               </Box>
+              <Button onClick={onOpen} colorScheme='gray' w='90%' h='40px' marginBlockEnd='10px'>
+                返信
+              </Button>
+              <DrawerCommentReply isOpen={isOpen} onClose={onClose} roomId={roomId} comments={comments} setComments={setComments} />
               <Link href={`/comments/commentDetail/${roomId}`}>
                 <Button colorScheme='red' w='90%' h='40px'>
                   Read More

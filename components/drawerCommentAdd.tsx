@@ -18,12 +18,11 @@ type NewComment = {
   commentRoomId: string
 }
 
-export default function CommentForm({ building }: Props) {
+export default function ({ building }: Props) {
 
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const [buttonToggle, setButtonToggle] = useState<boolean>(true);
   const [desc, setDesc] = useState<string>('');
   const [title, setTitle] = useState<string>('');
   const [guid, setGuid] = useState<string>('');
@@ -116,15 +115,8 @@ export default function CommentForm({ building }: Props) {
                     <GrDocumentPdf style={{ marginLeft: "5px", cursor: "pointer" }} size={30} />
                   </Box>
                   <Box display="flex" >
-                    {buttonToggle ? (
-                      <Button onClick={(e) => { addComment(e); setDesc(''); setTitle(''); onClose() }} colorScheme='red' ml="2">Add</Button>
-                    ) : (
-                      <>
-                        <Button value={"Update"} colorScheme='red' ml="2">Update</Button>
-                        <Button value={"Delete"} colorScheme='red' ml="2">Delete</Button>
-                      </>
-                    )}
-                    <Button onClick={(e) => { cancelComment(e); onClose() }} colorScheme='red' ml="2">Cancel</Button>
+                    <Button onClick={(e) => { addComment(e); setDesc(''); setTitle(''); onClose() }} colorScheme='red' ml="2">Add</Button>
+                    <Button onClick={(e) => { cancelComment(e); onClose() }} colorScheme='gray' ml="2">Cancel</Button>
                   </Box>
                 </Box>
               </form>

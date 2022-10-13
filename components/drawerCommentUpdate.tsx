@@ -12,11 +12,11 @@ type Props = {
   commentsLength: number,
   guid: string,
   setDisplayComemnt: Dispatch<SetStateAction<Comments | null>>,
-  isOpen: boolean,
-  onClose: () => void
+  isOpenUpdate: boolean,
+  onCloseUpdate: () => void
 }
 
-export default function ({ comment, commentsLength, guid, setDisplayComemnt, isOpen, onClose }: Props) {
+export default function ({ comment, commentsLength, guid, setDisplayComemnt, isOpenUpdate, onCloseUpdate }: Props) {
   const toast = useToast();
 
   const currentUser = useCurrentUser();
@@ -27,8 +27,7 @@ export default function ({ comment, commentsLength, guid, setDisplayComemnt, isO
 
   const cancelComment = (e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.preventDefault();
-    // useTransmission('', 'cancelPost', guid);
-    onClose()
+    onCloseUpdate()
     setDesc(`${comment.description}`);
     setTitle(`${comment.title}`);
     toast({
@@ -50,7 +49,7 @@ export default function ({ comment, commentsLength, guid, setDisplayComemnt, isO
         try {
           await axios
             .patch(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/comments/${comment.id}/${currentUser.id}`, newComment);
-          onClose()
+          onCloseUpdate()
           setDesc(`${newComment.description}`);
           setTitle(`${newComment.title}`);
           setDisplayComemnt(newComment);
@@ -71,7 +70,7 @@ export default function ({ comment, commentsLength, guid, setDisplayComemnt, isO
 
   return (
     <>
-      <Drawer onClose={onClose} isOpen={isOpen} size='lg' closeOnOverlayClick={false}>
+      <Drawer onClose={onCloseUpdate} isOpen={isOpenUpdate} size='lg' closeOnOverlayClick={false}>
         <DrawerOverlay />
         <DrawerContent >
           <DrawerCloseButton onClick={e => cancelComment(e)} />
