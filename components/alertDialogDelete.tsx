@@ -10,14 +10,13 @@ type Props = {
   isOpenAlert: boolean,
   onCloseAlert: () => void,
   comment: Comments,
-  commentsLength: number,
   guid: string,
-  setDisplayComemnt: Dispatch<SetStateAction<Comments | null>>,
+  setComments: Dispatch<SetStateAction<Comments[] | []>>,
+  index: number
 }
 
 
-export default function ({ isOpenAlert, onCloseAlert, comment, commentsLength, guid, setDisplayComemnt }: Props) {
-
+export default function ({ index, isOpenAlert, onCloseAlert, comment, guid, setComments }: Props) {
   const cancelRef = useRef<HTMLButtonElement>(null);
   const toast = useToast();
   const currentUser = useCurrentUser();
@@ -27,13 +26,18 @@ export default function ({ isOpenAlert, onCloseAlert, comment, commentsLength, g
     const deleteComment = async () => {
       if (currentUser) {
         try {
+          const roomId = comment.commentRoomId;
           await axios
             .delete(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/comments/${comment.id}/${currentUser.id}`);
-          if (commentsLength === 1) {
-            await axios.delete(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/comment-rooms/${comment.commentRoomId}`);
+          const commentsInRoom = await axios.get(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/comments/comments/${roomId}`).then(res => res.data);
+          if (commentsInRoom.length === 0) {
+            await axios.delete(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/comment-rooms/${roomId}`);
             useTransmission('', 'deleteComment', guid);
+          } else if (index === 0) {
+            const firstCommentInRoom = commentsInRoom[0];
+            useTransmission(firstCommentInRoom, 'updateComment', guid);
           }
-          setDisplayComemnt(null);
+          setComments(commentsInRoom)
           toast({
             title: `コメントを削除しました`,
             status: 'success',

@@ -1,23 +1,24 @@
-import { Box, Flex, Image, Text, Tooltip, Button, useDisclosure, AlertDialogOverlay, AlertDialogHeader, AlertDialogContent, AlertDialogBody, AlertDialogFooter, AlertDialog, useToast } from '@chakra-ui/react';
+import { Box, Flex, Image, Text, Tooltip, Button, useDisclosure } from '@chakra-ui/react';
 import { FaRegEdit } from 'react-icons/fa';
 import { RiDeleteBinLine } from 'react-icons/ri';
 import axios from 'axios';
 
-import { useEffect, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Comments } from '../types/Comments';
 import { User } from '../types/Users';
 import { useCurrentUser } from '../context/CurrentUserContext';
 import DrawerCommentUpdate from './drawerCommentUpdate';
-import useTransmission from '../hools/useTransmission';
 import AlertDialogDelete from './alertDialogDelete';
 
 type Props = {
   comment: Comments,
   commentsLength: number,
   guid: string,
+  setComments: Dispatch<SetStateAction<Comments[] | []>>,
+  index: number
 };
 
-export default function Post({ comment, commentsLength, guid }: Props) {
+export default function Post({ comment, commentsLength, guid, setComments, index }: Props) {
 
   const {
     isOpen: isOpenUpdate,
@@ -43,8 +44,6 @@ export default function Post({ comment, commentsLength, guid }: Props) {
       getUser();
     }
   }, []);
-
-
 
   return (
     <>
@@ -90,7 +89,7 @@ export default function Post({ comment, commentsLength, guid }: Props) {
               </Box>
             </Box>
             <DrawerCommentUpdate comment={displayComment} commentsLength={commentsLength} guid={guid} setDisplayComemnt={setDisplayComemnt} isOpenUpdate={isOpenUpdate} onCloseUpdate={onCloseUpdate} />
-            <AlertDialogDelete comment={displayComment} commentsLength={commentsLength} guid={guid} setDisplayComemnt={setDisplayComemnt} isOpenAlert={isOpenAlert} onCloseAlert={onCloseAlert} />
+            <AlertDialogDelete index={index} comment={displayComment} guid={guid} isOpenAlert={isOpenAlert} onCloseAlert={onCloseAlert} setComments={setComments} />
           </>
         )
       }

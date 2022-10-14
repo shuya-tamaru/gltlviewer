@@ -65,7 +65,6 @@ export default function ({ building }: Props) {
           getComments();
           break;
         }
-
       }
     }
   }, [currentIframeState])
@@ -84,8 +83,8 @@ export default function ({ building }: Props) {
           {comments.length > 0 &&
             <Box w='100%' h='70%' px='3' pt='3' display={displayState} flexDirection='column' alignItems='center'>
               <Box w='100%' h='calc(100% - 40px)' mb='2' overflowY='scroll' border='2px solid' borderColor='#999' >
-                {comments.map((comment) => (
-                  <SideBarComment key={comment.id} comment={comment} commentsLength={comments.length} guid={guid} />
+                {comments.map((comment, index) => (
+                  <SideBarComment key={comment.id} index={index} comment={comment} commentsLength={comments.length} guid={guid} setComments={setComments} />
                 ))}
               </Box>
               <Button onClick={onOpen} colorScheme='gray' w='90%' h='40px' marginBlockEnd='10px'>
