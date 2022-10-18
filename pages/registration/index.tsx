@@ -1,45 +1,24 @@
-import { Flex, Text, Box, Button, Input, Image } from '@chakra-ui/react';
+import { Flex, Text, Box, Button, Input, Image, useToast } from '@chakra-ui/react';
 import axios from 'axios';
-import { BiImageAdd } from 'react-icons/bi';
-import { useDropzone } from 'react-dropzone';
 
 import { getSession, signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useCallback, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 import Header from '../../components/header';
 import { useCurrentUserUpdate } from '../../context/CurrentUserContext';
 import { User } from '../../types/Users';
+import { RegisterUser } from '../../types/RegisterUser';
+import UserIconForm from '../../components/userIconForm';
+import { formStyle } from '../../styles/formStyle';
 
-const styles = {
-  w: '90%',
-  h: '45px',
-  py: '5',
-  ml: '5',
-  mt: '5',
-  color: '#333333',
-  borderColor: '#999999',
-  borderWidth: '2px',
-};
-
-type NewUserData = {
-  lastName: string,
-  firstName: string,
-  email: string,
-  password: string,
-  companyId: string,
-  userState: string,
-  imagePath?: string,
-}
 
 export default function Registration() {
   const router = useRouter();
+  const toast = useToast();
   const setCurrentUser = useCurrentUserUpdate();
   const [loading, setLoading] = useState<boolean>(false);
-  const [isError, setIsError] = useState<string>('');
-  const [paths, setPaths] = useState([]);
-  const [file, setFiles] = useState<any>(null);
 
   const lastName = useRef<HTMLInputElement | null>(null);
   const firstName = useRef<HTMLInputElement | null>(null);
@@ -48,6 +27,7 @@ export default function Registration() {
   const passwordConfirmation = useRef<HTMLInputElement | null>(null);
   const companyId = useRef<HTMLInputElement | null>(null);
   const userState = useRef<HTMLInputElement | null>(null);
+  const [file, setFiles] = useState<File | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -58,7 +38,7 @@ export default function Registration() {
       try {
         setLoading(true);
 
-        const newUser: NewUserData = {
+        const newUser: RegisterUser = {
           lastName: lastName.current!.value,
           firstName: firstName.current!.value,
           email: email.current!.value,
@@ -89,28 +69,28 @@ export default function Registration() {
           const session = await getSession();
           const user = session ? (session.userData as User) : null;
           setLoading(true);
-          setIsError('');
           setCurrentUser(user);
           const companyId: string = user!.companyId;
+          toast({
+            position: 'top',
+            title: 'ユーザー登録に成功しました',
+            status: 'success',
+            isClosable: true,
+          })
           router.push(`/topPage/${companyId}`);
         });
       } catch (error: any) {
         const errorMessage: string = error.response.data.message;
         setLoading(false);
-        setIsError(errorMessage);
+        toast({
+          position: 'top',
+          title: `${errorMessage}`,
+          status: 'warning',
+          isClosable: true,
+        })
       }
     }
   };
-
-  const onDrop = useCallback((acceptedFiles: any) => {
-    acceptedFiles.map((file: any) => {
-      setFiles(file)
-    })
-    setPaths(acceptedFiles.map((file: any) => {
-      return URL.createObjectURL(file)
-    }))
-  }, [setPaths]);
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return (
     <>
@@ -121,60 +101,21 @@ export default function Registration() {
             <Text fontSize='30px' fontWeight='800' color='#666666' textAlign='center'>
               新規ユーザー登録
             </Text>
-            <Input type='text' ref={lastName} placeholder={'姓'} required sx={styles} />
-            <Input type='text' ref={firstName} placeholder={'名'} required sx={styles} />
-            <Input type='email' ref={email} placeholder={'メールアドレス'} required sx={styles} />
-            <Input type='password' ref={password} placeholder={'パスワード'} required sx={styles} />
-            <Input type='password' ref={passwordConfirmation} placeholder={'パスワード確認'} required sx={styles} />
+            <Input type='text' ref={lastName} placeholder={'姓'} required sx={formStyle} />
+            <Input type='text' ref={firstName} placeholder={'名'} required sx={formStyle} />
+            <Input type='email' ref={email} placeholder={'メールアドレス'} required sx={formStyle} />
+            <Input type='password' ref={password} placeholder={'パスワード'} required sx={formStyle} />
+            <Input type='password' ref={passwordConfirmation} placeholder={'パスワード確認'} required sx={formStyle} />
             <Input
               type='text'
               ref={companyId}
               placeholder={'会社ID'}
               defaultValue={'224bb556-d42c-4908-b531-bf2c86983376'}
               required
-              sx={styles}
+              sx={formStyle}
             />
-            <Input type='text' ref={userState} placeholder={'ユーザー権限'} required defaultValue={'OnlyWatch'} sx={styles} />
-            {isError && (
-              <Text fontWeight='800' color='orange.300' textAlign='center' mt='5'>
-                {isError}
-              </Text>
-            )}
-
-            <Box
-              {...getRootProps()}
-              w='250px'
-              h='150px'
-              border='2px dotted gray'
-              alignItems='center'
-              textAlign='center'
-              margin=' 15px auto'
-              color='#666'
-              bg='#f5f5f5'
-              borderRadius='5px'
-            >
-              <input {...getInputProps()}
-                type='file'
-                onChange={(e) => {
-                  (e.target.files && e.target.files.length > 0) && setFiles(e.target.files[0])
-                }}
-                style={{ width: "100px", visibility: 'hidden' }}
-              />
-              <Flex justify="space-between">
-                {isDragActive ? (
-                  <Text display='table-cell' verticalAlign='middle' alignItems='center'>
-                    Drop the files here ...
-                  </Text>
-                ) : (
-                  <BiImageAdd
-                    style={{ cursor: 'pointer', display: 'table-cell', verticalAlign: 'middle', margin: 'auto' }}
-                    size={100}
-                  />
-                )}
-                {paths.length > 0 && <Image src={`${paths[0]}`} display='table-cell' verticalAlign='middle' margin='auto' objectFit='cover' boxSize='100px' borderRadius='50%' />}
-              </Flex>
-            </Box>
-
+            <Input type='text' ref={userState} placeholder={'ユーザー権限'} required defaultValue={'OnlyWatch'} sx={formStyle} />
+            <UserIconForm setFiles={setFiles} action={"signin"} />
             <Button
               isLoading={loading}
               type='submit'

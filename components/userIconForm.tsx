@@ -1,0 +1,70 @@
+import { Box, Flex, Image, Text } from "@chakra-ui/react";
+import { BiImageAdd } from "react-icons/bi";
+
+import { Dispatch, SetStateAction, useCallback, useState } from "react";
+import { useDropzone } from "react-dropzone";
+import { useCurrentUser } from "../context/CurrentUserContext";
+
+type Props = {
+  setFiles: Dispatch<SetStateAction<File | null>>,
+  action: string
+}
+
+export default function ({ setFiles, action }: Props) {
+
+  const [paths, setPaths] = useState<string[] | []>([]);
+  const currentUser = useCurrentUser();
+
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    acceptedFiles.map((file: File) => {
+      setFiles(file)
+    })
+    setPaths(acceptedFiles.map((file) => {
+      return URL.createObjectURL(file) as string
+    }))
+  }, [setPaths]);
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+
+  return (
+    <>
+      <Box
+        {...getRootProps()}
+        w='250px'
+        h='150px'
+        border='2px dotted gray'
+        alignItems='center'
+        textAlign='center'
+        margin=' 15px auto'
+        color='#666'
+        bg='#f5f5f5'
+        borderRadius='5px'
+      >
+        <input {...getInputProps()}
+          type='file'
+          onChange={(e) => {
+            (e.target.files && e.target.files.length > 0) && setFiles(e.target.files[0])
+          }}
+          style={{ width: "100px", visibility: 'hidden' }}
+        />
+        <Flex justify="space-between">
+          {isDragActive ? (
+            <Text display='table-cell' verticalAlign='middle' alignItems='center'>
+              Drop the files here ...
+            </Text>
+          ) : (
+            <BiImageAdd
+              style={{ cursor: 'pointer', display: 'table-cell', verticalAlign: 'middle', margin: 'auto' }}
+              size={100}
+            />
+          )}
+          {paths.length > 0
+            ? <Image src={`${paths[0]}`} display='table-cell' verticalAlign='middle' margin='auto' objectFit='cover' boxSize='100px' borderRadius='50%' />
+            : (currentUser?.imagePath && action === "update")
+              ? <Image src={`${currentUser?.imagePath}`} display='table-cell' verticalAlign='middle' margin='auto' objectFit='cover' boxSize='100px' borderRadius='50%' />
+              : <></>
+          }
+        </Flex>
+      </Box>
+    </>
+  );
+}

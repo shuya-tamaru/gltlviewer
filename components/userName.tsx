@@ -57,7 +57,7 @@ export default function UserName() {
   return (
     <>
       <Box display='flex' justifyContent='center' alignItems='center' position='relative'>
-        <Image src={currentUser?.imagePath ? currentUser?.imagePath : "/image/pika.jpeg"} objectFit='cover' boxSize='60px' borderRadius='50%' mx='2' />
+        <Image src={currentUser?.imagePath ? currentUser?.imagePath : "/images/pika.jpeg"} objectFit='cover' boxSize='60px' borderRadius='50%' mx='2' />
         <Text fontSize='xl' fontWeight='550' textAlign='center'>
           {!currentUser ? '' : currentUser.lastName + currentUser.firstName}
         </Text>
