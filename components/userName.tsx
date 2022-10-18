@@ -1,8 +1,6 @@
 import { Box, Image, Text, Button } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import { MdLogout } from 'react-icons/md';
-import { FaUserEdit } from 'react-icons/fa';
-import { HiOfficeBuilding } from 'react-icons/hi';
 import { BiUserPlus } from 'react-icons/bi';
 import { CgUserList } from 'react-icons/cg';
 import axios from 'axios';
@@ -59,7 +57,7 @@ export default function UserName() {
   return (
     <>
       <Box display='flex' justifyContent='center' alignItems='center' position='relative'>
-        <Image src='/images/pika.jpeg' objectFit='cover' boxSize='60px' borderRadius='50%' mx='2' />
+        <Image src={currentUser?.imagePath ? currentUser?.imagePath : "/image/pika.jpeg"} objectFit='cover' boxSize='60px' borderRadius='50%' mx='2' />
         <Text fontSize='xl' fontWeight='550' textAlign='center'>
           {!currentUser ? '' : currentUser.lastName + currentUser.firstName}
         </Text>
@@ -71,7 +69,7 @@ export default function UserName() {
           position='absolute'
           right='-10px'
           top='70px'
-          zIndex='100000000'
+          zIndex='10'
           shadow='md'
         >
           <ModalUserUpdate />

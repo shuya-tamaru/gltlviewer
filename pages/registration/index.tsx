@@ -1,10 +1,12 @@
-import { Flex, Text, Box, Button, Input } from '@chakra-ui/react';
+import { Flex, Text, Box, Button, Input, Image } from '@chakra-ui/react';
 import axios from 'axios';
+import { BiImageAdd } from 'react-icons/bi';
+import { useDropzone } from 'react-dropzone';
 
 import { getSession, signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 import Header from '../../components/header';
 import { useCurrentUserUpdate } from '../../context/CurrentUserContext';
@@ -12,7 +14,7 @@ import { User } from '../../types/Users';
 
 const styles = {
   w: '90%',
-  h: '50',
+  h: '45px',
   py: '5',
   ml: '5',
   mt: '5',
@@ -21,11 +23,23 @@ const styles = {
   borderWidth: '2px',
 };
 
+type NewUserData = {
+  lastName: string,
+  firstName: string,
+  email: string,
+  password: string,
+  companyId: string,
+  userState: string,
+  imagePath?: string,
+}
+
 export default function Registration() {
   const router = useRouter();
   const setCurrentUser = useCurrentUserUpdate();
   const [loading, setLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<string>('');
+  const [paths, setPaths] = useState([]);
+  const [file, setFiles] = useState<any>(null);
 
   const lastName = useRef<HTMLInputElement | null>(null);
   const firstName = useRef<HTMLInputElement | null>(null);
@@ -37,11 +51,14 @@ export default function Registration() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (password.current!.value !== passwordConfirmation.current!.value) {
       passwordConfirmation.current!.setCustomValidity('確認用パスワードが一致しません');
     } else {
       try {
-        const newUser = {
+        setLoading(true);
+
+        const newUser: NewUserData = {
           lastName: lastName.current!.value,
           firstName: firstName.current!.value,
           email: email.current!.value,
@@ -49,9 +66,21 @@ export default function Registration() {
           companyId: companyId.current!.value,
           userState: userState.current!.value,
         };
-        setLoading(true);
+
+        //userIconUpload
+        if (file) {
+          const imageData = new FormData();
+          const fileName = file.name;
+          imageData.append("name", fileName);
+          imageData.append("file", file);
+          const imagePath: string = await axios.post(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/uploads/upload`, imageData).then(res => res.data);
+          newUser.imagePath = imagePath;
+        }
+
+        //signUp
         await axios.post(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/users/auth/signup`, newUser);
 
+        //signIn
         await signIn('credentials', {
           email: newUser.email,
           password: newUser.password,
@@ -73,11 +102,21 @@ export default function Registration() {
     }
   };
 
+  const onDrop = useCallback((acceptedFiles: any) => {
+    acceptedFiles.map((file: any) => {
+      setFiles(file)
+    })
+    setPaths(acceptedFiles.map((file: any) => {
+      return URL.createObjectURL(file)
+    }))
+  }, [setPaths]);
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+
   return (
     <>
       <Header />
       <Flex w='100vw' h='calc(100vh - 80px)' display='flex' justify='center' alignItems='center' margin='auto'>
-        <Box w='30%' bg='#ffffff' p='10px 10px 20px 10px' boxShadow='0px 0px 15px -5px #777777' borderRadius='5px'>
+        <Box w='30%' h="100%" bg='#ffffff' p='10px 10px 20px 10px' boxShadow='0px 0px 15px -5px #777777' borderRadius='5px'>
           <form onSubmit={(e) => handleSubmit(e)}>
             <Text fontSize='30px' fontWeight='800' color='#666666' textAlign='center'>
               新規ユーザー登録
@@ -101,6 +140,41 @@ export default function Registration() {
                 {isError}
               </Text>
             )}
+
+            <Box
+              {...getRootProps()}
+              w='250px'
+              h='150px'
+              border='2px dotted gray'
+              alignItems='center'
+              textAlign='center'
+              margin=' 15px auto'
+              color='#666'
+              bg='#f5f5f5'
+              borderRadius='5px'
+            >
+              <input {...getInputProps()}
+                type='file'
+                onChange={(e) => {
+                  (e.target.files && e.target.files.length > 0) && setFiles(e.target.files[0])
+                }}
+                style={{ width: "100px", visibility: 'hidden' }}
+              />
+              <Flex justify="space-between">
+                {isDragActive ? (
+                  <Text display='table-cell' verticalAlign='middle' alignItems='center'>
+                    Drop the files here ...
+                  </Text>
+                ) : (
+                  <BiImageAdd
+                    style={{ cursor: 'pointer', display: 'table-cell', verticalAlign: 'middle', margin: 'auto' }}
+                    size={100}
+                  />
+                )}
+                {paths.length > 0 && <Image src={`${paths[0]}`} display='table-cell' verticalAlign='middle' margin='auto' objectFit='cover' boxSize='100px' borderRadius='50%' />}
+              </Flex>
+            </Box>
+
             <Button
               isLoading={loading}
               type='submit'

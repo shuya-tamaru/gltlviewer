@@ -7,4 +7,5 @@ export type User = {
   userState: string;
   createdAt: string;
   updatedAt: string;
+  imagePath?: string;
 };
