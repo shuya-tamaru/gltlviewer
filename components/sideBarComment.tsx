@@ -55,9 +55,9 @@ export default function Post({ comment, commentsLength, guid, setComments, index
                 <Flex>
                   <Image src='/images/pika.jpeg' objectFit='cover' boxSize='60px' borderRadius='50%' />
                   <Box ml='5' color='#333'>
-                    <Text fontSize='lg'>{commentUser ? commentUser.lastName + commentUser.firstName : 'userName'}</Text>
-                    <Text fontSize='xs'>{displayComment ? displayComment.createdAt : '投降日:2022-01-01'}</Text>
-                    <Text fontSize='xs'>{displayComment ? displayComment.updatedAt : '更新日:2022-02-01'}</Text>
+                    <Text fontSize='lg'>{commentUser ? commentUser.lastName + commentUser.firstName : ''}</Text>
+                    <Text fontSize='xs'>{displayComment ? displayComment.createdAt : ''}</Text>
+                    <Text fontSize='xs'>{displayComment ? displayComment.updatedAt : ''}</Text>
                   </Box>
                 </Flex>
                 {
@@ -69,7 +69,7 @@ export default function Post({ comment, commentsLength, guid, setComments, index
                           <FaRegEdit onClick={onOpenUpdate} style={{ color: '#333', cursor: 'pointer' }} size={20} />
                         </Button>
                       </Tooltip>
-                      <Tooltip hasArrow color='#fff' fontWeight='600' label='削除' bg='orange.400' placement='top'>
+                      <Tooltip hasArrow color='#fff' fontWeight='600' label='削除' bg='red.400' placement='top'>
                         <Button p="0" colorScheme='white'>
                           <RiDeleteBinLine onClick={onOpenAlert} style={{ color: '#333', cursor: 'pointer' }} size={20} />
                         </Button>

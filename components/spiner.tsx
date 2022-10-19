@@ -1,5 +1,5 @@
 import { Box } from '@chakra-ui/react';
-import { Dna } from 'react-loader-spinner';
+import { Circles } from 'react-loader-spinner';
 
 type Props = {
   containerWidth?: string;
@@ -18,12 +18,13 @@ export default function ({ containerWidth, containerHeight, iconWidth, iconHeigh
       justifyContent='center'
       bg='#f5f5f5'
     >
-      <Dna
-        width={iconWidth ? iconWidth : '200'}
-        height={iconHeight ? iconHeight : '200'}
-        ariaLabel='dna-loading'
+      <Circles
+        width={iconWidth ? iconWidth : '70'}
+        height={iconHeight ? iconHeight : '70'}
+        color="#6b48ff"
+        ariaLabel="circles-loading"
         wrapperStyle={{}}
-        wrapperClass='dna-wrapper'
+        wrapperClass=""
         visible={true}
       />
     </Box>
