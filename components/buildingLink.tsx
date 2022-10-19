@@ -25,7 +25,7 @@ export default function BuildingLink({ building }: Props) {
         _hover={{ transform: 'scale(1.001)', opacity: 0.7 }}
       >
         <Link href={`/buildings/${building.id}`}>
-          <Image src='/images/building.jpeg' objectFit='cover' boxSize='80px' ml='10px' cursor='pointer' />
+          <Image src={building.imagePath ? building.imagePath : '/images/building.jpeg'} objectFit='cover' boxSize='80px' ml='10px' cursor='pointer' />
         </Link>
         <Box h='100%' w='100%'>
           <Link href={`/buildings/${building.id}`}>

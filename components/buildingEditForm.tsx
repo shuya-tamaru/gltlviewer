@@ -1,11 +1,10 @@
-import { Box, Button, Input, Text } from '@chakra-ui/react';
-import { useDropzone } from 'react-dropzone';
-import { BiImageAdd } from 'react-icons/bi';
+import { Button, Input, useToast } from '@chakra-ui/react';
 import axios from 'axios';
 
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 
 import { Building } from '../types/Buildings';
+import IconUploadForm from './iconUploadForm';
 
 type inputForms = {
   inputForms: string[];
@@ -13,33 +12,59 @@ type inputForms = {
 };
 
 export default function ({ inputForms, data }: inputForms) {
+  const toast = useToast();
   const [buildingName, setBuildingName] = useState<string>(data.name);
   const [loading, setLoading] = useState(false);
+  const [file, setFiles] = useState<File | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const updateBuilding = {
-      ...data,
-      name: buildingName,
-    };
 
     try {
+      setLoading(true);
+
+      const updateBuilding: Building = {
+        ...data,
+        name: buildingName,
+      };
+
+      //buildingIconUpload
+      if (file) {
+        if (data.imagePath) {
+          const currentImagePath: string = data.imagePath.split('/').slice(-1)[0];
+          await axios.delete(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/uploads/delete/${currentImagePath}`)
+        }
+        const imageData = new FormData();
+        const fileName = file.name;
+        imageData.append("name", fileName);
+        imageData.append("file", file);
+        const imagePath: string = await axios.post(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/uploads/upload`, imageData).then(res => res.data);
+        updateBuilding.imagePath = imagePath;
+      }
+
+      //buildingUpdate
       const buildingUpdate = async () => {
         await axios.patch(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/buildings/${data.id}`, updateBuilding);
       };
       buildingUpdate();
-      setLoading(true);
+
+      toast({
+        title: `更新が完了しました`,
+        status: 'success',
+        isClosable: true,
+      })
+      setLoading(false);
       location.reload();
     } catch (error) {
       setLoading(false);
+      toast({
+        title: `更新に失敗しましt`,
+        status: 'warning',
+        isClosable: true,
+      })
       console.log(error);
     }
   };
-
-  const onDrop = useCallback((acceptedFiles: any) => {
-    console.log(acceptedFiles);
-  }, []);
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return (
     <>
@@ -63,31 +88,7 @@ export default function ({ inputForms, data }: inputForms) {
               borderWidth='2px'
             />
           ))}
-        <Box
-          {...getRootProps()}
-          w='200px'
-          h='150px'
-          border='2px dotted gray'
-          display='table'
-          alignItems='center'
-          textAlign='center'
-          margin=' 15px auto'
-          color='#666'
-          bg='#f5f5f5'
-          borderRadius='5px'
-        >
-          <input {...getInputProps()} type='file' style={{ display: 'none' }} />
-          {isDragActive ? (
-            <Text display='table-cell' verticalAlign='middle' alignItems='center'>
-              Drop the files here ...
-            </Text>
-          ) : (
-            <BiImageAdd
-              style={{ cursor: 'pointer', display: 'table-cell', verticalAlign: 'middle', margin: 'auto' }}
-              size={150}
-            />
-          )}
-        </Box>
+        <IconUploadForm setFiles={setFiles} action={"buildingUpdate"} building={data} />
         <Button
           isLoading={loading}
           type='submit'

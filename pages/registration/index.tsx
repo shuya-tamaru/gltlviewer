@@ -10,8 +10,8 @@ import Header from '../../components/header';
 import { useCurrentUserUpdate } from '../../context/CurrentUserContext';
 import { User } from '../../types/Users';
 import { RegisterUser } from '../../types/RegisterUser';
-import UserIconForm from '../../components/userIconForm';
 import { formStyle } from '../../styles/formStyle';
+import IconUploadForm from '../../components/iconUploadForm';
 
 
 export default function Registration() {
@@ -115,7 +115,7 @@ export default function Registration() {
               sx={formStyle}
             />
             <Input type='text' ref={userState} placeholder={'ユーザー権限'} required defaultValue={'OnlyWatch'} sx={formStyle} />
-            <UserIconForm setFiles={setFiles} action={"signin"} />
+            <IconUploadForm setFiles={setFiles} action={"userSignin"} />
             <Button
               isLoading={loading}
               type='submit'

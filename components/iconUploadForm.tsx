@@ -4,13 +4,15 @@ import { BiImageAdd } from "react-icons/bi";
 import { Dispatch, SetStateAction, useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useCurrentUser } from "../context/CurrentUserContext";
+import { Building } from "../types/Buildings";
 
 type Props = {
   setFiles: Dispatch<SetStateAction<File | null>>,
-  action: string
+  action: string,
+  building?: Building,
 }
 
-export default function ({ setFiles, action }: Props) {
+export default function ({ setFiles, action, building }: Props) {
 
   const [paths, setPaths] = useState<string[] | []>([]);
   const currentUser = useCurrentUser();
@@ -57,12 +59,18 @@ export default function ({ setFiles, action }: Props) {
               size={100}
             />
           )}
-          {paths.length > 0
+          {(action === "userSignin" || action === "userUpdate")
+            && paths.length > 0
             ? <Image src={`${paths[0]}`} display='table-cell' verticalAlign='middle' margin='auto' objectFit='cover' boxSize='100px' borderRadius='50%' />
-            : (currentUser?.imagePath && action === "update")
+            : (action === "userUpdate" && currentUser?.imagePath)
               ? <Image src={`${currentUser?.imagePath}`} display='table-cell' verticalAlign='middle' margin='auto' objectFit='cover' boxSize='100px' borderRadius='50%' />
-              : <></>
-          }
+              : <></>}
+          {(action === "buildingRegister" || action === "buildingUpdate")
+            && paths.length > 0
+            ? <Image src={`${paths[0]}`} display='table-cell' verticalAlign='middle' margin='auto' objectFit='cover' boxSize='100px' />
+            : (action === "buildingUpdate" && building?.imagePath)
+              ? <Image src={`${building?.imagePath}`} display='table-cell' verticalAlign='middle' margin='auto' objectFit='cover' boxSize='100px' />
+              : <></>}
         </Flex>
       </Box>
     </>

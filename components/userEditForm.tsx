@@ -1,15 +1,13 @@
-import { Box, Button, Flex, Image, Input, Text, useToast } from '@chakra-ui/react';
-import { useDropzone } from 'react-dropzone';
-import { BiImageAdd } from 'react-icons/bi';
+import { Button, Input, useToast } from '@chakra-ui/react';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { signOut, useSession } from 'next-auth/react';
 
 import { useCurrentUser, useCurrentUserUpdate } from '../context/CurrentUserContext';
 import axios from 'axios';
 import { formStyle } from '../styles/formStyle';
-import UserIconForm from './userIconForm';
+import IconUploadForm from './iconUploadForm';
 
 
 export default function () {
@@ -93,7 +91,7 @@ export default function () {
           sx={formStyle}
         />
         <Input value={email} onChange={(e) => setEmail(e.target.value)} type='email' placeholder='email' required sx={formStyle} />
-        <UserIconForm setFiles={setFiles} action={"update"} />
+        <IconUploadForm setFiles={setFiles} action={"userUpdate"} />
         <Button
           isLoading={loading}
           type='submit'
