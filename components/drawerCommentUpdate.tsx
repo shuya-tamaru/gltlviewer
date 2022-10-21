@@ -1,9 +1,10 @@
-import { Box, Button, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, useDisclosure, DrawerBody, DrawerHeader, Input, Textarea, useToast } from '@chakra-ui/react';
+import { useToast } from '@chakra-ui/react';
 import axios from 'axios';
-import { Dispatch, SetStateAction, useState } from 'react';
-import { BiImageAdd } from 'react-icons/bi';
-import { GrDocumentPdf } from 'react-icons/gr';
+
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+
 import { useCurrentUser } from '../context/CurrentUserContext';
+import useImageUploader from '../hools/useImageUploader';
 import useTransmission from '../hools/useTransmission';
 import { Comments } from '../types/Comments';
 import DrawerForm from './drawerForm';
@@ -24,13 +25,27 @@ export default function ({ comment, commentsLength, guid, setDisplayComemnt, isO
 
   const [desc, setDesc] = useState<string>(`${comment.title}`);
   const [title, setTitle] = useState<string>(`${comment.description}`);
+  const [images, setImages] = useState<File[] | []>([]);
+  const [initialExistingPaths, setInitialExistingPaths] = useState<string[]>([]);
+  const [existingPaths, setExistingPaths] = useState<string[]>([]);
 
+  useEffect(() => {
+    const getExistingImagePaths = async () => {
+      const imagePaths: string[] | [] = await axios.get(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/images/${comment.id}`).then(res => res.data);
+      setInitialExistingPaths(imagePaths);
+      setExistingPaths(imagePaths);
+      setImages([]);
+    }
+    getExistingImagePaths();
+  }, [isOpenUpdate])
 
   const cancelComment = (e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.preventDefault();
     onCloseUpdate()
     setDesc(`${comment.description}`);
     setTitle(`${comment.title}`);
+    setExistingPaths(initialExistingPaths);
+    setImages([]);
     toast({
       title: `コメント編集をキャンセルしました`,
       status: 'warning',
@@ -40,16 +55,35 @@ export default function ({ comment, commentsLength, guid, setDisplayComemnt, isO
 
   const updateComment = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const newComment: Comments = {
-      ...comment,
-      title: title,
-      description: desc
-    }
     const upateComment = async () => {
       if (currentUser) {
         try {
+          const newComment: Comments = {
+            ...comment,
+            title: title,
+            description: desc
+          }
+
           await axios
             .patch(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/comments/${comment.id}/${currentUser.id}`, newComment);
+
+          const deletePaths
+            = existingPaths.length > 0
+              ? initialExistingPaths.filter(path => existingPaths.indexOf(path) === -1)
+              : initialExistingPaths;
+          if (deletePaths && deletePaths.length > 0) {
+            deletePaths.map(async (path) => {
+              await axios.delete(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/uploads/delete`, {
+                data: {
+                  path: path
+                }
+              });
+            })
+          }
+
+          images.length > 0 && useImageUploader(images, newComment.id);
+          commentsLength === 1 && useTransmission(newComment, "updateComment", guid);
+
           onCloseUpdate()
           setDesc(`${newComment.description}`);
           setTitle(`${newComment.title}`);
@@ -65,7 +99,6 @@ export default function ({ comment, commentsLength, guid, setDisplayComemnt, isO
       };
     }
     upateComment()
-    commentsLength === 1 && useTransmission(newComment, "updateComment", guid)
   };
 
   const props = {
@@ -78,7 +111,11 @@ export default function ({ comment, commentsLength, guid, setDisplayComemnt, isO
     setTitle: setTitle,
     desc: desc,
     setDesc: setDesc,
-    excuteButtonText: 'Update'
+    excuteButtonText: 'Update',
+    images,
+    setImages,
+    existingPaths,
+    setExistingPaths
   }
 
 

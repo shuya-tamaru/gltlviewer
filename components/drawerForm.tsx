@@ -2,7 +2,8 @@ import { Box, Button, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, D
 import { BiImageAdd } from 'react-icons/bi';
 import { GrDocumentPdf } from 'react-icons/gr';
 
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction } from 'react';
+import CommentImageForm from './commentImageForm';
 
 type Props = {
   props:
@@ -16,7 +17,11 @@ type Props = {
     setTitle: Dispatch<SetStateAction<string>>,
     desc: string,
     setDesc: Dispatch<SetStateAction<string>>,
-    excuteButtonText: string
+    excuteButtonText: string,
+    images: File[],
+    setImages: Dispatch<SetStateAction<File[]>>,
+    existingPaths?: string[],
+    setExistingPaths?: Dispatch<SetStateAction<string[]>>,
   }
 }
 
@@ -32,7 +37,11 @@ export default function ({ props }: Props) {
     setTitle,
     desc,
     setDesc,
-    excuteButtonText
+    excuteButtonText,
+    images,
+    setImages,
+    existingPaths,
+    setExistingPaths
   } = props;
 
   return (
@@ -44,10 +53,10 @@ export default function ({ props }: Props) {
           <DrawerHeader textAlign="center">{headerText}</DrawerHeader>
           <DrawerBody>
             <Box w="100%" h="100%" display="flex" alignItems="center" flexDirection="column" p="2.5">
-              <form style={{ width: "100%", height: "100%" }} >
-                <Input required value={title} onChange={(e) => setTitle(e.target.value)} id="input" w="100%" h="5%" placeholder='タイトルを入力' borderRadius="2px" borderColor="#999" border="2px" />
-                <Textarea required value={desc} onChange={(e) => setDesc(e.target.value)} id="textArea" w="100%" h="60%" mt="5px" placeholder='コメントを入力' borderRadius="2px" borderColor="#999" border="2px" />
-                <Box w="100%" h="20%" mt="2" display="flex" justifyContent="space-between">
+              <form style={{ width: "100%" }} >
+                <Input required value={title} onChange={(e) => setTitle(e.target.value)} id="input" w="100%" h="40px" placeholder='タイトルを入力' borderRadius="2px" borderColor="#999" border="2px" />
+                <Textarea required value={desc} onChange={(e) => setDesc(e.target.value)} id="textArea" w="100%" h="300px" mt="5px" placeholder='コメントを入力' borderRadius="2px" borderColor="#999" border="2px" />
+                <Box w="100%" mt="2" display="flex" justifyContent="space-between">
                   <Box display="flex">
                     <BiImageAdd style={{ marginLeft: "5px", cursor: "pointer" }} size={30} />
                     <GrDocumentPdf style={{ marginLeft: "5px", cursor: "pointer" }} size={30} />
@@ -58,6 +67,7 @@ export default function ({ props }: Props) {
                   </Box>
                 </Box>
               </form>
+              <CommentImageForm images={images} setImages={setImages} existingPath={existingPaths} setExistingPaths={setExistingPaths} />
             </Box>
           </DrawerBody>
         </DrawerContent>

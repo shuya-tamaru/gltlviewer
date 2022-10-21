@@ -1,6 +1,4 @@
-import { Box, Textarea, Button, Input, useToast, useDisclosure, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody } from "@chakra-ui/react";
-import { BiImageAdd } from "react-icons/bi";
-import { GrDocumentPdf } from "react-icons/gr";
+import { useToast, useDisclosure } from "@chakra-ui/react";
 
 import React, { useEffect, useState } from "react";
 import { Building } from "../types/Buildings";
@@ -9,6 +7,8 @@ import axios from "axios";
 import { useCurrentUser } from "../context/CurrentUserContext";
 import useTransmission from "../hools/useTransmission";
 import DrawerForm from "./drawerForm";
+import useImageUploader from "../hools/useImageUploader";
+
 
 type Props = {
   building: Building;
@@ -23,13 +23,15 @@ export default function ({ building }: Props) {
 
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const currentIframeState = useCurrentIframeState();
+  const currentUser = useCurrentUser();
 
   const [desc, setDesc] = useState<string>('');
   const [title, setTitle] = useState<string>('');
   const [guid, setGuid] = useState<string>('');
   const [coordinate, setCoordinate] = useState<string>('');
-  const currentIframeState = useCurrentIframeState();
-  const currentUser = useCurrentUser();
+  const [images, setImages] = useState<File[] | []>([]);
+
 
   useEffect(() => {
     if (currentIframeState) {
@@ -70,9 +72,11 @@ export default function ({ building }: Props) {
             }
           });
 
+      images.length > 0 && useImageUploader(images, postedComment.id);
       useTransmission(postedComment, 'addPost', guid);
       setDesc('');
       setTitle('');
+      setImages([]);
       onClose()
       toast({
         title: `コメントを投稿しました`,
@@ -83,7 +87,8 @@ export default function ({ building }: Props) {
       console.log(error)
       setDesc('');
       setTitle('');
-      onClose()
+      setImages([]);
+      onClose();
       toast({
         title: 'コメント投稿に失敗しました',
         status: 'error',
@@ -97,6 +102,7 @@ export default function ({ building }: Props) {
     useTransmission('', 'cancelPost', guid);
     setDesc('');
     setTitle('');
+    setImages([]);
     onClose()
     toast({
       title: `コメント投稿をキャンセルしました`,
@@ -115,7 +121,9 @@ export default function ({ building }: Props) {
     setTitle: setTitle,
     desc: desc,
     setDesc: setDesc,
-    excuteButtonText: 'Add'
+    excuteButtonText: 'Add',
+    images,
+    setImages,
   }
 
   return (

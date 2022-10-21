@@ -7,6 +7,7 @@ import axios from "axios";
 import { useCurrentUser } from "../context/CurrentUserContext";
 import { Comments } from "../types/Comments";
 import DrawerForm from "./drawerForm";
+import useImageUploader from "../hools/useImageUploader";
 
 
 type Props = {
@@ -20,10 +21,12 @@ type Props = {
 export default function ({ isOpen, onClose, roomId, comments, setComments }: Props) {
 
   const toast = useToast();
+  const currentUser = useCurrentUser();
 
   const [desc, setDesc] = useState<string>('');
   const [title, setTitle] = useState<string>('');
-  const currentUser = useCurrentUser();
+  const [images, setImages] = useState<File[] | []>([]);
+
 
   const addReply = async (e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.preventDefault();
@@ -37,17 +40,29 @@ export default function ({ isOpen, onClose, roomId, comments, setComments }: Pro
         await axios.post(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/comments/${currentUser!.id}`, newComment).then(res => res.data);
       setComments([...comments, postedComment]);
 
+      images.length > 0 && useImageUploader(images, postedComment.id);
+      setDesc('');
+      setTitle('');
+      setImages([]);
+      onClose();
+      toast({
+        title: `返信しました`,
+        status: 'success',
+        isClosable: true,
+      })
     } catch (error) {
       console.log(error);
+      setDesc('');
+      setTitle('');
+      setImages([]);
+      onClose();
+      toast({
+        title: '投稿に失敗しました',
+        status: 'error',
+        isClosable: true,
+      })
     }
-    setDesc('');
-    setTitle('');
-    onClose();
-    toast({
-      title: `返信しました`,
-      status: 'success',
-      isClosable: true,
-    })
+
   }
 
   const cancelReply = (e?: React.MouseEvent<HTMLButtonElement>) => {
@@ -71,7 +86,9 @@ export default function ({ isOpen, onClose, roomId, comments, setComments }: Pro
     setTitle: setTitle,
     desc: desc,
     setDesc: setDesc,
-    excuteButtonText: 'Add'
+    excuteButtonText: 'Add',
+    images,
+    setImages,
   }
 
   return (

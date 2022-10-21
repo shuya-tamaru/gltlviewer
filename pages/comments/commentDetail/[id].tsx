@@ -14,7 +14,7 @@ import SideBarCommentSingle from '../../../components/sideBarCommentSingle';
 import { Building } from '../../../types/Buildings';
 
 type Props = {
-  comments: Comments[] | [];
+  comments: Comments[];
 };
 
 export default function CommentDetail({ comments }: Props) {
