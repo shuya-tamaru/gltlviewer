@@ -7,8 +7,8 @@ import { Dispatch, SetStateAction } from "react";
 
 
 type Props = {
-  images: File[] | [],
-  setImages: Dispatch<SetStateAction<[] | File[]>>,
+  images: File[],
+  setImages: Dispatch<SetStateAction<File[]>>,
   existingPath?: string[],
   setExistingPaths?: Dispatch<SetStateAction<string[]>>,
 }

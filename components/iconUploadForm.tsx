@@ -14,7 +14,7 @@ type Props = {
 
 export default function ({ setFiles, action, building }: Props) {
 
-  const [paths, setPaths] = useState<string[] | []>([]);
+  const [paths, setPaths] = useState<string[]>([]);
   const currentUser = useCurrentUser();
 
   const onDrop = useCallback((acceptedFiles: File[]) => {

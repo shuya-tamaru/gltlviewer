@@ -30,7 +30,7 @@ export default function ({ building }: Props) {
   const [title, setTitle] = useState<string>('');
   const [guid, setGuid] = useState<string>('');
   const [coordinate, setCoordinate] = useState<string>('');
-  const [images, setImages] = useState<File[] | []>([]);
+  const [images, setImages] = useState<File[]>([]);
 
 
   useEffect(() => {

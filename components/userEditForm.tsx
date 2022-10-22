@@ -36,8 +36,9 @@ export default function () {
       //userIconUpload
       if (file && currentUser) {
         if (currentUser.imagePath) {
-          const currentImagePath: string = currentUser.imagePath.split('/').slice(-1)[0];;
-          await axios.delete(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/uploads/delete/${currentImagePath}`)
+          await axios.delete(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/uploads/delete`, {
+            data: { path: currentUser.imagePath }
+          });
         }
         const imageData = new FormData();
         const fileName = file.name;

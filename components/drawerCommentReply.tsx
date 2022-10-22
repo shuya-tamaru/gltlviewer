@@ -1,9 +1,8 @@
-import { Box, Textarea, Button, Input, useToast, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody } from "@chakra-ui/react";
-import { BiImageAdd } from "react-icons/bi";
-import { GrDocumentPdf } from "react-icons/gr";
+import { useToast } from "@chakra-ui/react";
+import axios from "axios";
 
 import React, { Dispatch, SetStateAction, useState } from "react";
-import axios from "axios";
+
 import { useCurrentUser } from "../context/CurrentUserContext";
 import { Comments } from "../types/Comments";
 import DrawerForm from "./drawerForm";
@@ -25,7 +24,7 @@ export default function ({ isOpen, onClose, roomId, comments, setComments }: Pro
 
   const [desc, setDesc] = useState<string>('');
   const [title, setTitle] = useState<string>('');
-  const [images, setImages] = useState<File[] | []>([]);
+  const [images, setImages] = useState<File[]>([]);
 
 
   const addReply = async (e?: React.MouseEvent<HTMLButtonElement>) => {

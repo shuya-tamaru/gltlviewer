@@ -31,8 +31,9 @@ export default function ({ inputForms, data }: inputForms) {
       //buildingIconUpload
       if (file) {
         if (data.imagePath) {
-          const currentImagePath: string = data.imagePath.split('/').slice(-1)[0];
-          await axios.delete(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/uploads/delete/${currentImagePath}`)
+          await axios.delete(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/uploads/delete`, {
+            data: { path: data.imagePath }
+          });
         }
         const imageData = new FormData();
         const fileName = file.name;

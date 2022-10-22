@@ -1,9 +1,6 @@
 import axios from "axios";
 
-type Images = File[] | []
-
-
-const useImageUploader = async (images: Images, commentId: string) => {
+const useImageUploader = async (images: File[], commentId: string) => {
   const imageData = new FormData();
   images.map((image) => {
     const fileName = image.name;

@@ -5,6 +5,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 import { useCurrentUser } from '../context/CurrentUserContext';
 import useImageUploader from '../hools/useImageUploader';
+import useImageDelete from '../hools/useImageDelete';
 import useTransmission from '../hools/useTransmission';
 import { Comments } from '../types/Comments';
 import DrawerForm from './drawerForm';
@@ -25,13 +26,13 @@ export default function ({ comment, commentsLength, guid, setDisplayComemnt, isO
 
   const [desc, setDesc] = useState<string>(`${comment.title}`);
   const [title, setTitle] = useState<string>(`${comment.description}`);
-  const [images, setImages] = useState<File[] | []>([]);
+  const [images, setImages] = useState<File[]>([]);
   const [initialExistingPaths, setInitialExistingPaths] = useState<string[]>([]);
   const [existingPaths, setExistingPaths] = useState<string[]>([]);
 
   useEffect(() => {
     const getExistingImagePaths = async () => {
-      const imagePaths: string[] | [] = await axios.get(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/images/${comment.id}`).then(res => res.data);
+      const imagePaths: string[] = await axios.get(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/images/${comment.id}`).then(res => res.data);
       setInitialExistingPaths(imagePaths);
       setExistingPaths(imagePaths);
       setImages([]);
@@ -71,14 +72,8 @@ export default function ({ comment, commentsLength, guid, setDisplayComemnt, isO
             = existingPaths.length > 0
               ? initialExistingPaths.filter(path => existingPaths.indexOf(path) === -1)
               : initialExistingPaths;
-          if (deletePaths && deletePaths.length > 0) {
-            deletePaths.map(async (path) => {
-              await axios.delete(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/uploads/delete`, {
-                data: {
-                  path: path
-                }
-              });
-            })
+          if (deletePaths.length > 0) {
+            useImageDelete(deletePaths);
           }
 
           images.length > 0 && useImageUploader(images, newComment.id);
