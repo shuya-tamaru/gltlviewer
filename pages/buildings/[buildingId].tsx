@@ -1,4 +1,4 @@
-import { Box, Button, useDisclosure, Flex } from "@chakra-ui/react";
+import { Box, Button, useDisclosure, Flex } from '@chakra-ui/react';
 import axios from 'axios';
 
 import { GetStaticPropsContext } from 'next';
@@ -13,16 +13,15 @@ import DrawerCommentAdd from '../../components/drawerCommentAdd';
 import SideBarComment from '../../components/sideBarComment';
 import { Building } from '../../types/Buildings';
 import { useCurrentIframeState } from '../../context/CurrentIframeStateContext';
-import useTransmission from '../../hools/useTransmission';
+import useTransmission from '../../hooks/useTransmission';
 import { Comments } from '../../types/Comments';
-import DrawerCommentReply from "../../components/drawerCommentReply";
+import DrawerCommentReply from '../../components/drawerCommentReply';
 
 type Props = {
   building: Building;
 };
 
 export default function ({ building }: Props) {
-
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [initialComments, setInitialComments] = useState<Comments[] | []>([]);
@@ -57,17 +56,19 @@ export default function ({ building }: Props) {
           const commentRoomGuid = currentIframeState.guid as string;
           setDisplayState('flex');
           const getComments = async () => {
-            const commentsInRoom = await axios.get(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/comments/comments/${commentRoomId}`).then(res => res.data);
+            const commentsInRoom = await axios
+              .get(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/comments/comments/${commentRoomId}`)
+              .then((res) => res.data);
             setComments(commentsInRoom);
             setRoomId(commentRoomId);
             setGuid(commentRoomGuid);
-          }
+          };
           getComments();
           break;
         }
       }
     }
-  }, [currentIframeState])
+  }, [currentIframeState]);
 
   return (
     <>
@@ -80,24 +81,37 @@ export default function ({ building }: Props) {
           <IframeArea />
         </Box>
         <Box w='20%' h='calc(100vh - 80px)' boxShadow='0px 0px 15px -5px #777777'>
-          {comments.length > 0 &&
+          {comments.length > 0 && (
             <Box w='100%' h='70%' px='3' pt='3' display={displayState} flexDirection='column' alignItems='center'>
-              <Box w='100%' h='calc(100% - 40px)' mb='2' overflowY='scroll' border='2px solid' borderColor='#999' >
+              <Box w='100%' h='calc(100% - 40px)' mb='2' overflowY='scroll' border='2px solid' borderColor='#999'>
                 {comments.map((comment, index) => (
-                  <SideBarComment key={comment.id} index={index} comment={comment} commentsLength={comments.length} guid={guid} setComments={setComments} />
+                  <SideBarComment
+                    key={comment.id}
+                    index={index}
+                    comment={comment}
+                    commentsLength={comments.length}
+                    guid={guid}
+                    setComments={setComments}
+                  />
                 ))}
               </Box>
               <Button onClick={onOpen} colorScheme='gray' w='90%' h='40px' marginBlockEnd='10px'>
                 返信
               </Button>
-              <DrawerCommentReply isOpen={isOpen} onClose={onClose} roomId={roomId} comments={comments} setComments={setComments} />
+              <DrawerCommentReply
+                isOpen={isOpen}
+                onClose={onClose}
+                roomId={roomId}
+                comments={comments}
+                setComments={setComments}
+              />
               <Link href={`/comments/commentDetail/${roomId}`}>
                 <Button colorScheme='red' w='90%' h='40px'>
                   Read More
                 </Button>
               </Link>
             </Box>
-          }
+          )}
           <DrawerCommentAdd building={building} />
         </Box>
       </Flex>

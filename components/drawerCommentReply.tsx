@@ -1,24 +1,22 @@
-import { useToast } from "@chakra-ui/react";
-import axios from "axios";
+import { useToast } from '@chakra-ui/react';
+import axios from 'axios';
 
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from 'react';
 
-import { useCurrentUser } from "../context/CurrentUserContext";
-import { Comments } from "../types/Comments";
-import DrawerForm from "./drawerForm";
-import useImageUploader from "../hools/useImageUploader";
-
+import { useCurrentUser } from '../context/CurrentUserContext';
+import { Comments } from '../types/Comments';
+import DrawerForm from './drawerForm';
+import useImageUploader from '../hooks/useImageUploader';
 
 type Props = {
-  isOpen: boolean,
-  onClose: () => void,
-  comments: Comments[],
-  roomId: string,
-  setComments: Dispatch<SetStateAction<Comments[]>>,
-}
+  isOpen: boolean;
+  onClose: () => void;
+  comments: Comments[];
+  roomId: string;
+  setComments: Dispatch<SetStateAction<Comments[]>>;
+};
 
 export default function ({ isOpen, onClose, roomId, comments, setComments }: Props) {
-
   const toast = useToast();
   const currentUser = useCurrentUser();
 
@@ -26,17 +24,17 @@ export default function ({ isOpen, onClose, roomId, comments, setComments }: Pro
   const [title, setTitle] = useState<string>('');
   const [images, setImages] = useState<File[]>([]);
 
-
   const addReply = async (e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.preventDefault();
     try {
       const newComment = {
         title,
         description: desc,
-        commentRoomId: roomId
-      }
-      const postedComment: Comments =
-        await axios.post(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/comments/${currentUser!.id}`, newComment).then(res => res.data);
+        commentRoomId: roomId,
+      };
+      const postedComment: Comments = await axios
+        .post(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/comments/${currentUser!.id}`, newComment)
+        .then((res) => res.data);
       setComments([...comments, postedComment]);
 
       images.length > 0 && useImageUploader(images, postedComment.id);
@@ -48,7 +46,7 @@ export default function ({ isOpen, onClose, roomId, comments, setComments }: Pro
         title: `返信しました`,
         status: 'success',
         isClosable: true,
-      })
+      });
     } catch (error) {
       console.log(error);
       setDesc('');
@@ -59,10 +57,9 @@ export default function ({ isOpen, onClose, roomId, comments, setComments }: Pro
         title: '投稿に失敗しました',
         status: 'error',
         isClosable: true,
-      })
+      });
     }
-
-  }
+  };
 
   const cancelReply = (e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.preventDefault();
@@ -73,8 +70,8 @@ export default function ({ isOpen, onClose, roomId, comments, setComments }: Pro
       title: `返信をキャンセルしました`,
       status: 'warning',
       isClosable: true,
-    })
-  }
+    });
+  };
   const props = {
     onClose: onClose,
     isOpen: isOpen,
@@ -88,7 +85,7 @@ export default function ({ isOpen, onClose, roomId, comments, setComments }: Pro
     excuteButtonText: 'Add',
     images,
     setImages,
-  }
+  };
 
   return (
     <>

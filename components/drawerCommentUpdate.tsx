@@ -4,20 +4,20 @@ import axios from 'axios';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 import { useCurrentUser } from '../context/CurrentUserContext';
-import useImageUploader from '../hools/useImageUploader';
-import useImageDelete from '../hools/useImageDelete';
-import useTransmission from '../hools/useTransmission';
+import useImageUploader from '../hooks/useImageUploader';
+import useImageDelete from '../hooks/useImageDelete';
+import useTransmission from '../hooks/useTransmission';
 import { Comments } from '../types/Comments';
 import DrawerForm from './drawerForm';
 
 type Props = {
-  comment: Comments,
-  commentsLength: number,
-  guid: string,
-  setDisplayComemnt: Dispatch<SetStateAction<Comments | null>>,
-  isOpenUpdate: boolean,
-  onCloseUpdate: () => void
-}
+  comment: Comments;
+  commentsLength: number;
+  guid: string;
+  setDisplayComemnt: Dispatch<SetStateAction<Comments | null>>;
+  isOpenUpdate: boolean;
+  onCloseUpdate: () => void;
+};
 
 export default function ({ comment, commentsLength, guid, setDisplayComemnt, isOpenUpdate, onCloseUpdate }: Props) {
   const toast = useToast();
@@ -32,17 +32,19 @@ export default function ({ comment, commentsLength, guid, setDisplayComemnt, isO
 
   useEffect(() => {
     const getExistingImagePaths = async () => {
-      const imagePaths: string[] = await axios.get(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/images/${comment.id}`).then(res => res.data);
+      const imagePaths: string[] = await axios
+        .get(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/images/${comment.id}`)
+        .then((res) => res.data);
       setInitialExistingPaths(imagePaths);
       setExistingPaths(imagePaths);
       setImages([]);
-    }
+    };
     getExistingImagePaths();
-  }, [isOpenUpdate])
+  }, [isOpenUpdate]);
 
   const cancelComment = (e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.preventDefault();
-    onCloseUpdate()
+    onCloseUpdate();
     setDesc(`${comment.description}`);
     setTitle(`${comment.title}`);
     setExistingPaths(initialExistingPaths);
@@ -51,7 +53,7 @@ export default function ({ comment, commentsLength, guid, setDisplayComemnt, isO
       title: `コメント編集をキャンセルしました`,
       status: 'warning',
       isClosable: true,
-    })
+    });
   };
 
   const updateComment = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -62,24 +64,23 @@ export default function ({ comment, commentsLength, guid, setDisplayComemnt, isO
           const newComment: Comments = {
             ...comment,
             title: title,
-            description: desc
-          }
+            description: desc,
+          };
 
-          await axios
-            .patch(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/comments/${comment.id}/${currentUser.id}`, newComment);
+          await axios.patch(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/comments/${comment.id}/${currentUser.id}`, newComment);
 
-          const deletePaths
-            = existingPaths.length > 0
-              ? initialExistingPaths.filter(path => existingPaths.indexOf(path) === -1)
+          const deletePaths =
+            existingPaths.length > 0
+              ? initialExistingPaths.filter((path) => existingPaths.indexOf(path) === -1)
               : initialExistingPaths;
           if (deletePaths.length > 0) {
             useImageDelete(deletePaths);
           }
 
           images.length > 0 && useImageUploader(images, newComment.id);
-          commentsLength === 1 && useTransmission(newComment, "updateComment", guid);
+          commentsLength === 1 && useTransmission(newComment, 'updateComment', guid);
 
-          onCloseUpdate()
+          onCloseUpdate();
           setDesc(`${newComment.description}`);
           setTitle(`${newComment.title}`);
           setDisplayComemnt(newComment);
@@ -87,13 +88,13 @@ export default function ({ comment, commentsLength, guid, setDisplayComemnt, isO
             title: `コメントを編集しました`,
             status: 'success',
             isClosable: true,
-          })
+          });
         } catch (error) {
-          console.log(error)
+          console.log(error);
         }
-      };
-    }
-    upateComment()
+      }
+    };
+    upateComment();
   };
 
   const props = {
@@ -110,9 +111,8 @@ export default function ({ comment, commentsLength, guid, setDisplayComemnt, isO
     images,
     setImages,
     existingPaths,
-    setExistingPaths
-  }
-
+    setExistingPaths,
+  };
 
   return (
     <>
