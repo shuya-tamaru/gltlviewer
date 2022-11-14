@@ -3,11 +3,11 @@ import axios from 'axios';
 
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
-import { useCurrentUser } from '../context/CurrentUserContext';
-import useImageUploader from '../hooks/useImageUploader';
-import useImageDelete from '../hooks/useImageDelete';
-import useTransmission from '../hooks/useTransmission';
-import { Comments } from '../types/Comments';
+import { useCurrentUser } from '../../context/CurrentUserContext';
+import useImageUploader from '../../hooks/useImageUploader';
+import useImageDelete from '../../hooks/useImageDelete';
+import useTransmission from '../../hooks/useTransmission';
+import { Comments } from '../../types/Comments';
 import DrawerForm from './drawerForm';
 
 type Props = {

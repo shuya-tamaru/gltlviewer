@@ -3,8 +3,8 @@ import axios from 'axios';
 
 import { useEffect, useState } from 'react';
 
-import { useCurrentUser } from '../context/CurrentUserContext';
-import { Company } from '../types/Companys';
+import { useCurrentUser } from '../../context/CurrentUserContext';
+import { Company } from '../../types/Companys';
 
 const style = {
   w: '90%',

@@ -1,13 +1,13 @@
 import { useToast, useDisclosure } from '@chakra-ui/react';
 
 import React, { useEffect, useState } from 'react';
-import { Building } from '../types/Buildings';
-import { useCurrentIframeState } from '../context/CurrentIframeStateContext';
+import { Building } from '../../types/Buildings';
+import { useCurrentIframeState } from '../../context/CurrentIframeStateContext';
 import axios from 'axios';
-import { useCurrentUser } from '../context/CurrentUserContext';
-import useTransmission from '../hooks/useTransmission';
+import { useCurrentUser } from '../../context/CurrentUserContext';
+import useTransmission from '../../hooks/useTransmission';
 import DrawerForm from './drawerForm';
-import useImageUploader from '../hooks/useImageUploader';
+import useImageUploader from '../../hooks/useImageUploader';
 
 type Props = {
   building: Building;

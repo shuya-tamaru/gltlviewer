@@ -4,14 +4,14 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { GetStaticPropsContext } from 'next';
 
-import BuildingLink from '../../components/buildingLink';
-import TopBar from '../../components/topBar';
-import Pagination from '../../components/pagenation';
+import BuildingLink from '../../components/nextComponents/buildingLink';
+import TopBar from '../../components/nextComponents/topBar';
+import Pagination from '../../components/nextComponents/pagenation';
 import { SelectPage } from '../../types/SelectPage';
 import { Building } from '../../types/Buildings';
 import { Company } from '../../types/Companys';
 import { useSession } from 'next-auth/react';
-import Spiner from '../../components/spiner';
+import Spiner from '../../components/nextComponents/spiner';
 
 type GetBuildings = Building[] | null;
 type Props = {

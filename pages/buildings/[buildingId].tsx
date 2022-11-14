@@ -5,17 +5,17 @@ import { GetStaticPropsContext } from 'next';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-import BuildingTopBar from '../../components/buildingTopBar';
-import Header from '../../components/header';
-import UserName from '../../components/userName';
-import IframeArea from '../../components/iframeArea';
-import DrawerCommentAdd from '../../components/drawerCommentAdd';
-import SideBarComment from '../../components/sideBarComment';
+import BuildingTopBar from '../../components/nextComponents/buildingTopBar';
+import Header from '../../components/nextComponents/header';
+import UserName from '../../components/nextComponents/userName';
+import IframeArea from '../../components/threeComponents/iframeArea';
+import DrawerCommentAdd from '../../components/nextComponents/drawerCommentAdd';
+import SideBarComment from '../../components/nextComponents/sideBarComment';
 import { Building } from '../../types/Buildings';
 import { useCurrentIframeState } from '../../context/CurrentIframeStateContext';
 import useTransmission from '../../hooks/useTransmission';
 import { Comments } from '../../types/Comments';
-import DrawerCommentReply from '../../components/drawerCommentReply';
+import DrawerCommentReply from '../../components/nextComponents/drawerCommentReply';
 
 type Props = {
   building: Building;

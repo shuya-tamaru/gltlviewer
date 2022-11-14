@@ -6,13 +6,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
 
-import Header from '../../components/header';
+import Header from '../../components/nextComponents/header';
 import { useCurrentUserUpdate } from '../../context/CurrentUserContext';
 import { User } from '../../types/Users';
 import { RegisterUser } from '../../types/RegisterUser';
 import { formStyle } from '../../styles/formStyle';
-import IconUploadForm from '../../components/iconUploadForm';
-
+import IconUploadForm from '../../components/nextComponents/iconUploadForm';
 
 export default function Registration() {
   const router = useRouter();
@@ -51,9 +50,11 @@ export default function Registration() {
         if (file) {
           const imageData = new FormData();
           const fileName = file.name;
-          imageData.append("name", fileName);
-          imageData.append("file", file);
-          const imagePath: string = await axios.post(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/uploads/upload`, imageData).then(res => res.data);
+          imageData.append('name', fileName);
+          imageData.append('file', file);
+          const imagePath: string = await axios
+            .post(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/uploads/upload`, imageData)
+            .then((res) => res.data);
           newUser.imagePath = imagePath;
         }
 
@@ -76,7 +77,7 @@ export default function Registration() {
             title: 'ユーザー登録に成功しました',
             status: 'success',
             isClosable: true,
-          })
+          });
           router.push(`/topPage/${companyId}`);
         });
       } catch (error: any) {
@@ -87,7 +88,7 @@ export default function Registration() {
           title: `${errorMessage}`,
           status: 'warning',
           isClosable: true,
-        })
+        });
       }
     }
   };
@@ -96,7 +97,7 @@ export default function Registration() {
     <>
       <Header />
       <Flex w='100vw' h='calc(100vh - 80px)' display='flex' justify='center' alignItems='center' margin='auto'>
-        <Box w='30%' h="100%" bg='#ffffff' p='10px 10px 20px 10px' boxShadow='0px 0px 15px -5px #777777' borderRadius='5px'>
+        <Box w='30%' h='100%' bg='#ffffff' p='10px 10px 20px 10px' boxShadow='0px 0px 15px -5px #777777' borderRadius='5px'>
           <form onSubmit={(e) => handleSubmit(e)}>
             <Text fontSize='30px' fontWeight='800' color='#666666' textAlign='center'>
               新規ユーザー登録
@@ -115,7 +116,7 @@ export default function Registration() {
               sx={formStyle}
             />
             <Input type='text' ref={userState} placeholder={'ユーザー権限'} required defaultValue={'OnlyWatch'} sx={formStyle} />
-            <IconUploadForm setFiles={setFiles} action={"userSignin"} />
+            <IconUploadForm setFiles={setFiles} action={'userSignin'} />
             <Button
               isLoading={loading}
               type='submit'

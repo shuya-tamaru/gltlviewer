@@ -1,6 +1,5 @@
 import { Box, Button, Flex, VStack, Text } from '@chakra-ui/react';
 import { Radio, RadioGroup } from '@chakra-ui/react';
-import { BiImageAdd } from 'react-icons/bi';
 
 import Link from 'next/link';
 import { useCallback, useState } from 'react';

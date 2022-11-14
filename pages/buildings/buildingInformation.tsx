@@ -1,7 +1,7 @@
 import { Box, Flex } from '@chakra-ui/react';
-import BuildingTopBar from '../../components/buildingTopBar';
-import Header from '../../components/header';
-import UserName from '../../components/userName';
+import BuildingTopBar from '../../components/nextComponents/buildingTopBar';
+import Header from '../../components/nextComponents/header';
+import UserName from '../../components/nextComponents/userName';
 
 export default function () {
   return (

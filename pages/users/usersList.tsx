@@ -2,7 +2,7 @@ import { Box, Flex, Image, Radio, Text, VStack, RadioGroup } from '@chakra-ui/re
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
-import TopBar from '../../components/topBar';
+import TopBar from '../../components/nextComponents/topBar';
 import { useCurrentUser } from '../../context/CurrentUserContext';
 import { Company } from '../../types/Companys';
 import { User } from '../../types/Users';

@@ -3,7 +3,7 @@ import axios from 'axios';
 
 import { useState } from 'react';
 
-import { Building } from '../types/Buildings';
+import { Building } from '../../types/Buildings';
 import IconUploadForm from './iconUploadForm';
 
 type inputForms = {
@@ -32,14 +32,16 @@ export default function ({ inputForms, data }: inputForms) {
       if (file) {
         if (data.imagePath) {
           await axios.delete(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/uploads/delete`, {
-            data: { path: data.imagePath }
+            data: { path: data.imagePath },
           });
         }
         const imageData = new FormData();
         const fileName = file.name;
-        imageData.append("name", fileName);
-        imageData.append("file", file);
-        const imagePath: string = await axios.post(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/uploads/upload`, imageData).then(res => res.data);
+        imageData.append('name', fileName);
+        imageData.append('file', file);
+        const imagePath: string = await axios
+          .post(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/uploads/upload`, imageData)
+          .then((res) => res.data);
         updateBuilding.imagePath = imagePath;
       }
 
@@ -53,7 +55,7 @@ export default function ({ inputForms, data }: inputForms) {
         title: `更新が完了しました`,
         status: 'success',
         isClosable: true,
-      })
+      });
       setLoading(false);
       location.reload();
     } catch (error) {
@@ -62,7 +64,7 @@ export default function ({ inputForms, data }: inputForms) {
         title: `更新に失敗しましt`,
         status: 'warning',
         isClosable: true,
-      })
+      });
       console.log(error);
     }
   };
@@ -89,7 +91,7 @@ export default function ({ inputForms, data }: inputForms) {
               borderWidth='2px'
             />
           ))}
-        <IconUploadForm setFiles={setFiles} action={"buildingUpdate"} building={data} />
+        <IconUploadForm setFiles={setFiles} action={'buildingUpdate'} building={data} />
         <Button
           isLoading={loading}
           type='submit'

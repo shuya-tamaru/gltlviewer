@@ -1,5 +1,5 @@
-import FormWithRadio from '../../components/formWithRadio';
-import Header from '../../components/header';
+import FormWithRadio from '../../components/nextComponents/formWithRadio';
+import Header from '../../components/nextComponents/header';
 
 export default function () {
   const inputForms = ['email'];

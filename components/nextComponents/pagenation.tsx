@@ -1,7 +1,7 @@
 import { Box, Text } from '@chakra-ui/react';
 import ReactPaginate from 'react-paginate';
 
-import { SelectPage } from '../types/SelectPage';
+import { SelectPage } from '../../types/SelectPage';
 
 type Props = {
   pageCount: number;

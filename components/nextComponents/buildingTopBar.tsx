@@ -6,7 +6,7 @@ import { AiOutlineComment } from 'react-icons/ai';
 import { BiUserPlus } from 'react-icons/bi';
 import { BsGraphUp } from 'react-icons/bs';
 import { HiInformationCircle } from 'react-icons/hi';
-import { Building } from '../types/Buildings';
+import { Building } from '../../types/Buildings';
 
 type Props = {
   building?: Building | null;

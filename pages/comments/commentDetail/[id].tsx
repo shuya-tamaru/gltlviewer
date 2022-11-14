@@ -1,16 +1,16 @@
 import { Box, Flex, Button } from '@chakra-ui/react';
 import axios from 'axios';
 
-import BuildingTopBar from '../../../components/buildingTopBar';
-import DrawerCommentAdd from '../../../components/drawerCommentAdd';
-import Header from '../../../components/header';
-import UserName from '../../../components/userName';
-import Comment from '../../../components/comment';
+import BuildingTopBar from '../../../components/nextComponents/buildingTopBar';
+import DrawerCommentAdd from '../../../components/nextComponents/drawerCommentAdd';
+import Header from '../../../components/nextComponents/header';
+import UserName from '../../../components/nextComponents/userName';
+import Comment from '../../../components/nextComponents/comment';
 import { CommentRooms } from '../../../types/CommentRooms';
 import { GetStaticPropsContext } from 'next';
 import { Comments } from '../../../types/Comments';
 import { useEffect, useState } from 'react';
-import SideBarCommentSingle from '../../../components/sideBarCommentSingle';
+import SideBarCommentSingle from '../../../components/nextComponents/sideBarCommentSingle';
 import { Building } from '../../../types/Buildings';
 
 type Props = {
@@ -34,7 +34,7 @@ export default function CommentDetail({ comments }: Props) {
         setBuilding(building);
       };
       getBuilding();
-    } catch (error) { }
+    } catch (error) {}
   }, []);
 
   return (

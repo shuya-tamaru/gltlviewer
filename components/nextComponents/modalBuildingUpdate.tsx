@@ -11,7 +11,7 @@ import {
 import { FiEdit } from 'react-icons/fi';
 import { Tooltip } from '@chakra-ui/react';
 
-import { Building } from '../types/Buildings';
+import { Building } from '../../types/Buildings';
 import BuildingEditForm from './buildingEditForm';
 
 type Props = {

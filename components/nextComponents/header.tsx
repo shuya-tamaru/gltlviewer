@@ -3,7 +3,7 @@ import { Box, Text } from '@chakra-ui/react';
 import Link from 'next/link';
 import { ReactNode } from 'react';
 
-import { useCurrentUser } from '../context/CurrentUserContext';
+import { useCurrentUser } from '../../context/CurrentUserContext';
 
 type Props = {
   children?: ReactNode;

@@ -3,10 +3,10 @@ import axios from 'axios';
 
 import React, { Dispatch, SetStateAction, useState } from 'react';
 
-import { useCurrentUser } from '../context/CurrentUserContext';
-import { Comments } from '../types/Comments';
+import { useCurrentUser } from '../../context/CurrentUserContext';
+import { Comments } from '../../types/Comments';
 import DrawerForm from './drawerForm';
-import useImageUploader from '../hooks/useImageUploader';
+import useImageUploader from '../../hooks/useImageUploader';
 
 type Props = {
   isOpen: boolean;

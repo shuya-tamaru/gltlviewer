@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { signOut } from 'next-auth/react';
 
-import { useCurrentUser, useCurrentUserUpdate } from '../context/CurrentUserContext';
+import { useCurrentUser, useCurrentUserUpdate } from '../../context/CurrentUserContext';
 import ModalUserUpdate from './modalUserUpdate';
 import ModalCompanyUpdate from './modalCompanyUpdate';
 
@@ -57,7 +57,13 @@ export default function UserName() {
   return (
     <>
       <Box display='flex' justifyContent='center' alignItems='center' position='relative'>
-        <Image src={currentUser?.imagePath ? currentUser?.imagePath : "/images/pika.jpeg"} objectFit='cover' boxSize='60px' borderRadius='50%' mx='2' />
+        <Image
+          src={currentUser?.imagePath ? currentUser?.imagePath : '/images/pika.jpeg'}
+          objectFit='cover'
+          boxSize='60px'
+          borderRadius='50%'
+          mx='2'
+        />
         <Text fontSize='xl' fontWeight='550' textAlign='center'>
           {!currentUser ? '' : currentUser.lastName + currentUser.firstName}
         </Text>

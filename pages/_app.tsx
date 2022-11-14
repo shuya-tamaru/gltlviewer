@@ -6,7 +6,7 @@ import Router, { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 import '../styles/globals.css';
-import Spiner from '../components/spiner';
+import Spiner from '../components/nextComponents/spiner';
 import { CurrentUserProvider } from '../context/CurrentUserContext';
 import { CurrentBuildingProvider } from '../context/CurrentBuildingContext';
 import { CurrentIframeStateProvider } from '../context/CurrentIframeStateContext';

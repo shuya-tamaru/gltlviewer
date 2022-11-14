@@ -2,7 +2,7 @@ import type { NextPage } from 'next';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
-import Spiner from '../components/spiner';
+import Spiner from '../components/nextComponents/spiner';
 import { useCurrentUser } from '../context/CurrentUserContext';
 
 const IndexPage: NextPage = () => {

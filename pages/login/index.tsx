@@ -5,7 +5,7 @@ import { useRef, useState } from 'react';
 import Link from 'next/link';
 import { getSession, signIn } from 'next-auth/react';
 
-import Header from '../../components/header';
+import Header from '../../components/nextComponents/header';
 import { User } from '../../types/Users';
 import { useCurrentUserUpdate } from '../../context/CurrentUserContext';
 

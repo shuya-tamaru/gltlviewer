@@ -5,11 +5,11 @@ import { GetStaticPropsContext } from 'next';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-import BuildingTopBar from '../../../components/buildingTopBar';
-import CommentSearchForm from '../../../components/commentSearchForm';
-import Header from '../../../components/header';
-import Post from '../../../components/post';
-import UserName from '../../../components/userName';
+import BuildingTopBar from '../../../components/nextComponents/buildingTopBar';
+import CommentSearchForm from '../../../components/nextComponents/commentSearchForm';
+import Header from '../../../components/nextComponents/header';
+import Post from '../../../components/nextComponents/post';
+import UserName from '../../../components/nextComponents/userName';
 import { Building } from '../../../types/Buildings';
 import { Comments } from '../../../types/Comments';
 

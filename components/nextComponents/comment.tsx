@@ -1,8 +1,8 @@
 import { Box, Flex, Text, Image } from '@chakra-ui/react';
 import axios from 'axios';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { Comments } from '../types/Comments';
-import { User } from '../types/Users';
+import { Comments } from '../../types/Comments';
+import { User } from '../../types/Users';
 
 type Props = {
   comment: Comments;
