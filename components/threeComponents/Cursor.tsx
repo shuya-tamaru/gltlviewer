@@ -1,5 +1,5 @@
 import { useTexture } from '@react-three/drei';
-import { ObjectMap, useThree } from '@react-three/fiber';
+import { ObjectMap, useFrame, useThree } from '@react-three/fiber';
 import { Ref, useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
@@ -18,6 +18,13 @@ export default function Cursor({ model }: Props) {
     metalness: 0,
     roughness: 0,
     transparent: true,
+  });
+
+  useFrame((state) => {
+    const scale = Math.abs(Math.sin(state.clock.elapsedTime)) / 2 + 0.8;
+    if (ref.current) {
+      ref.current.scale.set(scale, scale, scale);
+    }
   });
 
   const ref = useRef<THREE.Mesh | null>(null);
