@@ -1631,6 +1631,11 @@
   dependencies:
     "tslib" "^2.4.0"
 
+"@tweenjs/tween.js@^18.6.4":
+  "integrity" "sha512-lB9lMjuqjtuJrx7/kOkqQBtllspPIN+96OvTCeJ2j5FEzinoAXTdAMFnDAQT1KVPRlnYfBrqxtqP66vDM40xxQ=="
+  "resolved" "https://registry.npmjs.org/@tweenjs/tween.js/-/tween.js-18.6.4.tgz"
+  "version" "18.6.4"
+
 "@types/body-parser@*":
   "integrity" "sha512-ALYone6pm6QmwZoAgeyNksccT9Q4AWZQ6PvfwR37GT6r6FWUPguq6sUmNGSMV2Wr761oQoBxwGGa6DR5o1DC9g=="
   "resolved" "https://registry.npmjs.org/@types/body-parser/-/body-parser-1.19.2.tgz"
@@ -1652,6 +1657,11 @@
   "version" "1.4.3"
   dependencies:
     "@types/express" "*"
+
+"@types/createjs-lib@*":
+  "integrity" "sha512-SjceOhvNEqweSfWNMT6wu4DsH09X0phnlzCCj5s+VAwLXuTsb8YS+vAmngg+DTuWu75vcF3qFsqxZQ85KZ3/Lw=="
+  "resolved" "https://registry.npmjs.org/@types/createjs-lib/-/createjs-lib-0.0.29.tgz"
+  "version" "0.0.29"
 
 "@types/express-serve-static-core@^4.17.18":
   "integrity" "sha512-DxMhY+NAsTwMMFHBTtJFNp5qiHKJ7TeqOo23zVEM9alT1Ml27Q3xcTH0xwxn7Q0BbMcVEJOs/7aQtUWupUQN3Q=="
@@ -1773,6 +1783,13 @@
   "version" "0.146.0"
   dependencies:
     "@types/webxr" "*"
+
+"@types/tweenjs@^1.0.4":
+  "integrity" "sha512-UnGcZRjGYz2w+2LB/70QkzWjtqOcTu4Nxa/Cy9YZ4I8HU44kcayNgbXZYMQu4ll7z+1GP7r1+viqLKNv7+Mrzw=="
+  "resolved" "https://registry.npmjs.org/@types/tweenjs/-/tweenjs-1.0.4.tgz"
+  "version" "1.0.4"
+  dependencies:
+    "@types/createjs-lib" "*"
 
 "@types/webxr@*":
   "integrity" "sha512-IUMDPSXnYIbEO2IereEFcgcqfDREOgmbGqtrMpVPpACTU6pltYLwHgVkrnYv0XhWEcjio9sYEfIEzgn3c7nDqA=="
@@ -4134,10 +4151,10 @@
   "resolved" "https://registry.npmjs.org/three-mesh-bvh/-/three-mesh-bvh-0.5.17.tgz"
   "version" "0.5.17"
 
-"three-stdlib@*", "three-stdlib@^2.15.0", "three-stdlib@^2.17.3":
-  "integrity" "sha512-k2VwPXi75ySy0fxPIeUk3mLkj3/j+sCFK4g9Kp5J7w0PUh6qrCdhah7L6+On6fW5mBdVtML4Q5yEyN1R0Cfvqw=="
-  "resolved" "https://registry.npmjs.org/three-stdlib/-/three-stdlib-2.17.3.tgz"
-  "version" "2.17.3"
+"three-stdlib@*", "three-stdlib@^2.15.0", "three-stdlib@^2.17.3", "three-stdlib@^2.17.4":
+  "integrity" "sha512-Xh9+B/1RL0YXRjWgLilbK/5qL7hVOWMF5sQ1seKqGvR4svNvQPU+vCZkL2sUaZ0usc/C3FpyGTuwbqo+eW444Q=="
+  "resolved" "https://registry.npmjs.org/three-stdlib/-/three-stdlib-2.17.4.tgz"
+  "version" "2.17.4"
   dependencies:
     "@babel/runtime" "^7.16.7"
     "@types/offscreencanvas" "^2019.6.4"
@@ -4229,6 +4246,11 @@
   "version" "3.21.0"
   dependencies:
     "tslib" "^1.8.1"
+
+"tweenjs@^1.0.2":
+  "integrity" "sha512-WnFozCNkUkmJtLqJyGrToxVojW2Srzudktr8BzFKQijQRVcmlq7Fc+qfo75ccnwIJGiRWbXKfg7qU67Tzbb1bg=="
+  "resolved" "https://registry.npmjs.org/tweenjs/-/tweenjs-1.0.2.tgz"
+  "version" "1.0.2"
 
 "type-check@^0.4.0", "type-check@~0.4.0":
   "integrity" "sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew=="
