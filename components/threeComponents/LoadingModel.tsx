@@ -1,17 +1,12 @@
-import { Center, useGLTF, Stage } from '@react-three/drei';
-import Cursor from './Cursor';
+import { Center, Stage } from '@react-three/drei';
+import useLoadingModel from '../../hooks/threeHooks/useLoadingModel';
 
 export default function LoadingModel() {
-  const buildingModel = useGLTF('/model/higashi_shinjuku.glb');
-  buildingModel.scene.children.forEach((mesh) => {
-    // mesh.castShadow = true;
-    // mesh.receiveShadow = true;
-  });
+  const buildingModel = useLoadingModel();
 
   return (
     <>
       <Stage>
-        <Cursor model={buildingModel} />
         <Center disableY>
           <primitive object={buildingModel.scene} />
         </Center>

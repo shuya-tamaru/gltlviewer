@@ -1,53 +1,81 @@
 import * as THREE from 'three';
 import { OrbitControls } from '@react-three/drei';
-import { useFrame, useThree } from '@react-three/fiber';
+import { useFrame } from '@react-three/fiber';
 import { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 
-import { Dispatch, SetStateAction, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import LoadingModel from './LoadingModel';
+import Cursor from './Cursor';
+import useRayCastFloor from '../../hooks/threeHooks/useRayCastFloor';
 
-type CurrentViewProps = {
-  currentViewProps: [boolean, Dispatch<SetStateAction<boolean>>];
+const sightHeight = 1.4;
+let walkThrougCameraPos = new THREE.Vector3(0, 0 + sightHeight, 0);
+
+type Props = {
+  currentView: boolean;
 };
 
-export default function Experience({ currentViewProps }: CurrentViewProps) {
-  const [currentView] = currentViewProps;
-
-  const ref = useRef<OrbitControlsImpl>(null);
-
-  const { camera, raycaster } = useThree();
-  // useFrame((state) => {
-  //   // const perspectiveTarget = new THREE.Vector3(0, 0, 0);
-  //   // const walkThrougTarget = new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z);
-  //   if (ref.current) {
-  //     const target = currentView
-  //       ? new THREE.Vector3(0, 3, 40)
-  //       : new THREE.Vector3(state.camera.position.x + 0.001, state.camera.position.y, state.camera.position.z);
-  //     ref.current.target = target;
-  //   }
-  // });
+export default function Experience({ currentView }: Props) {
+  const cameraRef = useRef<OrbitControlsImpl>(null);
+  const isInitialRender = useRef(true);
+  const [movingCamera, setMovingCamera] = useState(false);
+  const { floorRayPos, isMove, setIsMove } = useRayCastFloor();
 
   useEffect(() => {
-    const walkThrougPosition = new THREE.Vector3(0, 4, 0);
-    const perspectiveCameraPosition = new THREE.Vector3(0, 3, 40);
-    const toMovePosition = currentView ? perspectiveCameraPosition : walkThrougPosition;
-    // camera.position.set(toMovePosition.x, toMovePosition.y, toMovePosition.z);
-    if (ref.current) {
-      const newPos = ref.current.object.position.set(toMovePosition.x, toMovePosition.y, toMovePosition.z);
-      const { x, y, z } = newPos;
-      ref.current.target = currentView ? new THREE.Vector3(0, 0, 0) : new THREE.Vector3(x + 0.001, y, z);
+    console.log(currentView);
+    if (isInitialRender.current) {
+      isInitialRender.current = false;
+      return;
     }
-  }, [currentView]);
+    isMove && setMovingCamera(true);
+    setMovingCamera(true);
+  }, [currentView, isMove]);
+
+  useFrame((state, delta) => {
+    // console.log(currentView);
+    const perspectiveCameraPos = new THREE.Vector3(0, 3, 40);
+    if (floorRayPos) {
+      const { x, y, z } = floorRayPos;
+      walkThrougCameraPos.set(x, y + sightHeight, z);
+    }
+    const perspectiveLookAt = new THREE.Vector3(0, 0, 0);
+
+    //keep look at target
+    const newlookPos = currentView ? perspectiveLookAt : walkThrougCameraPos;
+    // state.camera.lookAt(newlookPos);
+
+    if (cameraRef.current && movingCamera) {
+      const currentPos = new THREE.Vector3();
+      currentPos.copy(state.camera.position);
+      const cameraMoveSpeed = 4 * delta;
+      const newPos = currentView
+        ? currentPos.lerp(perspectiveCameraPos, cameraMoveSpeed)
+        : currentPos.lerp(walkThrougCameraPos, cameraMoveSpeed);
+
+      //setCameraPos
+      state.camera.position.copy(newPos);
+
+      //setOrbitTarget
+      const { x, y, z } = walkThrougCameraPos;
+      cameraRef.current.target = currentView ? perspectiveLookAt : new THREE.Vector3(x + 0.0000001, y, z);
+
+      //check Camera Moving or stop
+      const endPoint = currentView ? perspectiveCameraPos : walkThrougCameraPos;
+      const distanceToDestination = Math.floor(state.camera.position.distanceTo(endPoint) * 100) / 100;
+      distanceToDestination < 0.01 && (setMovingCamera(false), setIsMove(false));
+    }
+  });
 
   return (
     <>
       <OrbitControls
-        ref={ref}
+        ref={cameraRef}
         enableZoom={currentView ? true : false}
         makeDefault
         // target={currentView ? perspectiveTarget : walkThrougTarget}
       />
+      <Cursor />
       <LoadingModel />
     </>
   );

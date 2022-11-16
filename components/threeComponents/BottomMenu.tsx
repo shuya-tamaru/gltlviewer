@@ -4,7 +4,7 @@ import { AiOutlineComment } from 'react-icons/ai';
 import { BiWalk } from 'react-icons/bi';
 import { GiCube } from 'react-icons/gi';
 
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 
 const iconStyles = { fontSize: '1.5em' };
 const hoverColor = '#e60012';
@@ -18,12 +18,12 @@ const buttonStyles = {
   color: '#fff',
 };
 
-type CurrentViewProps = {
-  currentViewProps: [boolean, Dispatch<SetStateAction<boolean>>];
+type Props = {
+  currentView: boolean;
+  setCurrentView: Dispatch<SetStateAction<boolean>>;
 };
 
-export default function BottomMenu({ currentViewProps }: CurrentViewProps) {
-  const [currentView, setCurrentView] = currentViewProps;
+export default function BottomMenu({ currentView, setCurrentView }: Props) {
   const handleIcon = () => {
     setCurrentView(!currentView);
   };
