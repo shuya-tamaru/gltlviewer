@@ -1,5 +1,5 @@
 import { useTexture } from '@react-three/drei';
-import { ObjectMap, useFrame, useThree } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import useLoadingModel from '../../hooks/threeHooks/useLoadingModel';
@@ -34,7 +34,8 @@ export default function Cursor() {
       const firstintersectObject = intersectObjects[0];
       if (firstintersectObject && firstintersectObject.object.parent?.visible && ref.current) {
         const { x, y, z } = firstintersectObject.point;
-        ref.current.position.set(x, y + 0.01, z);
+        console.log(ref.current.position, y, firstintersectObject.object.parent.name);
+        ref.current.position.set(x, y + 0.4, z);
       }
     });
   }, []);

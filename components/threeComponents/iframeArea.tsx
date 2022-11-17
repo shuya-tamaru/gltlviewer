@@ -1,16 +1,12 @@
 import { Box } from '@chakra-ui/react';
-import { Html } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import * as THREE from 'three';
-import useCurrentView from '../../hooks/threeHooks/useCurrentView';
 
 import BottomMenu from './BottomMenu';
 import Debug from './Debug';
 import Experience from './Experience';
 
 export default function IframeArea() {
-  const { currentView, setCurrentView } = useCurrentView();
-
   return (
     <>
       <Box w='100%' h='92%' p='5px' position='relative'>
@@ -30,9 +26,9 @@ export default function IframeArea() {
           }}
         >
           <Debug />
-          <Experience currentView={currentView} setCurrentView={setCurrentView} />
+          <Experience />
         </Canvas>
-        <BottomMenu currentView={currentView} setCurrentView={setCurrentView} />
+        <BottomMenu />
       </Box>
     </>
   );
