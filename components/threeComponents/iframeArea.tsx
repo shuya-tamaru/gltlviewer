@@ -1,4 +1,5 @@
 import { Box } from '@chakra-ui/react';
+import { Html } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import * as THREE from 'three';
 import useCurrentView from '../../hooks/threeHooks/useCurrentView';
@@ -29,7 +30,7 @@ export default function IframeArea() {
           }}
         >
           <Debug />
-          <Experience currentView={currentView} />
+          <Experience currentView={currentView} setCurrentView={setCurrentView} />
         </Canvas>
         <BottomMenu currentView={currentView} setCurrentView={setCurrentView} />
       </Box>

@@ -1,8 +1,10 @@
 import { useThree } from '@react-three/fiber';
-import { useEffect, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import useLoadingModel from './useLoadingModel';
 
-export default function useRayCastFloor() {
+type Props = Dispatch<SetStateAction<boolean>>;
+
+export default function useRayCastFloor(setCurrentView: Props) {
   const { raycaster } = useThree();
   const model = useLoadingModel();
   const [floorRayPos, setFloorRayPos] = useState<THREE.Vector3 | null>(null);
@@ -10,15 +12,19 @@ export default function useRayCastFloor() {
   const isMouseMove = useRef(0);
 
   useEffect(() => {
-    window.addEventListener('mouseup', () => {
-      if (isMouseMove.current < 3) {
+    window.addEventListener('mouseup', (e) => {
+      if (isMouseMove.current < 3 && e.target instanceof HTMLElement && e.target.tagName === 'CANVAS') {
         const intersectObjects = raycaster.intersectObjects(model.scene.children);
-        const firstintersectObject = intersectObjects[0];
-        if (firstintersectObject) {
-          const raycastPlace = firstintersectObject.object.parent!.name;
-          const isFloor = raycastPlace.indexOf('floor') !== -1 ? true : false;
-          isFloor ? setFloorRayPos(firstintersectObject.point) : setFloorRayPos(null);
+        const floorIntersectObject = intersectObjects.filter((mesh) => {
+          if (mesh.object.parent?.name.indexOf('floor') !== -1 || mesh.object.name.indexOf('floor') !== -1) return mesh;
+        });
+        // console.log(floorIntersectObject);
+        if (floorIntersectObject.length > 0 && floorIntersectObject[0].object.parent?.visible) {
+          setFloorRayPos(floorIntersectObject[0].point);
           setIsMove(true);
+          setCurrentView(false);
+        } else {
+          setFloorRayPos(null);
         }
       }
       isMouseMove.current = 0;
@@ -26,7 +32,8 @@ export default function useRayCastFloor() {
     window.addEventListener('mousemove', () => {
       isMouseMove.current++;
     });
-    window.addEventListener('mousedown', () => {
+    window.addEventListener('mousedown', (e) => {
+      e.stopPropagation();
       setIsMove(false);
       isMouseMove.current = 0;
     });

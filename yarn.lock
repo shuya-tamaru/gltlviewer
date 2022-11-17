@@ -4394,7 +4394,24 @@
   "resolved" "https://registry.npmjs.org/zstddec/-/zstddec-0.0.2.tgz"
   "version" "0.0.2"
 
-"zustand@^3.5.13", "zustand@^3.6.9", "zustand@^3.7.1":
+"zustand@^3.5.13":
   "integrity" "sha512-PIJDIZKtokhof+9+60cpockVOq05sJzHCriyvaLBmEJixseQ1a5Kdov6fWZfWOu5SK9c+FhH1jU0tntLxRJYMA=="
   "resolved" "https://registry.npmjs.org/zustand/-/zustand-3.7.2.tgz"
   "version" "3.7.2"
+
+"zustand@^3.6.9":
+  "integrity" "sha512-PIJDIZKtokhof+9+60cpockVOq05sJzHCriyvaLBmEJixseQ1a5Kdov6fWZfWOu5SK9c+FhH1jU0tntLxRJYMA=="
+  "resolved" "https://registry.npmjs.org/zustand/-/zustand-3.7.2.tgz"
+  "version" "3.7.2"
+
+"zustand@^3.7.1":
+  "integrity" "sha512-PIJDIZKtokhof+9+60cpockVOq05sJzHCriyvaLBmEJixseQ1a5Kdov6fWZfWOu5SK9c+FhH1jU0tntLxRJYMA=="
+  "resolved" "https://registry.npmjs.org/zustand/-/zustand-3.7.2.tgz"
+  "version" "3.7.2"
+
+"zustand@^4.1.4":
+  "integrity" "sha512-k2jVOlWo8p4R83mQ+/uyB8ILPO2PCJOf+QVjcL+1PbMCk1w5OoPYpAIxy9zd93FSfmJqoH6lGdwzzjwqJIRU5A=="
+  "resolved" "https://registry.npmjs.org/zustand/-/zustand-4.1.4.tgz"
+  "version" "4.1.4"
+  dependencies:
+    "use-sync-external-store" "1.2.0"

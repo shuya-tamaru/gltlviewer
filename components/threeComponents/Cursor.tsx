@@ -32,7 +32,7 @@ export default function Cursor() {
     window.addEventListener('mousemove', () => {
       const intersectObjects = raycaster.intersectObjects(buildingModel.scene.children);
       const firstintersectObject = intersectObjects[0];
-      if (firstintersectObject && ref.current) {
+      if (firstintersectObject && firstintersectObject.object.parent?.visible && ref.current) {
         const { x, y, z } = firstintersectObject.point;
         ref.current.position.set(x, y + 0.01, z);
       }

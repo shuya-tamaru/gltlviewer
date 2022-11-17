@@ -4,7 +4,8 @@ import { AiOutlineComment } from 'react-icons/ai';
 import { BiWalk } from 'react-icons/bi';
 import { GiCube } from 'react-icons/gi';
 
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef } from 'react';
+import useViewEvent from './stores/useViewEvent';
 
 const iconStyles = { fontSize: '1.5em' };
 const hoverColor = '#e60012';
@@ -28,20 +29,30 @@ export default function BottomMenu({ currentView, setCurrentView }: Props) {
     setCurrentView(!currentView);
   };
 
+  const floors: string[] = useViewEvent((state) => state.floorLength);
+  const floorsReverse = [...floors].reverse();
+  const handleVisibleFloors = useViewEvent((state) => state.handleFloorVisible);
+
+  const handleFloorVisibe = (e: React.MouseEvent<HTMLButtonElement>, floorName: string) => {
+    e.stopPropagation();
+    const selectedFloor = floorName.split('_floor')[0];
+    handleVisibleFloors(selectedFloor);
+  };
+
   return (
     <Flex position='absolute' bottom='5%' left='20px'>
       {/* walkThrougButton */}
-      <Button _hover={{ color: hoverColor }} sx={buttonStyles} variant='link'>
+      <Button _hover={{ color: hoverColor }} onClick={handleIcon} sx={buttonStyles} variant='link'>
         {currentView ? (
           <Tooltip hasArrow label='Walk Through' placement='top-start'>
             <span>
-              <BiWalk style={iconStyles} onClick={handleIcon} />
+              <BiWalk style={iconStyles} className='button' />
             </span>
           </Tooltip>
         ) : (
           <Tooltip hasArrow label='Perspective' placement='top-start'>
             <span>
-              <GiCube style={iconStyles} onClick={handleIcon} />
+              <GiCube style={iconStyles} className='button' />
             </span>
           </Tooltip>
         )}
@@ -50,7 +61,7 @@ export default function BottomMenu({ currentView, setCurrentView }: Props) {
       {/* floorSelector */}
       <Menu>
         <Tooltip hasArrow label='Select Floor' placement='top-start'>
-          <MenuButton color='#fff' _hover={{ color: hoverColor }} w='40px'>
+          <MenuButton color='#fff' _hover={{ color: hoverColor }} w='40px' className='button'>
             <span style={{ alignItems: 'center', display: 'flex', justifyContent: 'center' }}>
               <IoLayersOutline style={iconStyles} />
             </span>
@@ -58,10 +69,18 @@ export default function BottomMenu({ currentView, setCurrentView }: Props) {
         </Tooltip>
         <Portal>
           <MenuList>
-            <MenuItem>Menu 1</MenuItem>
-            <MenuItem>New Window</MenuItem>
-            <MenuItem>Open Closed Tab</MenuItem>
-            <MenuItem>Open File</MenuItem>
+            <MenuItem className='button' key={'all'} onClick={(e) => handleFloorVisibe(e, 'all')}>
+              {'全階表示'}
+            </MenuItem>
+            {floorsReverse.map((floorName, index) => {
+              const floorNum = floors.length;
+              const floor = floorNum - index;
+              return (
+                <MenuItem className='button' key={floor} onClick={(e) => handleFloorVisibe(e, floorName)}>
+                  {floorName}
+                </MenuItem>
+              );
+            })}
           </MenuList>
         </Portal>
       </Menu>
