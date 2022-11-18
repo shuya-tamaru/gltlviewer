@@ -1,11 +1,13 @@
 import { Box } from '@chakra-ui/react';
 import { Canvas } from '@react-three/fiber';
+import { Suspense } from 'react';
 import * as THREE from 'three';
 
 import BottomMenu from './BottomMenu';
 import Debug from './Debug';
 import DisplayCurrentFloor from './DisplayCurrentFloor';
 import Experience from './Experience';
+import LoadingDisplay from './LoadingDisplay';
 
 export default function IframeArea() {
   return (
@@ -27,8 +29,11 @@ export default function IframeArea() {
           }}
         >
           <Debug />
-          <Experience />
+          <Suspense fallback={null}>
+            <Experience />
+          </Suspense>
         </Canvas>
+        <LoadingDisplay />
         <BottomMenu />
         <DisplayCurrentFloor />
       </Box>
