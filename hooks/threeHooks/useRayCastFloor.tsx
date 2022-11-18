@@ -5,8 +5,7 @@ import { BuildingModel } from './useLoadingModel';
 
 export default function useRayCastFloor(buildingModel: BuildingModel) {
   const { raycaster } = useThree();
-  const setIsPerspective = useViewEvent((state) => state.setIsPerspective);
-  const cameraMovingToggle = useViewEvent((state) => state.cameraMovingToggle);
+
   const [floorRayPos, setFloorRayPos] = useState<THREE.Vector3 | null>(null);
   const isMouseMoveCount = useRef(0);
 
