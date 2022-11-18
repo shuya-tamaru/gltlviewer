@@ -1,6 +1,7 @@
 import { Menu, MenuButton, MenuItem, MenuList, Portal, Tooltip } from '@chakra-ui/react';
 import { IoLayersOutline } from 'react-icons/io5';
 import { HoverColor, IconStyle } from './BottomMenu';
+import useCurrentFloor from './stores/useCurrentFloor';
 import useViewEvent from './stores/useViewEvent';
 
 type Props = {
@@ -10,13 +11,16 @@ type Props = {
 function FloorSelector({ styleProps }: Props) {
   const [iconStyles, hoverColor] = styleProps;
 
-  const floors: string[] = useViewEvent((state) => state.floorLength);
-  const floorsReverse = [...floors].reverse();
-  const handleVisibleFloors = useViewEvent((state) => state.handleFloorVisible);
-
+  const { isPerspective, floorList, handleFloorVisible } = useViewEvent((state) => state);
+  const floorListReverse = [...floorList].reverse();
   const handleFloorVisibe = (floorName: string) => {
     const selectedFloor = floorName.split('_floor')[0];
-    handleVisibleFloors(selectedFloor);
+    handleFloorVisible(selectedFloor);
+  };
+
+  const setDestinationFloor = useCurrentFloor((state) => state.setDestinationFloor);
+  const handleCurrentFloor = (floorNum: number) => {
+    setDestinationFloor(floorNum);
   };
 
   return (
@@ -30,15 +34,23 @@ function FloorSelector({ styleProps }: Props) {
       </Tooltip>
       <Portal>
         <MenuList>
-          <MenuItem className='button' key={'all'} onClick={(e) => handleFloorVisibe('all')}>
-            {'全階表示'}
-          </MenuItem>
-          {floorsReverse.map((floorName, index) => {
-            const floorNum = floors.length;
+          {isPerspective ? (
+            <MenuItem className='button' key={'all'} onClick={(e) => handleFloorVisibe('all')}>
+              {'全階表示'}
+            </MenuItem>
+          ) : (
+            <></>
+          )}
+          {floorListReverse.map((floorName, index) => {
+            const floorNum = floorListReverse.length;
             const floor = floorNum - index;
             return (
-              <MenuItem className='button' key={floor} onClick={() => handleFloorVisibe(floorName)}>
-                {floorName}
+              <MenuItem
+                className='button'
+                key={floor}
+                onClick={() => (isPerspective ? handleFloorVisibe(floorName) : handleCurrentFloor(floor - 1))}
+              >
+                {isPerspective ? floorName : floorName + 'へ移動'}
               </MenuItem>
             );
           })}

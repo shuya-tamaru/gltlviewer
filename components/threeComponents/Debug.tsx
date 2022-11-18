@@ -5,7 +5,7 @@ import { useThree } from '@react-three/fiber';
 
 export default function Debug() {
   // AxesHelper
-  const { camera, scene, controls } = useThree();
+  const { scene } = useThree();
   const axesHelper = new THREE.AxesHelper(50);
   scene.add(axesHelper);
 

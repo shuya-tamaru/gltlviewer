@@ -1,11 +1,10 @@
-import { useThree } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import { useEffect, useRef, useState } from 'react';
 import useViewEvent from '../../components/threeComponents/stores/useViewEvent';
-import useLoadingModel from './useLoadingModel';
+import { BuildingModel } from './useLoadingModel';
 
-export default function useRayCastFloor() {
+export default function useRayCastFloor(buildingModel: BuildingModel) {
   const { raycaster } = useThree();
-  const model = useLoadingModel();
   const setIsPerspective = useViewEvent((state) => state.setIsPerspective);
   const cameraMovingToggle = useViewEvent((state) => state.cameraMovingToggle);
   const [floorRayPos, setFloorRayPos] = useState<THREE.Vector3 | null>(null);
@@ -13,16 +12,21 @@ export default function useRayCastFloor() {
 
   useEffect(() => {
     window.addEventListener('mouseup', (e) => {
-      if (isMouseMoveCount.current < 3 && e.target instanceof HTMLElement && e.target.tagName === 'CANVAS') {
-        const intersectObjects = raycaster.intersectObjects(model.scene.children);
+      if (
+        isMouseMoveCount.current < 3 &&
+        e.target instanceof HTMLElement &&
+        e.target.tagName === 'CANVAS'
+      ) {
+        const intersectObjects = raycaster.intersectObjects(buildingModel.scene.children);
         const floorIntersectObject = intersectObjects.filter((mesh) => {
-          if (mesh.object.parent?.name.indexOf('floor') !== -1 || mesh.object.name.indexOf('floor') !== -1) return mesh;
+          if (
+            mesh.object.parent?.name.indexOf('floor') !== -1 ||
+            mesh.object.name.indexOf('floor') !== -1
+          )
+            return mesh;
         });
         if (floorIntersectObject.length > 0 && floorIntersectObject[0].object.parent?.visible) {
           setFloorRayPos(floorIntersectObject[0].point);
-          cameraMovingToggle(true);
-          // setIsMove(true);
-          setIsPerspective(false);
         } else {
           setFloorRayPos(null);
         }
@@ -33,10 +37,9 @@ export default function useRayCastFloor() {
       isMouseMoveCount.current++;
     });
     window.addEventListener('mousedown', () => {
-      // setIsMove(false);
       isMouseMoveCount.current = 0;
     });
   }, []);
 
-  return floorRayPos;
+  return { floorRayPos, setFloorRayPos };
 }

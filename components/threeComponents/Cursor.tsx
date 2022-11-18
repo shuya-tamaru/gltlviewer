@@ -2,9 +2,13 @@ import { useTexture } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import useLoadingModel from '../../hooks/threeHooks/useLoadingModel';
+import { BuildingModel } from '../../hooks/threeHooks/useLoadingModel';
 
-export default function Cursor() {
+type Props = {
+  buildingModel: BuildingModel;
+};
+
+export default function Cursor({ buildingModel }: Props) {
   const texture = useTexture('/cursor/ring.png');
   const palneGeometry = new THREE.PlaneGeometry(0.5, 0.5);
   const palneMaterial = new THREE.MeshStandardMaterial({
@@ -15,8 +19,6 @@ export default function Cursor() {
     roughness: 0,
     transparent: true,
   });
-
-  const buildingModel = useLoadingModel();
 
   useFrame((state) => {
     const scale = Math.abs(Math.sin(state.clock.elapsedTime)) / 2 + 0.8;
@@ -34,8 +36,7 @@ export default function Cursor() {
       const firstintersectObject = intersectObjects[0];
       if (firstintersectObject && firstintersectObject.object.parent?.visible && ref.current) {
         const { x, y, z } = firstintersectObject.point;
-        console.log(ref.current.position, y, firstintersectObject.object.parent.name);
-        ref.current.position.set(x, y + 0.4, z);
+        ref.current.position.set(x, y + 0.05, z);
       }
     });
   }, []);

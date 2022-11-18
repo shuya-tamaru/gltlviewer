@@ -4,8 +4,8 @@ interface ViewState {
   isPerspective: boolean;
   setIsPerspective: (flg: boolean) => void;
 
-  floorLength: string[];
-  fetchFloor: (floorNames: string[]) => void;
+  floorList: string[];
+  setFloorList: (floorNames: string[]) => void;
 
   visibleFloors: string;
   handleFloorVisible: (selectedFloor: string) => void;
@@ -22,10 +22,10 @@ export default create<ViewState>((set) => ({
     });
   },
 
-  floorLength: [],
-  fetchFloor: (floorNames: string[]) => {
+  floorList: [],
+  setFloorList: (floorNames: string[]) => {
     set(() => {
-      return { floorLength: floorNames };
+      return { floorList: floorNames };
     });
   },
 
