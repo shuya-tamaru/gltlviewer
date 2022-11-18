@@ -4,6 +4,7 @@ import * as THREE from 'three';
 
 import BottomMenu from './BottomMenu';
 import Debug from './Debug';
+import DisplayCurrentFloor from './DisplayCurrentFloor';
 import Experience from './Experience';
 
 export default function IframeArea() {
@@ -29,6 +30,7 @@ export default function IframeArea() {
           <Experience />
         </Canvas>
         <BottomMenu />
+        <DisplayCurrentFloor />
       </Box>
     </>
   );

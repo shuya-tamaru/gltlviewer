@@ -6,6 +6,8 @@ interface PositionState {
   setFloorDefaultPosition: (positon: THREE.Vector3[]) => void;
   destinationFloor: null | number;
   setDestinationFloor: (floorNum: number | null) => void;
+  currentWalkingFloor: string | null;
+  setCurrentWalkingFloor: (floorName: string) => void;
 }
 
 export default create<PositionState>((set) => ({
@@ -25,6 +27,13 @@ export default create<PositionState>((set) => ({
   setDestinationFloor: (floorNum: number | null) => {
     set(() => {
       return { destinationFloor: floorNum };
+    });
+  },
+
+  currentWalkingFloor: null,
+  setCurrentWalkingFloor: (floorName: string) => {
+    set(() => {
+      return { currentWalkingFloor: floorName };
     });
   },
 }));

@@ -19,14 +19,17 @@ function useCameraAction(buildingModel: BuildingModel, cameraRef: RefObject<Orbi
   const { isPerspective, setIsPerspective, cameraIsMoving, cameraMovingToggle, handleFloorVisible } = useViewEvent(
     (state) => state,
   );
-  const { destinationFloor, setDestinationFloor, floorDefaultPosition } = useCurrentFloor((state) => state);
+  const { destinationFloor, setDestinationFloor, floorDefaultPosition, setCurrentWalkingFloor } = useCurrentFloor(
+    (state) => state,
+  );
   const commentAction = useCommentAction((state) => state.commentAction);
   const actions = CommentAction;
-  const { floorRayPos, setFloorRayPos } = useRayCastFloor(buildingModel);
+  const { floorRayPos, setFloorRayPos, floorName } = useRayCastFloor(buildingModel);
 
   const setRayCastPosition = (floorRayPos: THREE.Vector3) => {
     setIsPerspective(false);
     cameraMovingToggle(true);
+    setCurrentWalkingFloor(floorName);
     const { x, y, z } = floorRayPos;
     walkThrougCameraPos.set(x, y + sightHeight, z);
   };

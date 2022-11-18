@@ -18,9 +18,10 @@ function FloorSelector({ styleProps }: Props) {
     handleFloorVisible(selectedFloor);
   };
 
-  const setDestinationFloor = useCurrentFloor((state) => state.setDestinationFloor);
-  const handleCurrentFloor = (floorNum: number) => {
+  const { setDestinationFloor, setCurrentWalkingFloor } = useCurrentFloor((state) => state);
+  const handleCurrentFloor = (floorNum: number, floorName: string) => {
     setDestinationFloor(floorNum);
+    setCurrentWalkingFloor(floorName);
   };
 
   return (
@@ -48,7 +49,9 @@ function FloorSelector({ styleProps }: Props) {
               <MenuItem
                 className='button'
                 key={floor}
-                onClick={() => (isPerspective ? handleFloorVisibe(floorName) : handleCurrentFloor(floor - 1))}
+                onClick={() =>
+                  isPerspective ? handleFloorVisibe(floorName) : handleCurrentFloor(floor - 1, floorName)
+                }
               >
                 {isPerspective ? floorName : floorName + 'へ移動'}
               </MenuItem>

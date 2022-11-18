@@ -2,6 +2,7 @@ import { Button, Tooltip } from '@chakra-ui/react';
 import { BiWalk } from 'react-icons/bi';
 import { GiCube } from 'react-icons/gi';
 import { ButtonStyles, HoverColor, IconStyle } from './BottomMenu';
+import useCommentAction, { CommentAction } from './stores/useCommentAction';
 import useViewEvent from './stores/useViewEvent';
 
 type Props = {
@@ -15,8 +16,11 @@ function CurrentViewButton({ styleProps }: Props) {
   const setIsPerspective = useViewEvent((state) => state.setIsPerspective);
 
   const cameraMovingToggle = useViewEvent((state) => state.cameraMovingToggle);
+  const commentAction = useCommentAction((state) => state.commentAction);
+  const actions = CommentAction;
 
   const handleIcon = () => {
+    if (commentAction === actions.ACTIVE) return;
     setIsPerspective(!isPerspective);
     cameraMovingToggle(true);
   };
