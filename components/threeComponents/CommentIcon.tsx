@@ -38,15 +38,13 @@ export default function CommentIcon({ buildingModel }: Props) {
     meshRef.current?.lookAt(camera.position);
   });
 
-  const setCommentIcon = (e: any) => {
-    console.log(commentAction);
+  const setCommentIcon = (e: MouseEvent) => {
     if (
       mouseMoveCount.current < 3 &&
       e.target instanceof HTMLElement &&
       e.target.tagName === 'CANVAS' &&
       commentAction === actions.ACTIVE
     ) {
-      console.log(groupRef);
       const newCommentIcon = meshRef.current!.clone();
       const userData = { tag: 'comment', title: 'hi', description: 'helooooooo' };
       newCommentIcon.userData = userData;
@@ -57,24 +55,24 @@ export default function CommentIcon({ buildingModel }: Props) {
     }
   };
 
+  const moveCommentIcon = () => {
+    mouseMoveCount.current++;
+    const intersectObjects = raycaster.intersectObjects(buildingModel.scene.children);
+    const firstintersectObject = intersectObjects[0];
+    if (firstintersectObject && firstintersectObject.object.parent?.visible && meshRef.current) {
+      const { x, y, z } = firstintersectObject.point;
+      const cameraToCommentVec = vec3Instance.subVectors(camera.position, firstintersectObject.point).normalize();
+      meshRef.current.position.set(
+        x + cameraToCommentVec.x * 0.2,
+        y + cameraToCommentVec.y * 0.2,
+        z + cameraToCommentVec.z * 0.2,
+      );
+    }
+  };
+
   useEffect(() => {
     window.addEventListener('mouseup', (e) => setCommentIcon(e), { once: true });
-    window.removeEventListener('mouseup', (e) => setCommentIcon(e));
-
-    window.addEventListener('mousemove', () => {
-      mouseMoveCount.current++;
-      const intersectObjects = raycaster.intersectObjects(buildingModel.scene.children);
-      const firstintersectObject = intersectObjects[0];
-      if (firstintersectObject && firstintersectObject.object.parent?.visible && meshRef.current) {
-        const { x, y, z } = firstintersectObject.point;
-        const cameraToCommentVec = vec3Instance.subVectors(camera.position, firstintersectObject.point).normalize();
-        meshRef.current.position.set(
-          x + cameraToCommentVec.x * 0.2,
-          y + cameraToCommentVec.y * 0.2,
-          z + cameraToCommentVec.z * 0.2,
-        );
-      }
-    });
+    window.addEventListener('mousemove', moveCommentIcon);
     window.addEventListener('mousedown', () => {
       mouseMoveCount.current = 0;
     });
