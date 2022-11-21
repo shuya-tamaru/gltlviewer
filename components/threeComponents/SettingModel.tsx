@@ -1,5 +1,6 @@
 import { Center, Stage } from '@react-three/drei';
 import { BuildingModel } from '../../hooks/threeHooks/useLoadingModel';
+import CommentIcon from './CommentIcon';
 import Cursor from './Cursor';
 import useCommentAction, { CommentAction } from './stores/useCommentAction';
 
@@ -13,13 +14,13 @@ export default function SettingModel({ buildingModel }: Props) {
 
   return (
     <>
-      {}
       <Stage>
         <Center disableY>
           <primitive object={buildingModel.scene} />
         </Center>
       </Stage>
-      {commentAction !== actions.ACTIVE && <Cursor buildingModel={buildingModel} />}
+      <Cursor buildingModel={buildingModel} />
+      <CommentIcon buildingModel={buildingModel} />
     </>
   );
 }

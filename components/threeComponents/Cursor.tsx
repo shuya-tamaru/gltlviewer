@@ -3,6 +3,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { BuildingModel } from '../../hooks/threeHooks/useLoadingModel';
+import useCommentAction, { CommentAction } from './stores/useCommentAction';
 
 type Props = {
   buildingModel: BuildingModel;
@@ -19,6 +20,9 @@ export default function Cursor({ buildingModel }: Props) {
     roughness: 0,
     transparent: true,
   });
+
+  const commentAction = useCommentAction((state) => state.commentAction);
+  const actions = CommentAction;
 
   useFrame((state) => {
     const scale = Math.abs(Math.sin(state.clock.elapsedTime)) / 2 + 0.8;
@@ -42,6 +46,13 @@ export default function Cursor({ buildingModel }: Props) {
   }, []);
 
   return (
-    <mesh ref={ref} geometry={palneGeometry} material={palneMaterial} rotation-x={Math.PI * -0.5} position-y={0.02} />
+    <mesh
+      ref={ref}
+      visible={commentAction !== actions.ACTIVE ? true : false}
+      geometry={palneGeometry}
+      material={palneMaterial}
+      rotation-x={Math.PI * -0.5}
+      position-y={0.02}
+    />
   );
 }
