@@ -38,7 +38,13 @@ export default function Cursor({ buildingModel }: Props) {
     window.addEventListener('mousemove', () => {
       const intersectObjects = raycaster.intersectObjects(buildingModel.scene.children);
       const firstintersectObject = intersectObjects[0];
-      if (firstintersectObject && firstintersectObject.object.parent?.visible && ref.current) {
+      if (
+        firstintersectObject &&
+        firstintersectObject.object.parent?.visible &&
+        ref.current &&
+        (firstintersectObject.object.parent?.name.indexOf('floor') !== -1 ||
+          firstintersectObject.object.name.indexOf('floor') !== -1)
+      ) {
         const { x, y, z } = firstintersectObject.point;
         ref.current.position.set(x, y + 0.05, z);
       }

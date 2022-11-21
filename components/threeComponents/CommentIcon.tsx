@@ -2,6 +2,7 @@ import { useTexture } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import useCommentPopUp from '../../hooks/threeHooks/useCommentPopUp';
 import { BuildingModel } from '../../hooks/threeHooks/useLoadingModel';
 import useCommentAction, { CommentAction } from './stores/useCommentAction';
 
@@ -12,7 +13,7 @@ const vec3Instance = new THREE.Vector3(0, 0, 0);
 
 export default function CommentIcon({ buildingModel }: Props) {
   const { raycaster, camera } = useThree();
-  const commentAction = useCommentAction((state) => state.commentAction);
+  const { commentAction, setCommsntAction } = useCommentAction((state) => state);
   const actions = CommentAction;
 
   const mouseMoveCount = useRef(0);
@@ -30,17 +31,25 @@ export default function CommentIcon({ buildingModel }: Props) {
     transparent: true,
   });
 
+  useCommentPopUp(groupRef);
+
   useFrame(() => {
     groupRef.current!.children.map((commentMesh) => {
       commentMesh.lookAt(camera.position);
     });
+    meshRef.current?.lookAt(camera.position);
   });
 
   useEffect(() => {
     window.addEventListener('mouseup', (e) => {
       if (mouseMoveCount.current < 3 && e.target instanceof HTMLElement && e.target.tagName === 'CANVAS') {
         const newCommentIcon = meshRef.current!.clone();
+        const userData = { tag: 'comment', title: 'hi', description: 'helooooooo' };
+        newCommentIcon.userData = userData;
         groupRef.current!.add(newCommentIcon);
+        setTimeout(() => {
+          setCommsntAction(actions.READY);
+        }, 100);
       }
     });
     window.addEventListener('mousemove', () => {
@@ -70,7 +79,6 @@ export default function CommentIcon({ buildingModel }: Props) {
         visible={commentAction === actions.ACTIVE ? true : false}
         geometry={commentIconGeometry}
         material={commentIconMaterial}
-        userData={{ tag: 'comment' }}
         scale={[0.7, 0.7, 0.7]}
       />
     </>
