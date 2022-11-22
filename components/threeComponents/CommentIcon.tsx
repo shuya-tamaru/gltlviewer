@@ -1,21 +1,19 @@
-import { useTexture } from '@react-three/drei';
-import { useFrame, useThree } from '@react-three/fiber';
-import { useEffect, useRef } from 'react';
-import * as THREE from 'three';
-import useCommentPopUp from '../../hooks/threeHooks/useCommentPopUp';
-import { BuildingModel } from '../../hooks/threeHooks/useLoadingModel';
-import useCommentAction, { CommentAction } from './stores/useCommentAction';
+import { useTexture } from "@react-three/drei";
+import { useFrame, useThree } from "@react-three/fiber";
+import { useEffect, useRef } from "react";
+import * as THREE from "three";
+import useCommentPopUp from "../../hooks/threeHooks/useCommentPopUp";
+import { BuildingModel } from "../../hooks/threeHooks/useLoadingModel";
+import useCommentAction, { CommentAction } from "./stores/useCommentAction";
 
 type Props = {
   buildingModel: BuildingModel;
 };
 const vec3Instance = new THREE.Vector3(0, 0, 0);
 const iconGeometry = new THREE.PlaneGeometry(0.5, 0.5);
-const iconMaterial = new THREE.MeshStandardMaterial({
-  color: 'red',
+const iconMaterial = new THREE.MeshBasicMaterial({
+  color: "red",
   side: THREE.DoubleSide,
-  metalness: 0,
-  roughness: 0,
   transparent: true,
 });
 
@@ -28,7 +26,7 @@ export default function CommentIcon({ buildingModel }: Props) {
   const groupRef = useRef<THREE.Group | null>(null);
   const meshRef = useRef<THREE.Mesh | null>(null);
 
-  const commentIconTexture = useTexture('/comment/comment.png');
+  const commentIconTexture = useTexture("/comment/comment.png");
   const commentIconGeometry = iconGeometry;
   const commentIconMaterial = iconMaterial;
   commentIconMaterial.map = commentIconTexture;
@@ -44,11 +42,11 @@ export default function CommentIcon({ buildingModel }: Props) {
     if (
       mouseMoveCount.current < 3 &&
       e.target instanceof HTMLElement &&
-      e.target.tagName === 'CANVAS' &&
+      e.target.tagName === "CANVAS" &&
       commentAction === actions.ACTIVE
     ) {
       const newCommentIcon = meshRef.current!.clone();
-      const userData = { tag: 'comment', title: 'hi', description: 'helooooooo' };
+      const userData = { tag: "comment", title: "hi", description: "helooooooo" };
       newCommentIcon.userData = userData;
       groupRef.current!.add(newCommentIcon);
       setTimeout(() => {
@@ -67,15 +65,15 @@ export default function CommentIcon({ buildingModel }: Props) {
       meshRef.current.position.set(
         x + cameraToCommentVec.x * 0.2,
         y + cameraToCommentVec.y * 0.2,
-        z + cameraToCommentVec.z * 0.2,
+        z + cameraToCommentVec.z * 0.2
       );
     }
   };
 
   useEffect(() => {
-    window.addEventListener('mouseup', (e) => setCommentIcon(e), { once: true });
-    window.addEventListener('mousemove', moveCommentIcon);
-    window.addEventListener('mousedown', () => {
+    window.addEventListener("mouseup", (e) => setCommentIcon(e), { once: true });
+    window.addEventListener("mousemove", moveCommentIcon);
+    window.addEventListener("mousedown", () => {
       mouseMoveCount.current = 0;
     });
   }, [commentAction]);

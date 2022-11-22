@@ -1,12 +1,9 @@
-import { Box, Image, Text, VStack } from '@chakra-ui/react';
+import { Image, Text, VStack } from '@chakra-ui/react';
 
 const styles = {
   background: '#fff',
   width: '200px',
-  // height: '100px',
   position: 'absolute',
-  // bottom: '10%',
-  // left: '50%',
   padding: 0,
   margin: 0,
   border: 'none',

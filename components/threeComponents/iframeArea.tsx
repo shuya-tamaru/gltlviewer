@@ -1,14 +1,11 @@
 import { Box } from '@chakra-ui/react';
 import { Canvas } from '@react-three/fiber';
-import { Suspense, useEffect } from 'react';
+import { Suspense } from 'react';
 import * as THREE from 'three';
 
-import BottomMenu from './BottomMenu';
 import Debug from './Debug';
-import DisplayCurrentFloor from './DisplayCurrentFloor';
 import Experience from './Experience';
-import LoadingDisplay from './LoadingDisplay';
-import PopupText from './PopupText';
+import Interface from './interfaceComponents/Interface';
 import useViewEvent from './stores/useViewEvent';
 
 export default function IframeArea() {
@@ -20,7 +17,6 @@ export default function IframeArea() {
         <Canvas
           style={{ width: 'calc(100% - 5px)', height: 'calc(100% - 5px)', background: '#283b4f' }}
           id='viewer'
-          shadows
           gl={{
             antialias: true,
             toneMapping: THREE.ACESFilmicToneMapping,
@@ -37,10 +33,7 @@ export default function IframeArea() {
             <Experience />
           </Suspense>
         </Canvas>
-        <LoadingDisplay />
-        <BottomMenu />
-        <DisplayCurrentFloor />
-        <PopupText />
+        <Interface />
       </Box>
     </>
   );

@@ -1,34 +1,35 @@
-import { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
-import * as THREE from 'three';
-import { RootState, useFrame } from '@react-three/fiber';
+import { OrbitControls as OrbitControlsImpl } from "three-stdlib";
+import * as THREE from "three";
+import { RootState, useFrame } from "@react-three/fiber";
 
-import { RefObject, useEffect } from 'react';
+import { RefObject, useEffect } from "react";
 
-import useRayCastFloor from '../../hooks/threeHooks/useRayCastFloor';
-import useViewEvent from '../../components/threeComponents/stores/useViewEvent';
-import useCurrentFloor from '../../components/threeComponents/stores/useCurrentFloor';
-import useCommentAction, { CommentAction } from '../../components/threeComponents/stores/useCommentAction';
-import { BuildingModel } from './useLoadingModel';
-import useBoundingBox from './useBoundingBox';
+import useRayCastFloor from "../../hooks/threeHooks/useRayCastFloor";
+import useViewEvent from "../../components/threeComponents/stores/useViewEvent";
+import useCurrentFloor from "../../components/threeComponents/stores/useCurrentFloor";
+import useCommentAction, { CommentAction } from "../../components/threeComponents/stores/useCommentAction";
+import { BuildingModel } from "./useLoadingModel";
+import useBoundingBox from "./useBoundingBox";
 
 const sightHeight = 1.4;
-let walkThrougCameraPos = new THREE.Vector3(0, 0 + sightHeight, 0);
+let walkThrougCameraPos = new THREE.Vector3();
 
 function useCameraAction(buildingModel: BuildingModel, cameraRef: RefObject<OrbitControlsImpl>) {
+  //imports
   const { perspectiveLookAt } = useBoundingBox(buildingModel);
-
-  const perspectiveCameraPos = useViewEvent((state) => state.perspectiveCameraPos);
-
-  const { isPerspective, setIsPerspective, cameraIsMoving, cameraMovingToggle, handleFloorVisible } = useViewEvent(
-    (state) => state,
-  );
+  const { isPerspective, setIsPerspective, cameraIsMoving, cameraMovingToggle, handleFloorVisible, perspectiveCameraPos } =
+    useViewEvent((state) => state);
   const { destinationFloor, setDestinationFloor, floorDefaultPosition, setCurrentWalkingFloor } = useCurrentFloor(
-    (state) => state,
+    (state) => state
   );
   const commentAction = useCommentAction((state) => state.commentAction);
   const actions = CommentAction;
   const { floorRayPos, setFloorRayPos, floorName } = useRayCastFloor(buildingModel);
 
+  //update walkthrough pos
+  walkThrougCameraPos.set(floorDefaultPosition[0].x, floorDefaultPosition[0].y + sightHeight, floorDefaultPosition[0].z);
+
+  //function
   const setRayCastPosition = (floorRayPos: THREE.Vector3) => {
     setIsPerspective(false);
     cameraMovingToggle(true);
@@ -49,7 +50,7 @@ function useCameraAction(buildingModel: BuildingModel, cameraRef: RefObject<Orbi
   };
 
   const setCameraPosition = (cameraRef: RefObject<OrbitControlsImpl>, state: RootState, delta: number) => {
-    handleFloorVisible('all');
+    handleFloorVisible("all");
     cameraRef.current!.rotateSpeed = 0.3;
     const currentPos = new THREE.Vector3();
     currentPos.copy(state.camera.position);
@@ -58,12 +59,10 @@ function useCameraAction(buildingModel: BuildingModel, cameraRef: RefObject<Orbi
       ? currentPos.lerp(perspectiveCameraPos, cameraMoveSpeed)
       : currentPos.lerp(walkThrougCameraPos, cameraMoveSpeed);
 
-    //setCameraPos
     state.camera.position.copy(newPos);
 
-    //setOrbitTarget
     const { x, y, z } = walkThrougCameraPos;
-    cameraRef.current!.target = isPerspective ? perspectiveLookAt : new THREE.Vector3(x + 0.0000001, y, z);
+    cameraRef.current!.target = isPerspective ? perspectiveLookAt : new THREE.Vector3(x, y, z);
   };
 
   const cameraStop = (state: RootState) => {
@@ -81,7 +80,7 @@ function useCameraAction(buildingModel: BuildingModel, cameraRef: RefObject<Orbi
   }, [perspectiveLookAt]);
 
   useFrame((state, delta) => {
-    if (typeof destinationFloor === 'number') {
+    if (typeof destinationFloor === "number") {
       setSelectedFloorPoition(destinationFloor);
     } else {
       commentAction !== actions.ACTIVE ? floorRayPos && setRayCastPosition(floorRayPos) : resetState();

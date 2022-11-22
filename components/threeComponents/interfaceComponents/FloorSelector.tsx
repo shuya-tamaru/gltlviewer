@@ -1,8 +1,8 @@
 import { Menu, MenuButton, MenuItem, MenuList, Portal, Tooltip } from '@chakra-ui/react';
 import { IoLayersOutline } from 'react-icons/io5';
 import { HoverColor, IconStyle } from './BottomMenu';
-import useCurrentFloor from './stores/useCurrentFloor';
-import useViewEvent from './stores/useViewEvent';
+import useCurrentFloor from '../stores/useCurrentFloor';
+import useViewEvent from '../stores/useViewEvent';
 
 type Props = {
   styleProps: [IconStyle, HoverColor];

@@ -12,9 +12,11 @@ function useBoundingBox(buildingModel: BuildingModel) {
   const perspectiveTargetZ = (bbBox.max.z + bbBox.min.z) * 0.5;
   perspectiveLookAt.set(perspectiveTargetX, 0, perspectiveTargetZ);
 
-  const cameraOffsetX = bbBox.min.x - 5;
-  const cameraOffsetY = bbBox.max.y + 5;
-  const cameraOffsetZ = bbBox.max.z + 5;
+  const cameraOffsetDistance = 5;
+
+  const cameraOffsetX = bbBox.min.x - cameraOffsetDistance;
+  const cameraOffsetY = bbBox.max.y + cameraOffsetDistance;
+  const cameraOffsetZ = bbBox.max.z + cameraOffsetDistance;
   perspectivePosition.set(cameraOffsetX, cameraOffsetY, cameraOffsetZ);
 
   return { bbBox, perspectiveLookAt, perspectivePosition };

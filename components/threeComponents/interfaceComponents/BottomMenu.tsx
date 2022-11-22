@@ -4,7 +4,7 @@ import CommetnButton from './CommetnButton';
 
 import CurrentViewButton from './CurrentViewButton';
 import FloorSelector from './FloorSelector';
-import useCommentAction, { CommentAction } from './stores/useCommentAction';
+import useCommentAction, { CommentAction } from '../stores/useCommentAction';
 
 export type IconStyle = { fontSize: string };
 export type HoverColor = string;
@@ -28,7 +28,7 @@ const buttonStyles: ButtonStyles = {
   color: '#fff',
 };
 
-export default function BottomMenu() {
+function BottomMenu() {
   const commentAction = useCommentAction((state) => state.commentAction);
   const actions = CommentAction;
 
@@ -43,3 +43,4 @@ export default function BottomMenu() {
     </>
   );
 }
+export default BottomMenu;

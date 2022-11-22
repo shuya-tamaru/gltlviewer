@@ -22,12 +22,12 @@ export default function Cursor({ buildingModel }: Props) {
   const commentAction = useCommentAction((state) => state.commentAction);
   const actions = CommentAction;
 
-  useFrame((state) => {
-    const scale = Math.abs(Math.sin(state.clock.elapsedTime)) / 2 + 0.8;
-    if (ref.current) {
-      ref.current.scale.set(scale, scale, scale);
-    }
-  });
+  // useFrame((state) => {
+  //   const scale = Math.abs(Math.sin(state.clock.elapsedTime)) / 2 + 0.8;
+  //   if (ref.current) {
+  //     ref.current.scale.set(scale, scale, scale);
+  //   }
+  // });
 
   const ref = useRef<THREE.Mesh | null>(null);
   const { raycaster } = useThree();

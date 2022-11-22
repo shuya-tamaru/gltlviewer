@@ -2,8 +2,8 @@ import { Button, Tooltip } from '@chakra-ui/react';
 import { BiWalk } from 'react-icons/bi';
 import { GiCube } from 'react-icons/gi';
 import { ButtonStyles, HoverColor, IconStyle } from './BottomMenu';
-import useCommentAction, { CommentAction } from './stores/useCommentAction';
-import useViewEvent from './stores/useViewEvent';
+import useCommentAction, { CommentAction } from '../stores/useCommentAction';
+import useViewEvent from '../stores/useViewEvent';
 
 type Props = {
   styleProps: [IconStyle, ButtonStyles, HoverColor];

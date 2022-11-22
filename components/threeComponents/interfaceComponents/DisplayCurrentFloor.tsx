@@ -1,6 +1,6 @@
 import { Box, Text } from '@chakra-ui/react';
-import useCurrentFloor from './stores/useCurrentFloor';
-import useViewEvent from './stores/useViewEvent';
+import useCurrentFloor from '../stores/useCurrentFloor';
+import useViewEvent from '../stores/useViewEvent';
 
 const buttonStyles = {
   width: '60px',

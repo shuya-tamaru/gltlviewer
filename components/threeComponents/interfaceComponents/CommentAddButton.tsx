@@ -2,7 +2,7 @@ import { Button, Tooltip } from '@chakra-ui/react';
 import { AiFillPlusCircle } from 'react-icons/ai';
 import { MdCancel } from 'react-icons/md';
 import { HoverColor } from './BottomMenu';
-import useCommentAction, { CommentAction } from './stores/useCommentAction';
+import useCommentAction, { CommentAction } from '../stores/useCommentAction';
 
 const buttonStyles = {
   position: 'absolute',

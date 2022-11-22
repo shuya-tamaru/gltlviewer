@@ -1,4 +1,4 @@
-import { Environment, OrbitControls, Stage } from '@react-three/drei';
+import { Environment, OrbitControls } from '@react-three/drei';
 import { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 
 import { useRef } from 'react';
@@ -8,9 +8,8 @@ import useLoadingModel, { BuildingModel } from '../../hooks/threeHooks/useLoadin
 import SettingModel from './SettingModel';
 import useCameraAction from '../../hooks/threeHooks/useCameraAction';
 
-export default function Experience() {
+function Experience() {
   const buildingModel: BuildingModel = useLoadingModel();
-
   const cameraRef = useRef<OrbitControlsImpl>(null);
   const isPerspective = useViewEvent((state) => state.isPerspective);
 
@@ -33,3 +32,5 @@ export default function Experience() {
     </>
   );
 }
+
+export default Experience;
