@@ -36,7 +36,7 @@ function FloorSelector({ styleProps }: Props) {
       <Portal>
         <MenuList>
           {isPerspective ? (
-            <MenuItem className='button' key={'all'} onClick={(e) => handleFloorVisibe('all')}>
+            <MenuItem className='button' key={'all'} onClick={() => handleFloorVisibe('all')}>
               {'全階表示'}
             </MenuItem>
           ) : (

@@ -10,6 +10,14 @@ type Props = {
   buildingModel: BuildingModel;
 };
 const vec3Instance = new THREE.Vector3(0, 0, 0);
+const iconGeometry = new THREE.PlaneGeometry(0.5, 0.5);
+const iconMaterial = new THREE.MeshStandardMaterial({
+  color: 'red',
+  side: THREE.DoubleSide,
+  metalness: 0,
+  roughness: 0,
+  transparent: true,
+});
 
 export default function CommentIcon({ buildingModel }: Props) {
   const { raycaster, camera } = useThree();
@@ -21,15 +29,9 @@ export default function CommentIcon({ buildingModel }: Props) {
   const meshRef = useRef<THREE.Mesh | null>(null);
 
   const commentIconTexture = useTexture('/comment/comment.png');
-  const commentIconGeometry = new THREE.PlaneGeometry(0.5, 0.5);
-  const commentIconMaterial = new THREE.MeshStandardMaterial({
-    map: commentIconTexture,
-    color: 'red',
-    side: THREE.DoubleSide,
-    metalness: 0,
-    roughness: 0,
-    transparent: true,
-  });
+  const commentIconGeometry = iconGeometry;
+  const commentIconMaterial = iconMaterial;
+  commentIconMaterial.map = commentIconTexture;
 
   useFrame(() => {
     groupRef.current!.children.map((commentMesh) => {

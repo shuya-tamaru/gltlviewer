@@ -7,9 +7,11 @@ import useViewEvent from './stores/useViewEvent';
 import useLoadingModel, { BuildingModel } from '../../hooks/threeHooks/useLoadingModel';
 import SettingModel from './SettingModel';
 import useCameraAction from '../../hooks/threeHooks/useCameraAction';
+import Lights from './Light';
 
 export default function Experience() {
   const buildingModel: BuildingModel = useLoadingModel();
+
   const cameraRef = useRef<OrbitControlsImpl>(null);
   const isPerspective = useViewEvent((state) => state.isPerspective);
 
@@ -19,6 +21,7 @@ export default function Experience() {
     <>
       <OrbitControls ref={cameraRef} enableZoom={isPerspective ? true : false} makeDefault />
       <SettingModel buildingModel={buildingModel} />
+      <Lights />
     </>
   );
 }

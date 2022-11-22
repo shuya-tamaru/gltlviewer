@@ -1,4 +1,5 @@
 import create from 'zustand';
+import * as THREE from 'three';
 
 interface ViewState {
   isPerspective: boolean;
@@ -12,6 +13,9 @@ interface ViewState {
 
   cameraIsMoving: boolean;
   cameraMovingToggle: (flg: boolean) => void;
+
+  perspectiveCameraPos: THREE.Vector3;
+  setPerspectiveCameraPos: (position: THREE.Vector3) => void;
 }
 
 export default create<ViewState>((set) => ({
@@ -40,6 +44,13 @@ export default create<ViewState>((set) => ({
   cameraMovingToggle: (flg: boolean) => {
     set(() => {
       return { cameraIsMoving: flg };
+    });
+  },
+
+  perspectiveCameraPos: new THREE.Vector3(-20, 20, 20),
+  setPerspectiveCameraPos: (position: THREE.Vector3) => {
+    set(() => {
+      return { perspectiveCameraPos: position };
     });
   },
 }));

@@ -2,20 +2,23 @@ import { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import * as THREE from 'three';
 import { RootState, useFrame } from '@react-three/fiber';
 
-import { RefObject } from 'react';
+import { RefObject, useEffect } from 'react';
 
 import useRayCastFloor from '../../hooks/threeHooks/useRayCastFloor';
 import useViewEvent from '../../components/threeComponents/stores/useViewEvent';
 import useCurrentFloor from '../../components/threeComponents/stores/useCurrentFloor';
 import useCommentAction, { CommentAction } from '../../components/threeComponents/stores/useCommentAction';
 import { BuildingModel } from './useLoadingModel';
+import useBoundingBox from './useBoundingBox';
 
 const sightHeight = 1.4;
-const perspectiveCameraPos = new THREE.Vector3(0, 3, 40);
-const perspectiveLookAt = new THREE.Vector3(0, 0, 0);
 let walkThrougCameraPos = new THREE.Vector3(0, 0 + sightHeight, 0);
 
 function useCameraAction(buildingModel: BuildingModel, cameraRef: RefObject<OrbitControlsImpl>) {
+  const { perspectiveLookAt } = useBoundingBox(buildingModel);
+
+  const perspectiveCameraPos = useViewEvent((state) => state.perspectiveCameraPos);
+
   const { isPerspective, setIsPerspective, cameraIsMoving, cameraMovingToggle, handleFloorVisible } = useViewEvent(
     (state) => state,
   );
@@ -72,6 +75,10 @@ function useCameraAction(buildingModel: BuildingModel, cameraRef: RefObject<Orbi
       setFloorRayPos(null);
     }
   };
+
+  useEffect(() => {
+    cameraRef.current!.target = perspectiveLookAt;
+  }, [perspectiveLookAt]);
 
   useFrame((state, delta) => {
     if (typeof destinationFloor === 'number') {

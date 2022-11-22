@@ -1,6 +1,6 @@
-import { Box, Text } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import { Canvas } from '@react-three/fiber';
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 import * as THREE from 'three';
 
 import BottomMenu from './BottomMenu';
@@ -9,8 +9,11 @@ import DisplayCurrentFloor from './DisplayCurrentFloor';
 import Experience from './Experience';
 import LoadingDisplay from './LoadingDisplay';
 import PopupText from './PopupText';
+import useViewEvent from './stores/useViewEvent';
 
 export default function IframeArea() {
+  const perspectiveCameraPos = useViewEvent((state) => state.perspectiveCameraPos);
+
   return (
     <>
       <Box w='100%' h='92%' p='5px' position='relative'>
@@ -26,7 +29,7 @@ export default function IframeArea() {
             fov: 75,
             near: 0.1,
             far: 200,
-            // position: [2.5, 4, 6],
+            position: perspectiveCameraPos,
           }}
         >
           <Debug />
