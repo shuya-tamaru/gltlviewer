@@ -8,18 +8,16 @@ import useCommentAction, { CommentAction } from './stores/useCommentAction';
 type Props = {
   buildingModel: BuildingModel;
 };
+const palneGeometry = new THREE.PlaneGeometry(0.5, 0.5);
+const palneMaterial = new THREE.MeshBasicMaterial({
+  color: 'red',
+  side: THREE.DoubleSide,
+  transparent: true,
+});
 
 export default function Cursor({ buildingModel }: Props) {
   const texture = useTexture('/cursor/ring.png');
-  const palneGeometry = new THREE.PlaneGeometry(0.5, 0.5);
-  const palneMaterial = new THREE.MeshStandardMaterial({
-    map: texture,
-    color: 'red',
-    side: THREE.DoubleSide,
-    metalness: 0,
-    roughness: 0,
-    transparent: true,
-  });
+  palneMaterial.map = texture;
 
   const commentAction = useCommentAction((state) => state.commentAction);
   const actions = CommentAction;

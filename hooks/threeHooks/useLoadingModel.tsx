@@ -40,15 +40,18 @@ function useLoadingModel() {
   const defaultPositionList: THREE.Vector3[] = sortedDefaultPosMesh.map((mesh) => {
     return mesh.position;
   });
+  console.log(buildingModel);
 
   active === false && item.indexOf('model') !== -1 && setFloorDefaultPosition(defaultPositionList);
 
   // glass transparent
   Object.keys(buildingModel.materials).forEach((key) => {
+    const material = buildingModel.materials[key] as THREE.MeshStandardMaterial;
     if (key.indexOf('ガラス') !== -1) {
-      const material = buildingModel.materials[key];
       material.transparent = true;
     }
+    material.roughness = 1.0;
+    material.envMapIntensity = 2.0;
   });
 
   //initialSetUp after model loading

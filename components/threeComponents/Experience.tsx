@@ -1,4 +1,4 @@
-import { OrbitControls } from '@react-three/drei';
+import { Environment, OrbitControls, Stage } from '@react-three/drei';
 import { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 
 import { useRef } from 'react';
@@ -7,7 +7,6 @@ import useViewEvent from './stores/useViewEvent';
 import useLoadingModel, { BuildingModel } from '../../hooks/threeHooks/useLoadingModel';
 import SettingModel from './SettingModel';
 import useCameraAction from '../../hooks/threeHooks/useCameraAction';
-import Lights from './Light';
 
 export default function Experience() {
   const buildingModel: BuildingModel = useLoadingModel();
@@ -21,7 +20,16 @@ export default function Experience() {
     <>
       <OrbitControls ref={cameraRef} enableZoom={isPerspective ? true : false} makeDefault />
       <SettingModel buildingModel={buildingModel} />
-      <Lights />
+      <Environment
+        files={[
+          '/environmentMap/px.jpg',
+          '/environmentMap/nx.jpg',
+          '/environmentMap/py.jpg',
+          '/environmentMap/ny.jpg',
+          '/environmentMap/pz.jpg',
+          '/environmentMap/nz.jpg',
+        ]}
+      />
     </>
   );
 }
