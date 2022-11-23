@@ -2,7 +2,7 @@ import { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import * as THREE from "three";
 import { RootState, useFrame } from "@react-three/fiber";
 
-import { RefObject, useEffect } from "react";
+import { RefObject, useEffect, useRef } from "react";
 
 import useRayCastFloor from "../../hooks/threeHooks/useRayCastFloor";
 import useViewEvent from "../../components/threeComponents/stores/useViewEvent";
@@ -13,9 +13,14 @@ import useBoundingBox from "./useBoundingBox";
 
 const sightHeight = 1.4;
 let walkThrougCameraPos = new THREE.Vector3();
+let cameraDirection = new THREE.Vector3();
+let currentCameraDirection = new THREE.Vector3();
+let nextTarget = new THREE.Vector3();
+let calcCameraDirection = new THREE.Vector3();
 
 function useCameraAction(buildingModel: BuildingModel, cameraRef: RefObject<OrbitControlsImpl>) {
   //imports
+  const initialRender = useRef(true);
   const { perspectiveLookAt } = useBoundingBox(buildingModel);
   const { isPerspective, setIsPerspective, cameraIsMoving, cameraMovingToggle, handleFloorVisible, perspectiveCameraPos } =
     useViewEvent((state) => state);
@@ -27,7 +32,12 @@ function useCameraAction(buildingModel: BuildingModel, cameraRef: RefObject<Orbi
   const { floorRayPos, setFloorRayPos, floorName } = useRayCastFloor(buildingModel);
 
   //update walkthrough pos
-  walkThrougCameraPos.set(floorDefaultPosition[0].x, floorDefaultPosition[0].y + sightHeight, floorDefaultPosition[0].z);
+  useEffect(() => {
+    if (initialRender) {
+      walkThrougCameraPos.set(floorDefaultPosition[0].x, floorDefaultPosition[0].y + sightHeight, floorDefaultPosition[0].z);
+      initialRender.current = false;
+    }
+  }, []);
 
   //function
   const setRayCastPosition = (floorRayPos: THREE.Vector3) => {
@@ -52,17 +62,18 @@ function useCameraAction(buildingModel: BuildingModel, cameraRef: RefObject<Orbi
   const setCameraPosition = (cameraRef: RefObject<OrbitControlsImpl>, state: RootState, delta: number) => {
     handleFloorVisible("all");
     cameraRef.current!.rotateSpeed = 0.3;
-    const currentPos = new THREE.Vector3();
-    currentPos.copy(state.camera.position);
+    const cameraClone = state.camera.clone();
+    const currentPos = cameraClone.position;
     const cameraMoveSpeed = 2 * delta;
     const newPos = isPerspective
       ? currentPos.lerp(perspectiveCameraPos, cameraMoveSpeed)
       : currentPos.lerp(walkThrougCameraPos, cameraMoveSpeed);
 
-    state.camera.position.copy(newPos);
+    currentCameraDirection = state.camera.getWorldDirection(calcCameraDirection).multiplyScalar(0.00001);
+    nextTarget = walkThrougCameraPos.add(currentCameraDirection);
 
-    const { x, y, z } = walkThrougCameraPos;
-    cameraRef.current!.target = isPerspective ? perspectiveLookAt : new THREE.Vector3(x, y, z);
+    state.camera.position.copy(newPos);
+    cameraRef.current!.target = isPerspective ? perspectiveLookAt : cameraDirection.lerp(nextTarget, cameraMoveSpeed);
   };
 
   const cameraStop = (state: RootState) => {
@@ -80,7 +91,7 @@ function useCameraAction(buildingModel: BuildingModel, cameraRef: RefObject<Orbi
   }, [perspectiveLookAt]);
 
   useFrame((state, delta) => {
-    if (typeof destinationFloor === "number") {
+    if (typeof destinationFloor === "number" && !floorRayPos) {
       setSelectedFloorPoition(destinationFloor);
     } else {
       commentAction !== actions.ACTIVE ? floorRayPos && setRayCastPosition(floorRayPos) : resetState();
@@ -89,6 +100,7 @@ function useCameraAction(buildingModel: BuildingModel, cameraRef: RefObject<Orbi
     if (cameraRef.current && cameraIsMoving) {
       setCameraPosition(cameraRef, state, delta);
       cameraStop(state);
+    } else {
     }
   });
 
