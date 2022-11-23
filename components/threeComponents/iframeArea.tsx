@@ -1,22 +1,22 @@
-import { Box } from '@chakra-ui/react';
-import { Canvas } from '@react-three/fiber';
-import { Suspense } from 'react';
-import * as THREE from 'three';
+import { Box } from "@chakra-ui/react";
+import { Canvas } from "@react-three/fiber";
+import { Suspense } from "react";
+import * as THREE from "three";
 
-import Debug from './Debug';
-import Experience from './Experience';
-import Interface from './interfaceComponents/Interface';
-import useViewEvent from './stores/useViewEvent';
+import Debug from "./Debug";
+import Experience from "./Experience";
+import Interface from "./interfaceComponents/Interface";
+import useViewEvent from "./stores/useViewEvent";
 
 export default function IframeArea() {
   const perspectiveCameraPos = useViewEvent((state) => state.perspectiveCameraPos);
 
   return (
     <>
-      <Box w='100%' h='92%' p='5px' position='relative'>
+      <Box w="100%" h="92%" p="5px" position="relative">
         <Canvas
-          style={{ width: 'calc(100% - 5px)', height: 'calc(100% - 5px)', background: '#283b4f' }}
-          id='viewer'
+          style={{ width: "calc(100% - 5px)", height: "calc(100% - 5px)", background: "#283b4f" }}
+          id="viewer"
           gl={{
             antialias: true,
             toneMapping: THREE.ACESFilmicToneMapping,

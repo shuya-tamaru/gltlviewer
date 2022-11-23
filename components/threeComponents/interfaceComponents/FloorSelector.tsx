@@ -1,8 +1,8 @@
-import { Menu, MenuButton, MenuItem, MenuList, Portal, Tooltip } from '@chakra-ui/react';
-import { IoLayersOutline } from 'react-icons/io5';
-import { HoverColor, IconStyle } from './BottomMenu';
-import useCurrentFloor from '../stores/useCurrentFloor';
-import useViewEvent from '../stores/useViewEvent';
+import { Menu, MenuButton, MenuItem, MenuList, Portal, Tooltip } from "@chakra-ui/react";
+import { IoLayersOutline } from "react-icons/io5";
+import { HoverColor, IconStyle } from "./BottomMenu";
+import useCurrentFloor from "../stores/useCurrentFloor";
+import useViewEvent from "../stores/useViewEvent";
 
 type Props = {
   styleProps: [IconStyle, HoverColor];
@@ -14,7 +14,7 @@ function FloorSelector({ styleProps }: Props) {
   const { isPerspective, floorList, handleFloorVisible } = useViewEvent((state) => state);
   const floorListReverse = [...floorList].reverse();
   const handleFloorVisibe = (floorName: string) => {
-    const selectedFloor = floorName.split('_floor')[0];
+    const selectedFloor = floorName.split("_floor")[0];
     handleFloorVisible(selectedFloor);
   };
 
@@ -26,9 +26,9 @@ function FloorSelector({ styleProps }: Props) {
 
   return (
     <Menu>
-      <Tooltip hasArrow label='Select Floor' placement='top-start'>
-        <MenuButton color='#fff' _hover={{ color: hoverColor }} w='40px' className='button'>
-          <span style={{ alignItems: 'center', display: 'flex', justifyContent: 'center' }}>
+      <Tooltip hasArrow label="Select Floor" placement="top-start">
+        <MenuButton color="#fff" _hover={{ color: hoverColor }} w="40px" className="button">
+          <span style={{ alignItems: "center", display: "flex", justifyContent: "center" }}>
             <IoLayersOutline style={iconStyles} />
           </span>
         </MenuButton>
@@ -36,8 +36,8 @@ function FloorSelector({ styleProps }: Props) {
       <Portal>
         <MenuList>
           {isPerspective ? (
-            <MenuItem className='button' key={'all'} onClick={() => handleFloorVisibe('all')}>
-              {'全階表示'}
+            <MenuItem className="button" key={"all"} onClick={() => handleFloorVisibe("all")}>
+              {"全階表示"}
             </MenuItem>
           ) : (
             <></>
@@ -47,13 +47,11 @@ function FloorSelector({ styleProps }: Props) {
             const floor = floorNum - index;
             return (
               <MenuItem
-                className='button'
+                className="button"
                 key={floor}
-                onClick={() =>
-                  isPerspective ? handleFloorVisibe(floorName) : handleCurrentFloor(floor - 1, floorName)
-                }
+                onClick={() => (isPerspective ? handleFloorVisibe(floorName) : handleCurrentFloor(floor - 1, floorName))}
               >
-                {isPerspective ? floorName : floorName + 'へ移動'}
+                {isPerspective ? floorName : floorName + "へ移動"}
               </MenuItem>
             );
           })}

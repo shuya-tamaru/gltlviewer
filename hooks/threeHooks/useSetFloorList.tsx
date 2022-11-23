@@ -8,7 +8,7 @@ function useSetFloorList(buildingModel: BuildingModel) {
   buildingModel.scene.children.map((group) => {
     group.name.indexOf("floor") !== -1 && floorNames.push(group.name);
   });
-  setFloorList(floorNames);
+  setFloorList(floorNames.sort());
   return;
 }
 

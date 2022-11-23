@@ -1,12 +1,12 @@
-import { Environment, OrbitControls } from '@react-three/drei';
-import { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
+import { Environment, OrbitControls } from "@react-three/drei";
+import { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 
-import { useRef } from 'react';
+import { useRef } from "react";
 
-import useViewEvent from './stores/useViewEvent';
-import useLoadingModel, { BuildingModel } from '../../hooks/threeHooks/useLoadingModel';
-import SettingModel from './SettingModel';
-import useCameraAction from '../../hooks/threeHooks/useCameraAction';
+import useViewEvent from "./stores/useViewEvent";
+import useLoadingModel, { BuildingModel } from "../../hooks/threeHooks/useLoadingModel";
+import SettingModel from "./SettingModel";
+import useCameraAction from "../../hooks/threeHooks/useCameraAction";
 
 function Experience() {
   const buildingModel: BuildingModel = useLoadingModel();
@@ -21,12 +21,12 @@ function Experience() {
       <SettingModel buildingModel={buildingModel} />
       <Environment
         files={[
-          '/environmentMap/px.jpg',
-          '/environmentMap/nx.jpg',
-          '/environmentMap/py.jpg',
-          '/environmentMap/ny.jpg',
-          '/environmentMap/pz.jpg',
-          '/environmentMap/nz.jpg',
+          "/environmentMap/px.jpg",
+          "/environmentMap/nx.jpg",
+          "/environmentMap/py.jpg",
+          "/environmentMap/ny.jpg",
+          "/environmentMap/pz.jpg",
+          "/environmentMap/nz.jpg",
         ]}
       />
     </>

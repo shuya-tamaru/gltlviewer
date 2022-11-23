@@ -1,13 +1,15 @@
 import { useThree } from "@react-three/fiber";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import * as THREE from "three";
+
+import useCurrentFloor from "../../components/threeComponents/stores/useCurrentFloor";
 import { BuildingModel } from "./useLoadingModel";
 
 export default function useRayCastFloor(buildingModel: BuildingModel) {
   const { raycaster } = useThree();
+  const floorRayPos = useRef<THREE.Vector3 | null>(null);
 
-  const [floorName, setFloorName] = useState<string>("");
-  const [floorRayPos, setFloorRayPos] = useState<THREE.Vector3 | null>(null);
-  const [distantToTarget, setDistanceToTarget] = useState<number>(0);
+  const setCurrentWalkingFloor = useCurrentFloor((state) => state.setCurrentWalkingFloor);
   const mouseMoveCount = useRef(0);
 
   useEffect(() => {
@@ -20,13 +22,11 @@ export default function useRayCastFloor(buildingModel: BuildingModel) {
         if (floorIntersectObject.length > 0 && floorIntersectObject[0].object.parent?.visible) {
           const parentName = floorIntersectObject[0].object.parent.name;
           const meshName = floorIntersectObject[0].object.name;
-          const getFloorName =
-            parentName.indexOf("floor") !== -1 ? parentName : meshName.indexOf("floor") !== -1 ? meshName : floorName;
-          setFloorName(getFloorName);
-          setFloorRayPos(floorIntersectObject[0].point);
-          setDistanceToTarget(floorIntersectObject[0].distance);
+          const getFloorName = parentName.indexOf("floor") !== -1 ? parentName : meshName;
+          setCurrentWalkingFloor(getFloorName);
+          floorRayPos.current = floorIntersectObject[0].point;
         } else {
-          setFloorRayPos(null);
+          floorRayPos.current = null;
         }
       }
       mouseMoveCount.current = 0;
@@ -39,5 +39,5 @@ export default function useRayCastFloor(buildingModel: BuildingModel) {
     });
   }, []);
 
-  return { floorRayPos, setFloorRayPos, floorName, distantToTarget };
+  return { floorRayPos };
 }
