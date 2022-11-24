@@ -1,13 +1,15 @@
-import { useToast, useDisclosure } from '@chakra-ui/react';
+import { useToast, useDisclosure } from "@chakra-ui/react";
 
-import React, { useEffect, useState } from 'react';
-import { Building } from '../../types/Buildings';
-import { useCurrentIframeState } from '../../context/CurrentIframeStateContext';
-import axios from 'axios';
-import { useCurrentUser } from '../../context/CurrentUserContext';
-import useTransmission from '../../hooks/useTransmission';
-import DrawerForm from './drawerForm';
-import useImageUploader from '../../hooks/useImageUploader';
+import React, { useEffect, useState } from "react";
+import { Building } from "../../types/Buildings";
+import { useCurrentIframeState } from "../../context/CurrentIframeStateContext";
+import axios from "axios";
+import { useCurrentUser } from "../../context/CurrentUserContext";
+import useTransmission from "../../hooks/useTransmission";
+import DrawerForm from "./drawerForm";
+import useImageUploader from "../../hooks/useImageUploader";
+import useCanvasState, { CanvasState } from "../threeComponents/stores/useCanvasState";
+import useCommentTransmission from "../threeComponents/stores/useCommentTransmission";
 
 type Props = {
   building: Building;
@@ -23,22 +25,27 @@ export default function ({ building }: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const currentIframeState = useCurrentIframeState();
   const currentUser = useCurrentUser();
+  const canvasState = CanvasState;
+  const { currentCanvasState, setCanvasState } = useCanvasState((state) => state);
+  const { focusComment } = useCommentTransmission((state) => state);
 
-  const [desc, setDesc] = useState<string>('');
-  const [title, setTitle] = useState<string>('');
-  const [guid, setGuid] = useState<string>('');
-  const [coordinate, setCoordinate] = useState<string>('');
+  const [desc, setDesc] = useState<string>("");
+  const [title, setTitle] = useState<string>("");
+  const [guid, setGuid] = useState<string>("");
+  const [coordinate, setCoordinate] = useState<string>("");
   const [images, setImages] = useState<File[]>([]);
 
   useEffect(() => {
-    if (currentIframeState) {
-      if (currentIframeState.message === 'addPost') {
-        onOpen();
-        setGuid(currentIframeState.guid as string);
-        setCoordinate(currentIframeState.coordinate as string);
-      }
+    if (currentCanvasState === canvasState.ADD_COMMENT) {
+      const focusGuid = focusComment.guid;
+      const coordinate = focusComment.coordinate;
+      const focusCommentCoordinate = { x: coordinate.x, y: coordinate.y, z: coordinate.z };
+      const jsonCoordinate = JSON.stringify(focusCommentCoordinate);
+      onOpen();
+      setGuid(focusGuid);
+      setCoordinate(jsonCoordinate);
     }
-  }, [currentIframeState]);
+  }, [currentCanvasState]);
 
   const addComment = async (e: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => {
     e.preventDefault();
@@ -70,25 +77,25 @@ export default function ({ building }: Props) {
         });
 
       images.length > 0 && useImageUploader(images, postedComment.id);
-      useTransmission(postedComment, 'addPost', guid);
-      setDesc('');
-      setTitle('');
+      // useTransmission(postedComment, "addPost", guid);
+      setDesc("");
+      setTitle("");
       setImages([]);
       onClose();
       toast({
         title: `コメントを投稿しました`,
-        status: 'success',
+        status: "success",
         isClosable: true,
       });
     } catch (error) {
       console.log(error);
-      setDesc('');
-      setTitle('');
+      setDesc("");
+      setTitle("");
       setImages([]);
       onClose();
       toast({
-        title: 'コメント投稿に失敗しました',
-        status: 'error',
+        title: "コメント投稿に失敗しました",
+        status: "error",
         isClosable: true,
       });
     }
@@ -96,14 +103,14 @@ export default function ({ building }: Props) {
 
   const cancelComment = (e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.preventDefault();
-    useTransmission('', 'cancelPost', guid);
-    setDesc('');
-    setTitle('');
+    setCanvasState(canvasState.CANCEL_COMMENT);
+    setDesc("");
+    setTitle("");
     setImages([]);
     onClose();
     toast({
       title: `コメント投稿をキャンセルしました`,
-      status: 'warning',
+      status: "warning",
       isClosable: true,
     });
   };
@@ -113,12 +120,12 @@ export default function ({ building }: Props) {
     isOpen: isOpen,
     cancelFunction: cancelComment,
     excuteFunction: addComment,
-    headerText: 'コメントを投稿する',
+    headerText: "コメントを投稿する",
     title: title,
     setTitle: setTitle,
     desc: desc,
     setDesc: setDesc,
-    excuteButtonText: 'Add',
+    excuteButtonText: "Add",
     images,
     setImages,
   };
