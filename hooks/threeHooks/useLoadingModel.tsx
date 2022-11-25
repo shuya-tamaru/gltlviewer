@@ -7,14 +7,14 @@ import useDefaultFloorPosition from "./useDefaultFloorPosition";
 import useMaterialSetup from "./useMaterialSetup";
 import useSetFloorList from "./useSetFloorList";
 import usePerspectiveCameraPos from "./usePerspectiveCameraPos";
-import useCanvasState, { CanvasState } from "../../components/threeComponents/stores/useCanvasState";
+import useCommentActions, { CommentActions } from "../../components/threeComponents/stores/useCommentActions";
 export type BuildingModel = GLTF & ObjectMap;
 
 function useLoadingModel() {
   const buildingModel: BuildingModel = useGLTF("/model/higashi_shinjuku.glb");
   const { active, item } = useProgress();
-  const canvasState = CanvasState;
-  const setCanvasState = useCanvasState((state) => state.setCanvasState);
+  const commentActions = CommentActions;
+  const { setCommentAction } = useCommentActions((state) => state);
 
   //initialSetUp
   useFloorSelector(buildingModel);
@@ -25,7 +25,7 @@ function useLoadingModel() {
   if (active === false && item.indexOf("model") !== -1) {
     useSetFloorList(buildingModel);
     usePerspectiveCameraPos(buildingModel);
-    setCanvasState(canvasState.READY);
+    setCommentAction(commentActions.READY);
   }
 
   return buildingModel;

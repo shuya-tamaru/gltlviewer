@@ -1,7 +1,7 @@
-import { Button, Tooltip } from '@chakra-ui/react';
-import { AiOutlineComment } from 'react-icons/ai';
-import { ButtonStyles, HoverColor, IconStyle } from './BottomMenu';
-import useCommentAction, { CommentAction } from '../stores/useCommentAction';
+import { Button, Tooltip } from "@chakra-ui/react";
+import { AiOutlineComment } from "react-icons/ai";
+import { ButtonStyles, HoverColor, IconStyle } from "./BottomMenu";
+import useCommentModeState, { CommentModeStates } from "../stores/useCommentModeState";
 
 type Props = {
   styleProps: [IconStyle, ButtonStyles, HoverColor];
@@ -9,15 +9,16 @@ type Props = {
 
 function CommetnButton({ styleProps }: Props) {
   const [iconStyles, buttonStyles, hoverColor] = styleProps;
-  const { commentAction, setCommsntAction } = useCommentAction((state) => state);
-  const actions = CommentAction;
+  const { commentModeState, setCommentModeState } = useCommentModeState((state) => state);
   const handleCommentAction = () => {
-    commentAction === actions.INACTIVE ? setCommsntAction(actions.READY) : setCommsntAction(actions.INACTIVE);
+    commentModeState === CommentModeStates.INACTIVE
+      ? setCommentModeState(CommentModeStates.READY)
+      : setCommentModeState(CommentModeStates.INACTIVE);
   };
 
   return (
-    <Button _hover={{ color: hoverColor }} sx={buttonStyles} variant='link' onClick={handleCommentAction}>
-      <Tooltip hasArrow label='Add Comment' placement='top-start'>
+    <Button _hover={{ color: hoverColor }} sx={buttonStyles} variant="link" onClick={handleCommentAction}>
+      <Tooltip hasArrow label="Add Comment" placement="top-start">
         <span>
           <AiOutlineComment style={iconStyles} />
         </span>

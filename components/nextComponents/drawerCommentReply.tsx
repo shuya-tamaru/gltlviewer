@@ -1,27 +1,28 @@
-import { useToast } from '@chakra-ui/react';
-import axios from 'axios';
+import { useToast } from "@chakra-ui/react";
+import axios from "axios";
 
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from "react";
 
-import { useCurrentUser } from '../../context/CurrentUserContext';
-import { Comments } from '../../types/Comments';
-import DrawerForm from './drawerForm';
-import useImageUploader from '../../hooks/useImageUploader';
+import { useCurrentUser } from "../../context/CurrentUserContext";
+import { Comments } from "../../types/Comments";
+import DrawerForm from "./drawerForm";
+import useImageUploader from "../../hooks/useImageUploader";
+import useCommentTransmission from "../threeComponents/stores/useCommentTransmission";
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
   comments: Comments[];
-  roomId: string;
   setComments: Dispatch<SetStateAction<Comments[]>>;
 };
 
-export default function ({ isOpen, onClose, roomId, comments, setComments }: Props) {
+export default function ({ isOpen, onClose, comments, setComments }: Props) {
   const toast = useToast();
   const currentUser = useCurrentUser();
+  const { focusComment } = useCommentTransmission((state) => state);
 
-  const [desc, setDesc] = useState<string>('');
-  const [title, setTitle] = useState<string>('');
+  const [desc, setDesc] = useState<string>("");
+  const [title, setTitle] = useState<string>("");
   const [images, setImages] = useState<File[]>([]);
 
   const addReply = async (e?: React.MouseEvent<HTMLButtonElement>) => {
@@ -30,7 +31,7 @@ export default function ({ isOpen, onClose, roomId, comments, setComments }: Pro
       const newComment = {
         title,
         description: desc,
-        commentRoomId: roomId,
+        commentRoomId: focusComment.id,
       };
       const postedComment: Comments = await axios
         .post(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/comments/${currentUser!.id}`, newComment)
@@ -38,24 +39,24 @@ export default function ({ isOpen, onClose, roomId, comments, setComments }: Pro
       setComments([...comments, postedComment]);
 
       images.length > 0 && useImageUploader(images, postedComment.id);
-      setDesc('');
-      setTitle('');
+      setDesc("");
+      setTitle("");
       setImages([]);
       onClose();
       toast({
         title: `返信しました`,
-        status: 'success',
+        status: "success",
         isClosable: true,
       });
     } catch (error) {
       console.log(error);
-      setDesc('');
-      setTitle('');
+      setDesc("");
+      setTitle("");
       setImages([]);
       onClose();
       toast({
-        title: '投稿に失敗しました',
-        status: 'error',
+        title: "投稿に失敗しました",
+        status: "error",
         isClosable: true,
       });
     }
@@ -63,12 +64,12 @@ export default function ({ isOpen, onClose, roomId, comments, setComments }: Pro
 
   const cancelReply = (e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.preventDefault();
-    setDesc('');
-    setTitle('');
+    setDesc("");
+    setTitle("");
     onClose();
     toast({
       title: `返信をキャンセルしました`,
-      status: 'warning',
+      status: "warning",
       isClosable: true,
     });
   };
@@ -77,12 +78,12 @@ export default function ({ isOpen, onClose, roomId, comments, setComments }: Pro
     isOpen: isOpen,
     cancelFunction: cancelReply,
     excuteFunction: addReply,
-    headerText: '返信を投稿する',
+    headerText: "返信を投稿する",
     title: title,
     setTitle: setTitle,
     desc: desc,
     setDesc: setDesc,
-    excuteButtonText: 'Add',
+    excuteButtonText: "Add",
     images,
     setImages,
   };

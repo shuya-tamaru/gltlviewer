@@ -1,25 +1,25 @@
-import { useToast } from '@chakra-ui/react';
-import axios from 'axios';
+import { useToast } from "@chakra-ui/react";
+import axios from "axios";
 
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
-import { useCurrentUser } from '../../context/CurrentUserContext';
-import useImageUploader from '../../hooks/useImageUploader';
-import useImageDelete from '../../hooks/useImageDelete';
-import useTransmission from '../../hooks/useTransmission';
-import { Comments } from '../../types/Comments';
-import DrawerForm from './drawerForm';
+import { useCurrentUser } from "../../context/CurrentUserContext";
+import useImageUploader from "../../hooks/useImageUploader";
+import useImageDelete from "../../hooks/useImageDelete";
+import { Comments } from "../../types/Comments";
+import DrawerForm from "./drawerForm";
+import useCommentActions, { CommentActions } from "../threeComponents/stores/useCommentActions";
+import useCommentTransmission from "../threeComponents/stores/useCommentTransmission";
 
 type Props = {
   comment: Comments;
   commentsLength: number;
-  guid: string;
   setDisplayComemnt: Dispatch<SetStateAction<Comments | null>>;
   isOpenUpdate: boolean;
   onCloseUpdate: () => void;
 };
 
-export default function ({ comment, commentsLength, guid, setDisplayComemnt, isOpenUpdate, onCloseUpdate }: Props) {
+export default function ({ comment, commentsLength, setDisplayComemnt, isOpenUpdate, onCloseUpdate }: Props) {
   const toast = useToast();
 
   const currentUser = useCurrentUser();
@@ -29,6 +29,10 @@ export default function ({ comment, commentsLength, guid, setDisplayComemnt, isO
   const [images, setImages] = useState<File[]>([]);
   const [initialExistingPaths, setInitialExistingPaths] = useState<string[]>([]);
   const [existingPaths, setExistingPaths] = useState<string[]>([]);
+
+  const { setCommentAction } = useCommentActions((state) => state);
+  const commentActions = CommentActions;
+  const { setUpdateComment } = useCommentTransmission((state) => state);
 
   useEffect(() => {
     const getExistingImagePaths = async () => {
@@ -51,14 +55,14 @@ export default function ({ comment, commentsLength, guid, setDisplayComemnt, isO
     setImages([]);
     toast({
       title: `コメント編集をキャンセルしました`,
-      status: 'warning',
+      status: "warning",
       isClosable: true,
     });
   };
 
   const updateComment = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const upateComment = async () => {
+    const updateComment = async () => {
       if (currentUser) {
         try {
           const newComment: Comments = {
@@ -78,15 +82,15 @@ export default function ({ comment, commentsLength, guid, setDisplayComemnt, isO
           }
 
           images.length > 0 && useImageUploader(images, newComment.id);
-          commentsLength === 1 && useTransmission(newComment, 'updateComment', guid);
 
           onCloseUpdate();
           setDesc(`${newComment.description}`);
           setTitle(`${newComment.title}`);
           setDisplayComemnt(newComment);
+          commentsLength === 1 && (setUpdateComment(newComment), setCommentAction(commentActions.UPDATE_COMMENT));
           toast({
             title: `コメントを編集しました`,
-            status: 'success',
+            status: "success",
             isClosable: true,
           });
         } catch (error) {
@@ -94,7 +98,7 @@ export default function ({ comment, commentsLength, guid, setDisplayComemnt, isO
         }
       }
     };
-    upateComment();
+    updateComment();
   };
 
   const props = {
@@ -102,12 +106,12 @@ export default function ({ comment, commentsLength, guid, setDisplayComemnt, isO
     isOpen: isOpenUpdate,
     cancelFunction: cancelComment,
     excuteFunction: updateComment,
-    headerText: 'コメント編集',
+    headerText: "コメント編集",
     title: title,
     setTitle: setTitle,
     desc: desc,
     setDesc: setDesc,
-    excuteButtonText: 'Update',
+    excuteButtonText: "Update",
     images,
     setImages,
     existingPaths,

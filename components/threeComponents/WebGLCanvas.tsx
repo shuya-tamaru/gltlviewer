@@ -8,7 +8,7 @@ import Experience from "./Experience";
 import Interface from "./interfaceComponents/Interface";
 import useViewEvent from "./stores/useViewEvent";
 
-export default function IframeArea() {
+export default function WebGLCanvas() {
   const perspectiveCameraPos = useViewEvent((state) => state.perspectiveCameraPos);
 
   return (

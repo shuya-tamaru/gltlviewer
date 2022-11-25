@@ -6,12 +6,11 @@ import { useEffect, useRef } from "react";
 
 import useCommentPopUp from "../../hooks/threeHooks/useCommentPopUp";
 import { BuildingModel } from "../../hooks/threeHooks/useLoadingModel";
-import useCommentAction, { CommentAction } from "./stores/useCommentAction";
+import useCommentHandleThreejs from "../../hooks/threeHooks/useCommentHandleThreejs";
+import useCommentModeState, { CommentModeStates } from "./stores/useCommentModeState";
 import useCommentTransmission from "./stores/useCommentTransmission";
+import useCommentActions, { CommentActions } from "./stores/useCommentActions";
 import { Comments } from "../../types/Comments";
-import useCanvasState, { CanvasState } from "./stores/useCanvasState";
-import useInitialFetchComment from "../../hooks/threeHooks/useInitialFetchComment";
-import useCommentIconHandle from "../../hooks/threeHooks/useCommentIconHandle";
 
 type Props = {
   buildingModel: BuildingModel;
@@ -31,28 +30,19 @@ type Coordinate = {
 };
 
 export default function CommentIcon({ buildingModel }: Props) {
+  const commentIconTexture = useTexture("/comment/comment.png");
+  const commentIconGeometry = iconGeometry;
+  const commentIconMaterial = iconMaterial;
+  commentIconMaterial.map = commentIconTexture;
+
   const { raycaster, camera } = useThree();
   const mouseMoveCount = useRef(0);
   const groupRef = useRef<THREE.Group | null>(null);
   const meshRef = useRef<THREE.Mesh | null>(null);
 
   const { setfocusComment } = useCommentTransmission((state) => state);
-  const { commentAction, setCommsntAction } = useCommentAction((state) => state);
-  const actions = CommentAction;
-  const canvasState = CanvasState;
-  const { setCanvasState } = useCanvasState((state) => state);
-
-  const commentIconTexture = useTexture("/comment/comment.png");
-  const commentIconGeometry = iconGeometry;
-  const commentIconMaterial = iconMaterial;
-  commentIconMaterial.map = commentIconTexture;
-
-  useFrame(() => {
-    groupRef.current!.children.map((commentMesh) => {
-      commentMesh.lookAt(camera.position);
-    });
-    meshRef.current?.lookAt(camera.position);
-  });
+  const { commentModeState, setCommentModeState } = useCommentModeState((state) => state);
+  const { setCommentAction } = useCommentActions((state) => state);
 
   const addNewCommentIcon = (commentData?: Comments, FocusTemp?: boolean) => {
     const newCommentIcon = meshRef.current!.clone();
@@ -72,20 +62,17 @@ export default function CommentIcon({ buildingModel }: Props) {
     focusComment && setfocusComment(focusComment);
   };
 
-  useInitialFetchComment(addNewCommentIcon);
-  useCommentIconHandle(groupRef);
-
   const setCommentIcon = (e: MouseEvent) => {
     if (
       mouseMoveCount.current < 3 &&
       e.target instanceof HTMLElement &&
       e.target.tagName === "CANVAS" &&
-      commentAction === actions.ACTIVE
+      commentModeState === CommentModeStates.ACTIVE
     ) {
       addNewCommentIcon(undefined, true);
-      setCanvasState(canvasState.ADD_COMMENT);
+      setCommentAction(CommentActions.ADD_COMMENT);
       setTimeout(() => {
-        setCommsntAction(actions.READY);
+        setCommentModeState(CommentModeStates.READY);
       }, 100);
     }
   };
@@ -105,22 +92,44 @@ export default function CommentIcon({ buildingModel }: Props) {
     }
   };
 
+  useCommentPopUp(groupRef);
+
+  // connect To frontEndApp
+  useCommentHandleThreejs(groupRef, addNewCommentIcon);
+
+  useFrame(() => {
+    groupRef.current!.children.map((commentMesh) => {
+      commentMesh.lookAt(camera.position);
+    });
+    meshRef.current?.lookAt(camera.position);
+  });
+
   useEffect(() => {
-    window.addEventListener("mouseup", (e) => setCommentIcon(e), { once: true });
-    window.addEventListener("mousemove", moveCommentIcon);
+    window.addEventListener(
+      "mouseup",
+      (e) => {
+        setCommentIcon(e);
+      },
+      { once: true }
+    );
+    window.addEventListener("mousemove", () => {
+      commentModeState === CommentModeStates.ACTIVE && moveCommentIcon();
+    });
     window.addEventListener("mousedown", () => {
       mouseMoveCount.current = 0;
     });
-  }, [commentAction]);
-
-  useCommentPopUp(groupRef);
+  }, [commentModeState]);
 
   return (
     <>
-      <group ref={groupRef} visible={commentAction !== actions.INACTIVE ? true : false}></group>
+      <group
+        ref={groupRef}
+        visible={commentModeState !== CommentModeStates.INACTIVE ? true : false}
+        name={"commentGroup"}
+      ></group>
       <mesh
         ref={meshRef}
-        visible={commentAction === actions.ACTIVE ? true : false}
+        visible={commentModeState === CommentModeStates.ACTIVE ? true : false}
         geometry={commentIconGeometry}
         material={commentIconMaterial}
         scale={[0.5, 0.5, 0.5]}

@@ -1,12 +1,13 @@
 import { useThree } from "@react-three/fiber";
 import { MutableRefObject, useEffect } from "react";
 import * as THREE from "three";
-import useCommentAction, { CommentAction } from "../../components/threeComponents/stores/useCommentAction";
+import useCommentModeState, { CommentModeStates } from "../../components/threeComponents/stores/useCommentModeState";
+import useCommentTransmission from "../../components/threeComponents/stores/useCommentTransmission";
 
 export default function useCommentPopUp(groupRef: MutableRefObject<THREE.Group | null>) {
   const { raycaster } = useThree();
-  const commentAction = useCommentAction((state) => state.commentAction);
-  const actions = CommentAction;
+  const { commentModeState } = useCommentModeState((state) => state);
+  const { setfocusComment } = useCommentTransmission((state) => state);
 
   const popUp = document.getElementById("popUp") as HTMLElement;
   const popDate = document.getElementById("popDate") as HTMLElement;
@@ -20,7 +21,12 @@ export default function useCommentPopUp(groupRef: MutableRefObject<THREE.Group |
       const intersectObjects = raycaster.intersectObjects(groupRef.current.children);
       const firstintersectObject = intersectObjects[0];
 
-      if (firstintersectObject && firstintersectObject.object.userData.tag === "comment" && commentAction !== actions.INACTIVE) {
+      if (
+        firstintersectObject &&
+        firstintersectObject.object.userData.tag === "comment" &&
+        commentModeState === CommentModeStates.READY &&
+        popUp.style.visibility !== "visible"
+      ) {
         const canvasWidth = gl.domElement.width;
         const canvasHeight = gl.domElement.height;
         const projectPoint = firstintersectObject.point.project(camera);
@@ -31,6 +37,7 @@ export default function useCommentPopUp(groupRef: MutableRefObject<THREE.Group |
         const screenRightSpace = canvasWidth - projectPoint.x;
         const screenBottomSpace = canvasHeight - projectPoint.y;
         const screenLeftSpace = projectPoint.x;
+        const offset = 0;
         const popupPosX =
           screenRightSpace > screenLeftSpace
             ? (projectPoint.x / canvasWidth) * 100
@@ -39,11 +46,15 @@ export default function useCommentPopUp(groupRef: MutableRefObject<THREE.Group |
           screenTopSpace > screenBottomSpace
             ? 100 - (projectPoint.y / canvasHeight) * 100
             : 100 - ((projectPoint.y + popUp.offsetHeight) / canvasHeight) * 100;
-        popUp.style.left = `${String(popupPosX)}%`;
-        popUp.style.bottom = `${String(popupPosY)}%`;
+        popUp.style.left = `${String(popupPosX + offset)}%`;
+        popUp.style.bottom = `${String(popupPosY + offset)}%`;
 
+        const commentRoomId = firstintersectObject.object.userData.commentRoomId;
+        const guid = firstintersectObject.object.uuid;
+        const coordinate = firstintersectObject.object.position;
         const title = firstintersectObject.object.userData.title;
         const description = firstintersectObject.object.userData.description;
+        setfocusComment({ guid, coordinate, id: commentRoomId });
 
         popUp.style.visibility = "visible";
         poptitle.innerText = title;
@@ -57,8 +68,8 @@ export default function useCommentPopUp(groupRef: MutableRefObject<THREE.Group |
   };
 
   useEffect(() => {
-    window.addEventListener("mousemove", setPopUpIcon);
-  }, [commentAction]);
+    window.addEventListener("mousedown", setPopUpIcon);
+  }, [commentModeState]);
 
   return;
 }

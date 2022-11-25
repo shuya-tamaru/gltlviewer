@@ -7,30 +7,34 @@ import {
   AlertDialogFooter,
   AlertDialog,
   useToast,
-} from '@chakra-ui/react';
-import axios from 'axios';
+} from "@chakra-ui/react";
+import axios from "axios";
 
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
-import { useCurrentUser } from '../../context/CurrentUserContext';
-import useImageDelete from '../../hooks/useImageDelete';
-import useTransmission from '../../hooks/useTransmission';
-import { Comments } from '../../types/Comments';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { useCurrentUser } from "../../context/CurrentUserContext";
+import useImageDelete from "../../hooks/useImageDelete";
+import { Comments } from "../../types/Comments";
+import useCommentActions, { CommentActions } from "../threeComponents/stores/useCommentActions";
+import useCommentTransmission from "../threeComponents/stores/useCommentTransmission";
 
 type Props = {
   isOpenAlert: boolean;
   onCloseAlert: () => void;
   comment: Comments;
-  guid: string;
   setComments: Dispatch<SetStateAction<Comments[] | []>>;
   index: number;
 };
 
-export default function ({ index, isOpenAlert, onCloseAlert, comment, guid, setComments }: Props) {
+export default function ({ index, isOpenAlert, onCloseAlert, comment, setComments }: Props) {
   const cancelRef = useRef<HTMLButtonElement>(null);
   const toast = useToast();
   const currentUser = useCurrentUser();
 
   const [imagePaths, setImgePath] = useState<string[]>([]);
+
+  const { setCommentAction } = useCommentActions((state) => state);
+  const commentActions = CommentActions;
+  const { setUpdateComment } = useCommentTransmission((state) => state);
 
   useEffect(() => {
     const getExistingImagePaths = async () => {
@@ -59,15 +63,16 @@ export default function ({ index, isOpenAlert, onCloseAlert, comment, guid, setC
 
             if (commentsInRoom.length === 0) {
               await axios.delete(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/comment-rooms/${roomId}`);
-              useTransmission('', 'deleteComment', guid);
+              setCommentAction(commentActions.DELETE_COMMENT);
             } else if (index === 0) {
               const firstCommentInRoom = commentsInRoom[0];
-              useTransmission(firstCommentInRoom, 'updateComment', guid);
+              setUpdateComment(firstCommentInRoom);
+              setCommentAction(commentActions.UPDATE_COMMENT);
             }
             setComments(commentsInRoom);
             toast({
               title: `コメントを削除しました`,
-              status: 'success',
+              status: "success",
               isClosable: true,
             });
           };
@@ -99,25 +104,24 @@ export default function ({ index, isOpenAlert, onCloseAlert, comment, guid, setC
       <AlertDialog isOpen={isOpenAlert} leastDestructiveRef={cancelRef} onClose={onCloseAlert}>
         <AlertDialogOverlay>
           <AlertDialogContent>
-            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
               コメントの削除
             </AlertDialogHeader>
 
             <AlertDialogBody>コメントを完全に削除いたします。よろしいでしょうか？</AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={onCloseAlert}>
-                キャンセル
-              </Button>
               <Button
-                colorScheme='red'
+                colorScheme="red"
                 onClick={(e) => {
                   deleteComment(e);
                   onCloseAlert();
                 }}
-                ml={3}
               >
-                削除
+                Delete
+              </Button>
+              <Button ref={cancelRef} onClick={onCloseAlert} ml={3}>
+                Cancel
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>

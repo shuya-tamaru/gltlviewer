@@ -2,13 +2,11 @@ import { useToast, useDisclosure } from "@chakra-ui/react";
 
 import React, { useEffect, useState } from "react";
 import { Building } from "../../types/Buildings";
-import { useCurrentIframeState } from "../../context/CurrentIframeStateContext";
 import axios from "axios";
 import { useCurrentUser } from "../../context/CurrentUserContext";
-import useTransmission from "../../hooks/useTransmission";
 import DrawerForm from "./drawerForm";
 import useImageUploader from "../../hooks/useImageUploader";
-import useCanvasState, { CanvasState } from "../threeComponents/stores/useCanvasState";
+import useCommentActions, { CommentActions } from "../threeComponents/stores/useCommentActions";
 import useCommentTransmission from "../threeComponents/stores/useCommentTransmission";
 
 type Props = {
@@ -23,29 +21,26 @@ type NewComment = {
 export default function ({ building }: Props) {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const currentIframeState = useCurrentIframeState();
   const currentUser = useCurrentUser();
-  const canvasState = CanvasState;
-  const { currentCanvasState, setCanvasState } = useCanvasState((state) => state);
-  const { focusComment } = useCommentTransmission((state) => state);
+  const commentActions = CommentActions;
+  const { currentCommentAction, setCommentAction } = useCommentActions((state) => state);
+  const { focusComment, setUpdateComment } = useCommentTransmission((state) => state);
 
   const [desc, setDesc] = useState<string>("");
   const [title, setTitle] = useState<string>("");
-  const [guid, setGuid] = useState<string>("");
   const [coordinate, setCoordinate] = useState<string>("");
   const [images, setImages] = useState<File[]>([]);
 
   useEffect(() => {
-    if (currentCanvasState === canvasState.ADD_COMMENT) {
+    if (currentCommentAction === commentActions.ADD_COMMENT) {
       const focusGuid = focusComment.guid;
       const coordinate = focusComment.coordinate;
       const focusCommentCoordinate = { x: coordinate.x, y: coordinate.y, z: coordinate.z };
       const jsonCoordinate = JSON.stringify(focusCommentCoordinate);
       onOpen();
-      setGuid(focusGuid);
       setCoordinate(jsonCoordinate);
     }
-  }, [currentCanvasState]);
+  }, [currentCommentAction]);
 
   const addComment = async (e: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => {
     e.preventDefault();
@@ -77,7 +72,7 @@ export default function ({ building }: Props) {
         });
 
       images.length > 0 && useImageUploader(images, postedComment.id);
-      // useTransmission(postedComment, "addPost", guid);
+      setUpdateComment(postedComment), setCommentAction(commentActions.UPDATE_COMMENT);
       setDesc("");
       setTitle("");
       setImages([]);
@@ -103,7 +98,7 @@ export default function ({ building }: Props) {
 
   const cancelComment = (e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.preventDefault();
-    setCanvasState(canvasState.CANCEL_COMMENT);
+    setCommentAction(commentActions.CANCEL_COMMENT);
     setDesc("");
     setTitle("");
     setImages([]);

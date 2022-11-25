@@ -7,7 +7,7 @@ import { RefObject, useEffect, useRef } from "react";
 import useRayCastFloor from "../../hooks/threeHooks/useRayCastFloor";
 import useViewEvent from "../../components/threeComponents/stores/useViewEvent";
 import useCurrentFloor from "../../components/threeComponents/stores/useCurrentFloor";
-import useCommentAction, { CommentAction } from "../../components/threeComponents/stores/useCommentAction";
+import useCommentModeState, { CommentModeStates } from "../../components/threeComponents/stores/useCommentModeState";
 import { BuildingModel } from "./useLoadingModel";
 import useBoundingBox from "./useBoundingBox";
 
@@ -30,8 +30,7 @@ function useCameraAction(buildingModel: BuildingModel, cameraRef: RefObject<Orbi
   const { isPerspective, setIsPerspective, cameraIsMoving, cameraMovingToggle, handleFloorVisible, perspectiveCameraPos } =
     useViewEvent((state) => state);
   const { destinationFloor, setDestinationFloor, floorDefaultPosition } = useCurrentFloor((state) => state);
-  const commentAction = useCommentAction((state) => state.commentAction);
-  const actions = CommentAction;
+  const { commentModeState } = useCommentModeState((state) => state);
   const { floorRayPos } = useRayCastFloor(buildingModel);
 
   //update walkthrough pos
@@ -112,7 +111,7 @@ function useCameraAction(buildingModel: BuildingModel, cameraRef: RefObject<Orbi
       setSelectedFloorPoition(destinationFloor);
     } else {
       if (floorRayPos.current !== null) {
-        commentAction !== actions.ACTIVE ? floorRayPos && setRayCastPosition(floorRayPos.current) : resetState();
+        commentModeState !== CommentModeStates.ACTIVE ? floorRayPos && setRayCastPosition(floorRayPos.current) : resetState();
       }
     }
 

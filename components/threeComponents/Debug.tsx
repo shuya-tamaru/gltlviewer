@@ -1,7 +1,7 @@
-import * as THREE from 'three';
+import * as THREE from "three";
 
-import { Perf } from 'r3f-perf';
-import { useThree } from '@react-three/fiber';
+import { Perf } from "r3f-perf";
+import { useThree } from "@react-three/fiber";
 
 export default function Debug() {
   // AxesHelper
@@ -11,7 +11,7 @@ export default function Debug() {
 
   return (
     <>
-      <Perf />
+      <Perf position={"top-left"} />
     </>
   );
 }
