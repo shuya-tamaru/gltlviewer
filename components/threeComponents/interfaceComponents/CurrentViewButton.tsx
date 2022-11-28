@@ -1,6 +1,7 @@
 import { Button, Tooltip } from "@chakra-ui/react";
 import { BiWalk } from "react-icons/bi";
 import { GiCube } from "react-icons/gi";
+
 import { ButtonStyles, HoverColor, IconStyle } from "./BottomMenu";
 import useCommentModeState, { CommentModeStates } from "../stores/useCommentModeState";
 import useViewEvent from "../stores/useViewEvent";

@@ -1,6 +1,7 @@
 import { useThree } from "@react-three/fiber";
 import { MutableRefObject, useEffect } from "react";
 import * as THREE from "three";
+import useCommentActions, { CommentActions } from "../../components/threeComponents/stores/useCommentActions";
 import useCommentModeState, { CommentModeStates } from "../../components/threeComponents/stores/useCommentModeState";
 import useCommentTransmission from "../../components/threeComponents/stores/useCommentTransmission";
 
@@ -16,11 +17,12 @@ export default function useCommentPopUp(groupRef: MutableRefObject<THREE.Group |
   const popImage = document.getElementById("popImage") as HTMLElement;
 
   const { gl, camera } = useThree();
+  const { setCommentAction } = useCommentActions((state) => state);
+
   const setPopUpIcon = () => {
     if (groupRef.current) {
       const intersectObjects = raycaster.intersectObjects(groupRef.current.children);
       const firstintersectObject = intersectObjects[0];
-
       if (
         firstintersectObject &&
         firstintersectObject.object.userData.tag === "comment" &&
@@ -55,6 +57,7 @@ export default function useCommentPopUp(groupRef: MutableRefObject<THREE.Group |
         const title = firstintersectObject.object.userData.title;
         const description = firstintersectObject.object.userData.description;
         setfocusComment({ guid, coordinate, id: commentRoomId });
+        commentModeState === CommentModeStates.READY && setCommentAction(CommentActions.SELECT_COMMENT);
 
         popUp.style.visibility = "visible";
         poptitle.innerText = title;

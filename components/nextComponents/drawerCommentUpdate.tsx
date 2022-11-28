@@ -24,8 +24,8 @@ export default function ({ comment, commentsLength, setDisplayComemnt, isOpenUpd
 
   const currentUser = useCurrentUser();
 
-  const [desc, setDesc] = useState<string>(`${comment.title}`);
-  const [title, setTitle] = useState<string>(`${comment.description}`);
+  const [title, setTitle] = useState<string>(`${comment.title}`);
+  const [desc, setDesc] = useState<string>(`${comment.description}`);
   const [images, setImages] = useState<File[]>([]);
   const [initialExistingPaths, setInitialExistingPaths] = useState<string[]>([]);
   const [existingPaths, setExistingPaths] = useState<string[]>([]);

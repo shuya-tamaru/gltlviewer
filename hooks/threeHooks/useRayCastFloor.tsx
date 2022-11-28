@@ -6,16 +6,13 @@ import useCurrentFloor from "../../components/threeComponents/stores/useCurrentF
 import { BuildingModel } from "./useLoadingModel";
 
 export default function useRayCastFloor(buildingModel: BuildingModel) {
-  const { raycaster, scene } = useThree();
+  const { raycaster } = useThree();
   const floorRayPos = useRef<THREE.Vector3 | null>(null);
 
   const setCurrentWalkingFloor = useCurrentFloor((state) => state.setCurrentWalkingFloor);
   const mouseMoveCount = useRef(0);
-  const commentGroup = scene.children.filter((child) => child.name === "commentGroup");
 
   useEffect(() => {
-    const rayTarget = buildingModel.scene.children;
-
     window.addEventListener("mouseup", (e) => {
       if (mouseMoveCount.current < 3 && e.target instanceof HTMLElement && e.target.tagName === "CANVAS") {
         const intersectObjects = raycaster.intersectObjects(buildingModel.scene.children);

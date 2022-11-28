@@ -1,8 +1,8 @@
-import { useTexture } from "@react-three/drei";
+import { useCursor, useTexture } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import useCommentPopUp from "../../hooks/threeHooks/useCommentPopUp";
 import { BuildingModel } from "../../hooks/threeHooks/useLoadingModel";
@@ -40,12 +40,16 @@ export default function CommentIcon({ buildingModel }: Props) {
   const groupRef = useRef<THREE.Group | null>(null);
   const meshRef = useRef<THREE.Mesh | null>(null);
 
+  const [hovered, setHovered] = useState(false);
+  useCursor(hovered);
+
   const { setfocusComment } = useCommentTransmission((state) => state);
   const { commentModeState, setCommentModeState } = useCommentModeState((state) => state);
   const { setCommentAction } = useCommentActions((state) => state);
 
   const addNewCommentIcon = (commentData?: Comments, FocusTemp?: boolean) => {
     const newCommentIcon = meshRef.current!.clone();
+
     let userData = { tag: "comment" };
     if (commentData) {
       const coordinate = commentData.coordinate as string;
@@ -77,7 +81,7 @@ export default function CommentIcon({ buildingModel }: Props) {
     }
   };
 
-  const moveCommentIcon = () => {
+  const moveCommentIcon = useCallback(() => {
     mouseMoveCount.current++;
     const intersectObjects = raycaster.intersectObjects(buildingModel.scene.children);
     const firstintersectObject = intersectObjects[0];
@@ -90,7 +94,7 @@ export default function CommentIcon({ buildingModel }: Props) {
         z + cameraToCommentVec.z * 0.2
       );
     }
-  };
+  }, []);
 
   useCommentPopUp(groupRef);
 
@@ -112,12 +116,18 @@ export default function CommentIcon({ buildingModel }: Props) {
       },
       { once: true }
     );
-    window.addEventListener("mousemove", () => {
-      commentModeState === CommentModeStates.ACTIVE && moveCommentIcon();
-    });
+
     window.addEventListener("mousedown", () => {
       mouseMoveCount.current = 0;
     });
+
+    if (commentModeState === CommentModeStates.ACTIVE) {
+      window.addEventListener("mousemove", moveCommentIcon);
+    } else {
+      window.removeEventListener("mousemove", moveCommentIcon);
+    }
+
+    return () => window.removeEventListener("mousemove", moveCommentIcon);
   }, [commentModeState]);
 
   return (
@@ -126,6 +136,8 @@ export default function CommentIcon({ buildingModel }: Props) {
         ref={groupRef}
         visible={commentModeState !== CommentModeStates.INACTIVE ? true : false}
         name={"commentGroup"}
+        onPointerOver={() => setHovered(true)}
+        onPointerOut={() => setHovered(false)}
       ></group>
       <mesh
         ref={meshRef}

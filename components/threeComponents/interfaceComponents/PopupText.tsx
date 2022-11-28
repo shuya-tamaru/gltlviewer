@@ -1,6 +1,4 @@
 import { Image, Text, VStack } from "@chakra-ui/react";
-import useCommentActions, { CommentActions } from "../stores/useCommentActions";
-import useCommentModeState, { CommentModeStates } from "../stores/useCommentModeState";
 
 const styles = {
   background: "#fff",
@@ -14,15 +12,8 @@ const styles = {
 };
 
 function PopupText() {
-  const { commentModeState } = useCommentModeState((state) => state);
-  const { setCommentAction } = useCommentActions((state) => state);
-
-  const selectComment = () => {
-    commentModeState === CommentModeStates.READY && setCommentAction(CommentActions.SELECT_COMMENT);
-  };
-
   return (
-    <VStack sx={styles} id={"popUp"} cursor={"pointer"} onClick={() => selectComment()}>
+    <VStack sx={styles} id={"popUp"} cursor={"pointer"}>
       <Text id={"popDate"}>投稿日</Text>
       <Text id={"poptitle"}>タイトル:hello</Text>
       <Text id={"popdescription"}>本文:こんにちは</Text>

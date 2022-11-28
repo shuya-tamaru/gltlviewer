@@ -33,7 +33,6 @@ export default function ({ building }: Props) {
 
   useEffect(() => {
     if (currentCommentAction === commentActions.ADD_COMMENT) {
-      const focusGuid = focusComment.guid;
       const coordinate = focusComment.coordinate;
       const focusCommentCoordinate = { x: coordinate.x, y: coordinate.y, z: coordinate.z };
       const jsonCoordinate = JSON.stringify(focusCommentCoordinate);

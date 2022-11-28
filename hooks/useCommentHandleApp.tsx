@@ -33,13 +33,6 @@ function useCommentHandleApp(props: Props) {
         initialComments.length > 0 && setInitialCommentsFetch(initialComments);
         break;
       }
-      case commentActions.ADD_COMMENT: {
-        const focusGuid = focusComment.guid;
-        const coordinate = focusComment.coordinate;
-        const focusCommentCoordinate = { x: coordinate.x, y: coordinate.y, z: coordinate.z };
-        const jsonCoordinate = JSON.stringify(focusCommentCoordinate);
-        break;
-      }
       case commentActions.SELECT_COMMENT: {
         const { id } = focusComment;
         setDisplayState("flex");

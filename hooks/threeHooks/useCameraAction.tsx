@@ -72,7 +72,6 @@ function useCameraAction(buildingModel: BuildingModel, cameraRef: RefObject<Orbi
 
     currentCameraDirection = state.camera.getWorldDirection(calcCameraDirection).multiplyScalar(0.00001);
     nextTarget = walkThrougCameraPos.add(currentCameraDirection);
-
     state.camera.position.copy(newPos);
     cameraRef.current!.target = isPerspective ? perspectiveLookAt : cameraDirection.lerp(nextTarget, cameraMoveSpeed);
   };
@@ -80,7 +79,6 @@ function useCameraAction(buildingModel: BuildingModel, cameraRef: RefObject<Orbi
   const cameraStop = (state: RootState) => {
     const targetPoint = isPerspective ? perspectiveCameraPos : walkThrougCameraPos;
     const distanceToDestination = Math.floor(state.camera.position.distanceTo(targetPoint) * 100) / 100;
-
     if (distanceToDestination < 0.5 || (isPressed && mouseMoveCount > 3)) {
       cameraMovingToggle(false);
       setDestinationFloor(null);
@@ -93,15 +91,15 @@ function useCameraAction(buildingModel: BuildingModel, cameraRef: RefObject<Orbi
   }, [perspectiveLookAt]);
 
   useEffect(() => {
-    canvas.addEventListener("mouseup", () => {
+    window.addEventListener("mouseup", () => {
       mouseMoveCount = 0;
       isPressed = false;
     });
-    canvas.addEventListener("mousedown", () => {
+    window.addEventListener("mousedown", (e) => {
       mouseMoveCount = 0;
       isPressed = true;
     });
-    canvas.addEventListener("mousemove", () => {
+    window.addEventListener("mousemove", () => {
       mouseMoveCount++;
     });
   }, []);
@@ -114,11 +112,9 @@ function useCameraAction(buildingModel: BuildingModel, cameraRef: RefObject<Orbi
         commentModeState !== CommentModeStates.ACTIVE ? floorRayPos && setRayCastPosition(floorRayPos.current) : resetState();
       }
     }
-
     if (cameraRef.current && cameraIsMoving) {
       setCameraPosition(cameraRef, state, delta);
       cameraStop(state);
-    } else {
     }
   });
 
