@@ -28,7 +28,7 @@ export default function WebGLCanvas() {
             position: perspectiveCameraPos,
           }}
         >
-          <Debug />
+          {/* <Debug /> */}
           <Suspense fallback={null}>
             <Experience />
           </Suspense>
@@ -38,9 +38,3 @@ export default function WebGLCanvas() {
     </>
   );
 }
-
-/* <iframe
-  style={{ width: 'calc(100% - 5px)', height: 'calc(100% - 5px)', background: '#283b4f' }}
-  src='https://playcanv.as/index/9d5d1068'
-  id='viewer'
-/> */

@@ -1,6 +1,6 @@
-import { BuildingModel } from '../../hooks/threeHooks/useLoadingModel';
-import CommentIcon from './CommentIcon';
-import Cursor from './Cursor';
+import { BuildingModel } from "../../hooks/threeHooks/useLoadingModel";
+import CommentIcon from "./CommentIcon";
+import Cursor from "./Cursor";
 
 type Props = {
   buildingModel: BuildingModel;

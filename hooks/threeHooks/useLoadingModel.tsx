@@ -13,21 +13,18 @@ export type BuildingModel = GLTF & ObjectMap;
 function useLoadingModel() {
   const buildingModel: BuildingModel = useGLTF("/model/higashi_shinjuku.glb");
   const { active, item } = useProgress();
-  const commentActions = CommentActions;
   const { setCommentAction } = useCommentActions((state) => state);
 
-  //initialSetUp
   useFloorSelector(buildingModel);
   useDefaultFloorPosition(buildingModel);
-  useMaterialSetup(buildingModel);
 
   //initialSetUp after model loading
   if (active === false && item.indexOf("model") !== -1) {
+    useMaterialSetup(buildingModel);
     useSetFloorList(buildingModel);
     usePerspectiveCameraPos(buildingModel);
-    setCommentAction(commentActions.READY);
+    setCommentAction(CommentActions.READY);
   }
-
   return buildingModel;
 }
 

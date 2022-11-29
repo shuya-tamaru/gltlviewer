@@ -1,12 +1,12 @@
-import BottomMenu from './BottomMenu';
-import DisplayCurrentFloor from './DisplayCurrentFloor';
-import PopupText from './PopupText';
-import LoadingDisplay from './LoadingDisplay';
+import BottomMenu from "./BottomMenu";
+import DisplayCurrentFloor from "./DisplayCurrentFloor";
+import PopupText from "./PopupText";
+import LoadingDisplay from "./LoadingDisplay";
 
 function Interface() {
   return (
     <>
-      <LoadingDisplay />
+      {/* <LoadingDisplay /> */}
       <BottomMenu />
       <DisplayCurrentFloor />
       <PopupText />

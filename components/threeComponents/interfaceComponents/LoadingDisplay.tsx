@@ -1,19 +1,19 @@
-import { Loader } from '@react-three/drei';
+import { Loader } from "@react-three/drei";
 
 const containerStyles = {
-  background: '#283b4f',
-  width: '100%',
+  background: "#283b4f",
+  width: "100%",
 };
 const barStyles = {
-  transformOrigin: 'center',
+  transformOrigin: "center",
 };
 
 const innerStyles = {
-  width: '100%',
+  width: "100%",
 };
 
 const dataStyles = {
-  fontSize: '1.5rem',
+  fontSize: "1.5rem",
 };
 
 function LoadingDisplay() {

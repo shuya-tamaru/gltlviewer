@@ -12,7 +12,6 @@ type Props = {
 
 function useCommentHandleApp(props: Props) {
   const { building, setDisplayState, setComments } = props;
-  const commentActions = CommentActions;
   const { currentCommentAction, setCommentAction } = useCommentActions((state) => state);
   const { setInitialCommentsFetch } = useCommentTransmission((state) => state);
   const [initialComments, setInitialComments] = useState<Comments[] | []>([]);
@@ -25,18 +24,18 @@ function useCommentHandleApp(props: Props) {
       });
     };
     getComments();
-  }, []);
+  }, [building]);
 
   useEffect(() => {
     switch (currentCommentAction) {
-      case commentActions.READY: {
-        initialComments.length > 0 && setInitialCommentsFetch(initialComments);
+      case CommentActions.READY: {
+        initialComments.length > 0 ? setInitialCommentsFetch(initialComments) : setInitialCommentsFetch([]);
         break;
       }
-      case commentActions.SELECT_COMMENT: {
+      case CommentActions.SELECT_COMMENT: {
         const { id } = focusComment;
         setDisplayState("flex");
-        setCommentAction(commentActions.WAITING);
+        setCommentAction(CommentActions.WAITING);
         const getComments = async () => {
           const commentsInRoom = await axios
             .get(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/comments/comments/${id}`)

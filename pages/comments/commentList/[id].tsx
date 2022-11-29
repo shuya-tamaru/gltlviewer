@@ -1,17 +1,17 @@
-import { Box, Flex, SimpleGrid } from '@chakra-ui/react';
-import axios from 'axios';
+import { Box, Flex, SimpleGrid } from "@chakra-ui/react";
+import axios from "axios";
 
-import { GetStaticPropsContext } from 'next';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { GetStaticPropsContext } from "next";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
-import BuildingTopBar from '../../../components/nextComponents/buildingTopBar';
-import CommentSearchForm from '../../../components/nextComponents/commentSearchForm';
-import Header from '../../../components/nextComponents/header';
-import Post from '../../../components/nextComponents/post';
-import UserName from '../../../components/nextComponents/userName';
-import { Building } from '../../../types/Buildings';
-import { Comments } from '../../../types/Comments';
+import BuildingTopBar from "../../../components/nextComponents/buildingTopBar";
+import CommentSearchForm from "../../../components/nextComponents/commentSearchForm";
+import Header from "../../../components/nextComponents/header";
+import Post from "../../../components/nextComponents/post";
+import UserName from "../../../components/nextComponents/userName";
+import { Building } from "../../../types/Buildings";
+import { Comments } from "../../../types/Comments";
 
 type Props = {
   building: Building;
@@ -36,20 +36,20 @@ export default function CommentList({ building }: Props) {
         <UserName />
       </Header>
       <Flex>
-        <Box w='80%' h='calc(100vh - 80px)'>
+        <Box w="80%" h="calc(100vh - 80px)">
           <BuildingTopBar building={building} />
-          <SimpleGrid w='100%' h='92%' columns={3} spacing={10} overflowY='scroll' py='5' px='5'>
+          <SimpleGrid w="100%" h="92%" columns={3} spacing={10} overflowY="scroll" py="5" px="5">
             {comments.map((comment) => (
               <Link href={`/comments/commentDetail/${comment.commentRoomId}`} key={comment.id}>
                 <Box
-                  cursor='pointer'
-                  h='300px'
-                  overflow='hidden'
-                  boxShadow='2xl'
-                  borderRadius='3'
-                  p='3'
-                  transition='all 0.5s ease'
-                  _hover={{ transform: 'scale(1.01)', opacity: 0.7 }}
+                  cursor="pointer"
+                  h="300px"
+                  overflow="hidden"
+                  boxShadow="2xl"
+                  borderRadius="3"
+                  p="3"
+                  transition="all 0.5s ease"
+                  _hover={{ transform: "scale(1.01)", opacity: 0.7 }}
                 >
                   <Post comment={comment} />
                 </Box>
@@ -58,14 +58,14 @@ export default function CommentList({ building }: Props) {
           </SimpleGrid>
         </Box>
         <Box
-          w='20%'
-          h='calc(100vh - 80px)'
-          boxShadow='2xl'
-          display='flex'
-          flexDirection='column'
-          alignItems='center'
-          pt='5'
-          bg='#fffafa'
+          w="20%"
+          h="calc(100vh - 80px)"
+          boxShadow="2xl"
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          pt="5"
+          bg="#fffafa"
         >
           <CommentSearchForm />
         </Box>
