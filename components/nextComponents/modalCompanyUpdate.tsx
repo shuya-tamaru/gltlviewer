@@ -7,22 +7,28 @@ import {
   ModalCloseButton,
   useDisclosure,
   Button,
-} from '@chakra-ui/react';
-import { HiOfficeBuilding } from 'react-icons/hi';
-import CompanyEditForm from './companyEditForm';
+} from "@chakra-ui/react";
 
-export default function () {
+import { HiOfficeBuilding } from "react-icons/hi";
+import CompanyEditForm from "./companyEditForm";
+import { ButtonStyles, HoverStyles, IconSize } from "./userHamburgerMenu";
+
+type Props = {
+  iconSize: IconSize;
+  buttonStyles: ButtonStyles;
+  hoverStyles: HoverStyles;
+};
+
+export default function ({ iconSize, buttonStyles, hoverStyles }: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
       <Button
         onClick={onOpen}
-        colorScheme='#fff'
-        borderRadius='0'
-        color='#666'
-        _hover={{ background: 'red', color: '#fff' }}
-        leftIcon={<HiOfficeBuilding style={{ fontSize: '20px' }} />}
+        sx={buttonStyles}
+        _hover={hoverStyles}
+        leftIcon={<HiOfficeBuilding style={{ fontSize: iconSize }} />}
       >
         会社情報編集
       </Button>
@@ -30,11 +36,11 @@ export default function () {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader color='#666' textAlign='center'>
+          <ModalHeader color="#666" textAlign="center">
             会社情報を編集
           </ModalHeader>
-          <ModalCloseButton borderRadius='50%' />
-          <ModalBody pb='20px'>
+          <ModalCloseButton borderRadius="50%" />
+          <ModalBody pb="20px">
             <CompanyEditForm />
           </ModalBody>
         </ModalContent>

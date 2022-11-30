@@ -4,11 +4,11 @@ import type { AppProps } from "next/app";
 import { SessionProvider } from "next-auth/react";
 import Router, { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { RecoilRoot } from "recoil";
 
 import "../styles/globals.css";
 import Spiner from "../components/nextComponents/spiner";
 import { CurrentUserProvider } from "../context/CurrentUserContext";
-import { CurrentBuildingProvider } from "../context/CurrentBuildingContext";
 
 function Loading() {
   const router = useRouter();
@@ -44,9 +44,9 @@ function MyApp({ Component, pageProps }: AppProps) {
             },
           })}
         >
-          <CurrentBuildingProvider>
+          <RecoilRoot>
             <CurrentUserProvider>{loadingState ? <Spiner /> : <Component {...pageProps} />}</CurrentUserProvider>
-          </CurrentBuildingProvider>
+          </RecoilRoot>
         </ChakraProvider>
       </SessionProvider>
     </>

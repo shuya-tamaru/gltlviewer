@@ -16,6 +16,8 @@ import { Comments } from "../../types/Comments";
 import DrawerCommentReply from "../../components/nextComponents/drawerCommentReply";
 import useCommentHandleApp from "../../hooks/useCommentHandleApp";
 import useCommentTransmission from "../../components/threeComponents/stores/useCommentTransmission";
+import { useCurrentUser } from "../../context/CurrentUserContext";
+import { UserRoles } from "../../types/UserRoles";
 
 type Props = {
   building: Building;
@@ -24,6 +26,7 @@ type Props = {
 export default function ({ building }: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const currentUser = useCurrentUser();
   const [comments, setComments] = useState<Comments[] | []>([]);
   const [displayState, setDisplayState] = useState<"flex" | "none">("none");
   const { focusComment } = useCommentTransmission((state) => state);
@@ -43,7 +46,7 @@ export default function ({ building }: Props) {
       <Flex>
         <Box w="80%" h="calc(100vh - 80px)">
           <BuildingTopBar building={building} />
-          <WebGLCanvas />
+          <WebGLCanvas building={building} />
         </Box>
         <Box w="20%" h="calc(100vh - 80px)" boxShadow="0px 0px 15px -5px #777777">
           {comments.length > 0 && (
@@ -59,10 +62,14 @@ export default function ({ building }: Props) {
                   />
                 ))}
               </Box>
-              <Button onClick={onOpen} colorScheme="gray" w="90%" h="40px" marginBlockEnd="10px">
-                返信
-              </Button>
-              <DrawerCommentReply isOpen={isOpen} onClose={onClose} comments={comments} setComments={setComments} />
+              {currentUser && currentUser.userRole <= UserRoles.Commenter && (
+                <>
+                  <Button onClick={onOpen} colorScheme="gray" w="90%" h="40px" marginBlockEnd="10px">
+                    返信
+                  </Button>
+                  <DrawerCommentReply isOpen={isOpen} onClose={onClose} comments={comments} setComments={setComments} />
+                </>
+              )}
               <Link href={`/comments/commentDetail/${focusComment.id!}`}>
                 <Button colorScheme="red" w="90%" h="40px">
                   Read More

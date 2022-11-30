@@ -7,9 +7,10 @@ import useViewEvent from "./stores/useViewEvent";
 import useLoadingModel, { BuildingModel } from "../../hooks/threeHooks/useLoadingModel";
 import SettingModel from "./SettingModel";
 import useCameraAction from "../../hooks/threeHooks/useCameraAction";
+import { Building } from "../../types/Buildings";
 
-function Experience() {
-  const buildingModel: BuildingModel = useLoadingModel();
+function Experience({ building }: { building: Building }) {
+  const buildingModel: BuildingModel = useLoadingModel(building);
   const cameraRef = useRef<OrbitControlsImpl>(null);
   const isPerspective = useViewEvent((state) => state.isPerspective);
 

@@ -1,13 +1,24 @@
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
+import { useSetRecoilState } from "recoil";
+import { useCurrentUser } from "../../context/CurrentUserContext";
 
 import { Building } from "../../types/Buildings";
+import { UserRoles } from "../../types/UserRoles";
 import ModalBuildingUpdate from "./modalBuildingUpdate";
+import { buildingState } from "./store/Building/building";
 
 type Props = {
   building: Building;
 };
 
 export default function BuildingLink({ building }: Props) {
+  const setBuilding = useSetRecoilState(buildingState);
+  const currentUser = useCurrentUser();
+
+  const setCurrentBuilding = () => {
+    setBuilding(building);
+  };
+
   return (
     <>
       <Flex
@@ -22,12 +33,11 @@ export default function BuildingLink({ building }: Props) {
         transition="all 0.5s ease"
         _hover={{ transform: "scale(1.001)", opacity: 0.7 }}
       >
-        <a href={`/buildings/${building.id}`}>
+        <a href={`/buildings/${building.id}`} onClick={setCurrentBuilding}>
           <Image
             src={building.imagePath ? building.imagePath : "/images/building.jpeg"}
             objectFit="cover"
-            boxSize="80px"
-            ml="10px"
+            boxSize="100px"
             cursor="pointer"
           />
         </a>
@@ -46,13 +56,13 @@ export default function BuildingLink({ building }: Props) {
             >
               {building.name}
             </Text>
+            <Text fontSize="xl" w="100% - 20px" h="30%" lineHeight="30px" m="auto" fontWeight="800" color="#555555" ml="20px">
+              CreatedAt : {building.createdAt.substring(0, 10)}
+            </Text>
           </a>
-          <Text fontSize="xl" w="100% - 20px" h="30%" lineHeight="30px" m="auto" fontWeight="800" color="#555555" ml="20px">
-            CreatedAt : {building.createdAt.substring(0, 10)}
-          </Text>
         </Box>
         <Box position="relative">
-          <ModalBuildingUpdate building={building} />
+          {currentUser && currentUser.userRole < UserRoles.Commenter && <ModalBuildingUpdate building={building} />}
         </Box>
       </Flex>
     </>

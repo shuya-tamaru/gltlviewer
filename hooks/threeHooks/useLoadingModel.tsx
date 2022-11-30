@@ -8,10 +8,13 @@ import useMaterialSetup from "./useMaterialSetup";
 import useSetFloorList from "./useSetFloorList";
 import usePerspectiveCameraPos from "./usePerspectiveCameraPos";
 import useCommentActions, { CommentActions } from "../../components/threeComponents/stores/useCommentActions";
+import { Building } from "../../types/Buildings";
 export type BuildingModel = GLTF & ObjectMap;
 
-function useLoadingModel() {
-  const buildingModel: BuildingModel = useGLTF("/model/higashi_shinjuku.glb");
+function useLoadingModel(building: Building) {
+  // const buildingModel: BuildingModel = useGLTF("/model/higashi_shinjuku.glb");
+
+  const buildingModel: BuildingModel = useGLTF(`${building.modelPath}`);
   const { active, item } = useProgress();
   const { setCommentAction } = useCommentActions((state) => state);
 

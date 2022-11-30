@@ -5,6 +5,8 @@ import CommetnButton from "./CommetnButton";
 import CurrentViewButton from "./CurrentViewButton";
 import FloorSelector from "./FloorSelector";
 import useCommentModeState, { CommentModeStates } from "../stores/useCommentModeState";
+import { useCurrentUser } from "../../../context/CurrentUserContext";
+import { UserRoles } from "../../../types/UserRoles";
 
 export type IconStyle = { fontSize: string };
 export type HoverColor = string;
@@ -29,6 +31,7 @@ const buttonStyles: ButtonStyles = {
 };
 
 function BottomMenu() {
+  const currentUser = useCurrentUser();
   const commentModeState = useCommentModeState((state) => state.commentModeState);
 
   return (
@@ -38,7 +41,9 @@ function BottomMenu() {
         <FloorSelector styleProps={[iconStyles, hoverColor]} />
         <CommetnButton styleProps={[iconStyles, buttonStyles, hoverColor]} />
       </Flex>
-      {commentModeState !== CommentModeStates.INACTIVE && <CommentAddButton styleProps={[hoverColor]} />}
+      {currentUser && currentUser.userRole <= UserRoles.Commenter && commentModeState !== CommentModeStates.INACTIVE && (
+        <CommentAddButton styleProps={[hoverColor]} />
+      )}
     </>
   );
 }

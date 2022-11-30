@@ -4,7 +4,7 @@ export type User = {
   firstName: string;
   email: string;
   companyId: string;
-  userState: string;
+  userRole: number;
   createdAt: string;
   updatedAt: string;
   imagePath?: string;

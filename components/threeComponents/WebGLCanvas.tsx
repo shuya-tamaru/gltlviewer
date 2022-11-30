@@ -2,13 +2,19 @@ import { Box } from "@chakra-ui/react";
 import { Canvas } from "@react-three/fiber";
 import { Suspense } from "react";
 import * as THREE from "three";
+import { Building } from "../../types/Buildings";
 
 import Debug from "./Debug";
 import Experience from "./Experience";
+import CanvasSpinner from "./interfaceComponents/CanvasSpinner";
 import Interface from "./interfaceComponents/Interface";
 import useViewEvent from "./stores/useViewEvent";
 
-export default function WebGLCanvas() {
+type Props = {
+  building: Building;
+};
+
+export default function WebGLCanvas({ building }: Props) {
   const perspectiveCameraPos = useViewEvent((state) => state.perspectiveCameraPos);
 
   return (
@@ -29,8 +35,8 @@ export default function WebGLCanvas() {
           }}
         >
           {/* <Debug /> */}
-          <Suspense fallback={null}>
-            <Experience />
+          <Suspense fallback={<CanvasSpinner />}>
+            <Experience building={building} />
           </Suspense>
         </Canvas>
         <Interface />
