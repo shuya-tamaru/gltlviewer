@@ -8,6 +8,7 @@ import DrawerForm from "./drawerForm";
 import useImageUploader from "../../hooks/useImageUploader";
 import useCommentActions, { CommentActions } from "../threeComponents/stores/useCommentActions";
 import useCommentTransmission from "../threeComponents/stores/useCommentTransmission";
+import { toastText } from "../utils/toastStatus";
 
 type Props = {
   building: Building;
@@ -41,6 +42,13 @@ export default function ({ building }: Props) {
     }
   }, [currentCommentAction]);
 
+  const resetState = () => {
+    setDesc("");
+    setTitle("");
+    setImages([]);
+    onClose();
+  };
+
   const addComment = async (e: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => {
     e.preventDefault();
     try {
@@ -72,41 +80,20 @@ export default function ({ building }: Props) {
 
       images.length > 0 && useImageUploader(images, postedComment.id);
       setUpdateComment(postedComment), setCommentAction(commentActions.UPDATE_COMMENT);
-      setDesc("");
-      setTitle("");
-      setImages([]);
-      onClose();
-      toast({
-        title: `コメントを投稿しました`,
-        status: "success",
-        isClosable: true,
-      });
+      resetState();
+      toast({ ...toastText.success, title: "コメントを投稿しました" });
     } catch (error) {
       console.log(error);
-      setDesc("");
-      setTitle("");
-      setImages([]);
-      onClose();
-      toast({
-        title: "コメント投稿に失敗しました",
-        status: "error",
-        isClosable: true,
-      });
+      resetState();
+      toast({ ...toastText.error, title: "コメント投稿に失敗しました" });
     }
   };
 
   const cancelComment = (e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.preventDefault();
     setCommentAction(commentActions.CANCEL_COMMENT);
-    setDesc("");
-    setTitle("");
-    setImages([]);
-    onClose();
-    toast({
-      title: `コメント投稿をキャンセルしました`,
-      status: "warning",
-      isClosable: true,
-    });
+    resetState();
+    toast({ ...toastText.cancel, title: "コメント投稿をキャンセルしました" });
   };
 
   const props = {

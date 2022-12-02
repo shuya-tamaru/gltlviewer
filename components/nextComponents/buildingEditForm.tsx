@@ -1,10 +1,11 @@
-import { Button, Input, useToast } from '@chakra-ui/react';
-import axios from 'axios';
+import { Button, Input, useToast } from "@chakra-ui/react";
+import axios from "axios";
 
-import { useState } from 'react';
+import { useState } from "react";
 
-import { Building } from '../../types/Buildings';
-import IconUploadForm from './iconUploadForm';
+import { Building } from "../../types/Buildings";
+import { toastText } from "../utils/toastStatus";
+import IconUploadForm from "./iconUploadForm";
 
 type inputForms = {
   inputForms: string[];
@@ -37,8 +38,8 @@ export default function ({ inputForms, data }: inputForms) {
         }
         const imageData = new FormData();
         const fileName = file.name;
-        imageData.append('name', fileName);
-        imageData.append('file', file);
+        imageData.append("name", fileName);
+        imageData.append("file", file);
         const imagePath: string = await axios
           .post(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/uploads/upload`, imageData)
           .then((res) => res.data);
@@ -50,21 +51,12 @@ export default function ({ inputForms, data }: inputForms) {
         await axios.patch(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/buildings/${data.id}`, updateBuilding);
       };
       buildingUpdate();
-
-      toast({
-        title: `更新が完了しました`,
-        status: 'success',
-        isClosable: true,
-      });
+      toast({ ...toastText.success, title: "更新が完了しました" });
       setLoading(false);
       location.reload();
     } catch (error) {
+      toast({ ...toastText.error, title: "更新に失敗しました" });
       setLoading(false);
-      toast({
-        title: `更新に失敗しましt`,
-        status: 'warning',
-        isClosable: true,
-      });
       console.log(error);
     }
   };
@@ -78,31 +70,31 @@ export default function ({ inputForms, data }: inputForms) {
               key={form}
               value={buildingName}
               onChange={(e) => setBuildingName(e.target.value)}
-              type='text'
+              type="text"
               placeholder={form}
               required
-              w='90%'
-              h='50'
-              py='5'
-              ml='5'
-              mt='5'
-              color='#333333'
-              borderColor='#999999'
-              borderWidth='2px'
+              w="90%"
+              h="50"
+              py="5"
+              ml="5"
+              mt="5"
+              color="#333333"
+              borderColor="#999999"
+              borderWidth="2px"
             />
           ))}
-        <IconUploadForm setFiles={setFiles} action={'buildingUpdate'} building={data} />
+        <IconUploadForm setFiles={setFiles} action={"buildingUpdate"} building={data} />
         <Button
           isLoading={loading}
-          type='submit'
-          w='90%'
-          h='50'
-          py='5'
-          ml='5'
-          mt='5'
-          color='#ffffff'
-          colorScheme='red'
-          fontWeight='800'
+          type="submit"
+          w="90%"
+          h="50"
+          py="5"
+          ml="5"
+          mt="5"
+          color="#ffffff"
+          colorScheme="red"
+          fontWeight="800"
         >
           更新
         </Button>

@@ -1,13 +1,14 @@
-import { Button, Input, useToast } from '@chakra-ui/react';
+import { Button, Input, useToast } from "@chakra-ui/react";
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import { signOut, useSession } from 'next-auth/react';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { signOut, useSession } from "next-auth/react";
 
-import { useCurrentUser, useCurrentUserUpdate } from '../../context/CurrentUserContext';
-import axios from 'axios';
-import { formStyle } from '../../styles/formStyle';
-import IconUploadForm from './iconUploadForm';
+import { useCurrentUser, useCurrentUserUpdate } from "../../context/CurrentUserContext";
+import axios from "axios";
+import { formStyle } from "../../styles/formStyle";
+import IconUploadForm from "./iconUploadForm";
+import { toastText } from "../utils/toastStatus";
 
 export default function () {
   const { status } = useSession();
@@ -17,9 +18,9 @@ export default function () {
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
-  const [lastName, setLastName] = useState<string>('');
-  const [firstName, setFirstName] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
+  const [lastName, setLastName] = useState<string>("");
+  const [firstName, setFirstName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   const [file, setFiles] = useState<File | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -41,8 +42,8 @@ export default function () {
         }
         const imageData = new FormData();
         const fileName = file.name;
-        imageData.append('name', fileName);
-        imageData.append('file', file);
+        imageData.append("name", fileName);
+        imageData.append("file", file);
         const imagePath: string = await axios
           .post(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/uploads/upload`, imageData)
           .then((res) => res.data);
@@ -54,25 +55,17 @@ export default function () {
       setLoading(false);
       setCurrentUser(null);
       signOut({ redirect: false });
-      toast({
-        title: `更新が完了しました、再度ログインしてください`,
-        status: 'success',
-        isClosable: true,
-      });
-      router.push('/login');
+      toast({ ...toastText.success, title: "更新が完了しました、再度ログインしてください" });
+      router.push("/login");
     } catch (error) {
       setLoading(false);
-      toast({
-        title: `更新に失敗しましt`,
-        status: 'warning',
-        isClosable: true,
-      });
+      toast({ ...toastText.cancel, title: "更新に失敗しました" });
       console.log(error);
     }
   };
 
   useEffect(() => {
-    if (status === 'authenticated' && currentUser) {
+    if (status === "authenticated" && currentUser) {
       setLastName(currentUser!.lastName);
       setFirstName(currentUser!.firstName);
       setEmail(currentUser!.email);
@@ -85,39 +78,39 @@ export default function () {
         <Input
           value={lastName}
           onChange={(e) => setLastName(e.target.value)}
-          type='text'
-          placeholder='姓'
+          type="text"
+          placeholder="姓"
           required
           sx={formStyle}
         />
         <Input
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
-          type='text'
-          placeholder='名'
+          type="text"
+          placeholder="名"
           required
           sx={formStyle}
         />
         <Input
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          type='email'
-          placeholder='email'
+          type="email"
+          placeholder="email"
           required
           sx={formStyle}
         />
-        <IconUploadForm setFiles={setFiles} action={'userUpdate'} />
+        <IconUploadForm setFiles={setFiles} action={"userUpdate"} />
         <Button
           isLoading={loading}
-          type='submit'
-          w='90%'
-          h='50'
-          py='5'
-          ml='5'
-          mt='5'
-          color='#ffffff'
-          colorScheme='red'
-          fontWeight='800'
+          type="submit"
+          w="90%"
+          h="50"
+          py="5"
+          ml="5"
+          mt="5"
+          color="#ffffff"
+          colorScheme="red"
+          fontWeight="800"
         >
           更新
         </Button>

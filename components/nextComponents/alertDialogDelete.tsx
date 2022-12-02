@@ -16,6 +16,7 @@ import useImageDelete from "../../hooks/useImageDelete";
 import { Comments } from "../../types/Comments";
 import useCommentActions, { CommentActions } from "../threeComponents/stores/useCommentActions";
 import useCommentTransmission from "../threeComponents/stores/useCommentTransmission";
+import { toastText } from "../utils/toastStatus";
 
 type Props = {
   isOpenAlert: boolean;
@@ -70,11 +71,7 @@ export default function ({ index, isOpenAlert, onCloseAlert, comment, setComment
               setCommentAction(commentActions.UPDATE_COMMENT);
             }
             setComments(commentsInRoom);
-            toast({
-              title: `コメントを削除しました`,
-              status: "success",
-              isClosable: true,
-            });
+            toast({ ...toastText.success, title: "コメントを削除しました" });
           };
 
           const deleteImage = async (commentId: string) => {

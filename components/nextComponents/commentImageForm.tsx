@@ -1,9 +1,10 @@
-import { Box, Flex, Image, Text } from '@chakra-ui/react';
-import { BiImageAdd } from 'react-icons/bi';
-import { MdCancel } from 'react-icons/md';
-import { useDropzone } from 'react-dropzone';
+import { Box, Flex, Image, Text } from "@chakra-ui/react";
+import { BiImageAdd } from "react-icons/bi";
+import { MdCancel } from "react-icons/md";
+import { useDropzone } from "react-dropzone";
 
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction } from "react";
+import { ImagePreview } from "./imagePreview";
 
 type Props = {
   images: File[];
@@ -42,69 +43,37 @@ export default function ({ images, setImages, existingPath, setExistingPaths }: 
     <>
       <Box
         {...getRootProps()}
-        w='100%'
-        h='20%'
-        border='2px dotted gray'
-        alignItems='center'
-        textAlign='center'
-        margin=' 15px auto'
-        color='#666'
-        bg='#f5f5f5'
-        borderRadius='5px'
+        w="100%"
+        h="20%"
+        border="2px dotted gray"
+        alignItems="center"
+        textAlign="center"
+        margin=" 15px auto"
+        color="#666"
+        bg="#f5f5f5"
+        borderRadius="5px"
       >
-        <input {...getInputProps()} type='file' style={{ width: '100px', visibility: 'hidden' }} />
-        <Flex justify='space-between'>
+        <input {...getInputProps()} type="file" style={{ width: "100px", visibility: "hidden" }} />
+        <Flex justify="space-between">
           {isDragActive ? (
-            <Text display='table-cell' verticalAlign='middle' alignItems='center'>
+            <Text display="table-cell" verticalAlign="middle" alignItems="center">
               Drop the files here ...
             </Text>
           ) : (
-            <BiImageAdd style={{ cursor: 'pointer', display: 'flex', verticalAlign: 'middle', margin: 'auto' }} size={100} />
+            <BiImageAdd style={{ cursor: "pointer", display: "flex", verticalAlign: "middle", margin: "auto" }} size={100} />
           )}
         </Flex>
       </Box>
-      <Flex justify='space-between'>
+      <Flex justify="space-between">
         {existingPath &&
           existingPath.length > 0 &&
           existingPath.map((path, index) => {
-            return (
-              <Box key={index} display='table-cell' verticalAlign='middle' margin='auto' position='relative' ml='5'>
-                <Image src={`${path}`} objectFit='cover' boxSize='100px' />
-                <Box
-                  position='absolute'
-                  width='30px'
-                  height='30px'
-                  right='-15px'
-                  top='-15px'
-                  cursor='pointer'
-                  onClick={(e) => deleteExistIcon(e)}
-                  id={index.toString()}
-                >
-                  <MdCancel size={30} color={'#111'} />
-                </Box>
-              </Box>
-            );
+            return <ImagePreview key={index} index={index} path={path} action={deleteExistIcon} />;
           })}
         {images.length > 0 &&
           images.map((image, index) => {
             const path: string = URL.createObjectURL(image);
-            return (
-              <Box key={index} display='table-cell' verticalAlign='middle' margin='auto' position='relative' ml='5'>
-                <Image src={`${path}`} objectFit='cover' boxSize='100px' />
-                <Box
-                  position='absolute'
-                  width='30px'
-                  height='30px'
-                  right='-15px'
-                  top='-15px'
-                  cursor='pointer'
-                  onClick={(e) => deleteIcon(e)}
-                  id={index.toString()}
-                >
-                  <MdCancel size={30} color={'#111'} />
-                </Box>
-              </Box>
-            );
+            return <ImagePreview key={index} index={index} path={path} action={deleteIcon} />;
           })}
       </Flex>
     </>

@@ -8,6 +8,7 @@ import { Comments } from "../../types/Comments";
 import DrawerForm from "./drawerForm";
 import useImageUploader from "../../hooks/useImageUploader";
 import useCommentTransmission from "../threeComponents/stores/useCommentTransmission";
+import { toastText } from "../utils/toastStatus";
 
 type Props = {
   isOpen: boolean;
@@ -25,6 +26,13 @@ export default function ({ isOpen, onClose, comments, setComments }: Props) {
   const [title, setTitle] = useState<string>("");
   const [images, setImages] = useState<File[]>([]);
 
+  const resetState = () => {
+    setDesc("");
+    setTitle("");
+    setImages([]);
+    onClose();
+  };
+
   const addReply = async (e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.preventDefault();
     try {
@@ -39,40 +47,21 @@ export default function ({ isOpen, onClose, comments, setComments }: Props) {
       setComments([...comments, postedComment]);
 
       images.length > 0 && useImageUploader(images, postedComment.id);
-      setDesc("");
-      setTitle("");
-      setImages([]);
-      onClose();
-      toast({
-        title: `返信しました`,
-        status: "success",
-        isClosable: true,
-      });
+      resetState();
+      toast({ ...toastText.success, title: "返信しました" });
     } catch (error) {
       console.log(error);
-      setDesc("");
-      setTitle("");
-      setImages([]);
-      onClose();
-      toast({
-        title: "投稿に失敗しました",
-        status: "error",
-        isClosable: true,
-      });
+      resetState();
+      toast({ ...toastText.error, title: "投稿に失敗しました" });
     }
   };
 
   const cancelReply = (e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.preventDefault();
-    setDesc("");
-    setTitle("");
-    onClose();
-    toast({
-      title: `返信をキャンセルしました`,
-      status: "warning",
-      isClosable: true,
-    });
+    resetState();
+    toast({ ...toastText.cancel, title: "返信をキャンセルしました" });
   };
+
   const props = {
     onClose: onClose,
     isOpen: isOpen,

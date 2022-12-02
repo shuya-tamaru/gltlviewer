@@ -10,6 +10,7 @@ import { Comments } from "../../types/Comments";
 import DrawerForm from "./drawerForm";
 import useCommentActions, { CommentActions } from "../threeComponents/stores/useCommentActions";
 import useCommentTransmission from "../threeComponents/stores/useCommentTransmission";
+import { toastText } from "../utils/toastStatus";
 
 type Props = {
   comment: Comments;
@@ -46,20 +47,6 @@ export default function ({ comment, commentsLength, setDisplayComemnt, isOpenUpd
     getExistingImagePaths();
   }, [isOpenUpdate]);
 
-  const cancelComment = (e?: React.MouseEvent<HTMLButtonElement>) => {
-    e?.preventDefault();
-    onCloseUpdate();
-    setDesc(`${comment.description}`);
-    setTitle(`${comment.title}`);
-    setExistingPaths(initialExistingPaths);
-    setImages([]);
-    toast({
-      title: `コメント編集をキャンセルしました`,
-      status: "warning",
-      isClosable: true,
-    });
-  };
-
   const updateComment = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const updateComment = async () => {
@@ -88,17 +75,24 @@ export default function ({ comment, commentsLength, setDisplayComemnt, isOpenUpd
           setTitle(`${newComment.title}`);
           setDisplayComemnt(newComment);
           commentsLength === 1 && (setUpdateComment(newComment), setCommentAction(commentActions.UPDATE_COMMENT));
-          toast({
-            title: `コメントを編集しました`,
-            status: "success",
-            isClosable: true,
-          });
+          toast({ ...toastText.success, title: "コメントを編集しました" });
         } catch (error) {
           console.log(error);
+          toast({ ...toastText.error, title: "コメントの編集に失敗しました" });
         }
       }
     };
     updateComment();
+  };
+
+  const cancelComment = (e?: React.MouseEvent<HTMLButtonElement>) => {
+    e?.preventDefault();
+    onCloseUpdate();
+    setDesc(`${comment.description}`);
+    setTitle(`${comment.title}`);
+    setExistingPaths(initialExistingPaths);
+    setImages([]);
+    toast({ ...toastText.cancel, title: "コメント編集をキャンセルしました" });
   };
 
   const props = {

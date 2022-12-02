@@ -7,13 +7,13 @@ import {
   AlertDialogOverlay,
   Button,
   useToast,
-  UseToastOptions,
 } from "@chakra-ui/react";
 import axios from "axios";
 
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 
 import { User } from "../../types/Users";
+import { toastText } from "../utils/toastStatus";
 
 type Props = {
   isOpen: boolean;
@@ -36,7 +36,7 @@ const alertDialogChangeUserRole = ({ isOpen, focusUser, role, focusSelectorId, s
       userRole: role,
     };
     await axios.patch(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/users/${updateUser.id}`, updateUser).then((res) => res.data);
-    toast(toastText.success);
+    toast({ ...toastText.success, title: "権限の更新が完了しました" });
   };
 
   const handleUserRole = async () => {
@@ -45,7 +45,7 @@ const alertDialogChangeUserRole = ({ isOpen, focusUser, role, focusSelectorId, s
       role && focusUser && userRoleUpdate();
     } catch (error) {
       console.log(error);
-      toast(toastText.error);
+      toast({ ...toastText.error, title: "権限の更新に失敗しました" });
     }
     setLoading(false);
     setFocusSelectorId(null);
@@ -62,7 +62,7 @@ const alertDialogChangeUserRole = ({ isOpen, focusUser, role, focusSelectorId, s
       };
       cancelUserRole();
     }
-    toast(toastText.cancel);
+    toast({ ...toastText.cancel, title: "権限の更新をキャンセルしました" });
     setFocusSelectorId(null);
     setRole(null);
     onClose();
@@ -92,28 +92,6 @@ const alertDialogChangeUserRole = ({ isOpen, focusUser, role, focusSelectorId, s
       </AlertDialogOverlay>
     </AlertDialog>
   );
-};
-
-const toastText = {
-  success: {
-    title: `権限の更新が完了しました`,
-    status: "success",
-    isClosable: true,
-  },
-  error: {
-    title: `権限の更新に失敗しましt`,
-    status: "error",
-    isClosable: true,
-  },
-  cancel: {
-    title: `権限の更新をキャンセルしました`,
-    status: "warning",
-    isClosable: true,
-  },
-} as {
-  success: UseToastOptions;
-  error: UseToastOptions;
-  cancel: UseToastOptions;
 };
 
 export default alertDialogChangeUserRole;

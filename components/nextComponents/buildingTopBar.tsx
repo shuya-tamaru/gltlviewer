@@ -1,53 +1,17 @@
 import { Box, Button, Text } from "@chakra-ui/react";
-import { AiOutlineComment } from "react-icons/ai";
-import { BiUserPlus } from "react-icons/bi";
-import { BsGraphUp } from "react-icons/bs";
-import { HiInformationCircle } from "react-icons/hi";
 
 import Link from "next/link";
 
 import { Building } from "../../types/Buildings";
 import { useCurrentUser } from "../../context/CurrentUserContext";
-import { UserRoles } from "../../types/UserRoles";
+import { buildingBarMenu } from "../utils/buildingBarMenu";
 
 type Props = {
   building: Building;
 };
-type buildingMenu = {
-  menu: string;
-  path: string;
-  icon: JSX.Element;
-  role: number;
-};
 
 export default function BuildingTopBar({ building }: Props) {
-  const buildingMenu: buildingMenu[] = [
-    {
-      menu: "建物情報",
-      path: `/buildings/buildingInformation/${building.id}`,
-      icon: <HiInformationCircle size={25} />,
-      role: UserRoles.Editor,
-    },
-    {
-      menu: "グラフ",
-      path: `/buildings/buildingGraph/${building.id}`,
-      icon: <BsGraphUp size={25} />,
-      role: UserRoles.Editor,
-    },
-    {
-      menu: "ゲストを招待",
-      path: "/users/inviteGuest",
-      icon: <BiUserPlus size={25} />,
-      role: UserRoles.Editor,
-    },
-    {
-      menu: "コメント検索",
-      path: `/comments/commentList/${building.id}`,
-      icon: <AiOutlineComment size={25} />,
-      role: UserRoles.OnlyWatch,
-    },
-  ];
-
+  const buildingMenu = buildingBarMenu(building.id);
   const currentUser = useCurrentUser();
 
   return (

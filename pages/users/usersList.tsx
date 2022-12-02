@@ -12,9 +12,9 @@ import { UserRoles } from "../../types/UserRoles";
 import { User } from "../../types/Users";
 
 export default function () {
-  const roleList = Object.keys(UserRoles);
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const roleList = Object.keys(UserRoles);
 
   //currentState
   const currentUser = useCurrentUser();
@@ -81,11 +81,7 @@ export default function () {
   return (
     <>
       <TopBar>
-        <SearchFormUser
-          searchUserName={searchUserName}
-          setSearchUserName={setSearchUserName}
-          setSearchUserRole={setSearchUserRole}
-        />
+        <SearchFormUser setSearchUserName={setSearchUserName} setSearchUserRole={setSearchUserRole} />
       </TopBar>
       <Box w="100%" h="calc(100vh - 80px)" bg="#f5f5f5" display="flex" flexDirection="column" justifyContent="center">
         <Box w="calc(100% - 20px)" h="100%" overflowY="scroll" p="0 10px 0 10px">
@@ -96,43 +92,41 @@ export default function () {
             {searchUsers.map((user, index) => {
               return (
                 <Box key={index} sx={style}>
-                  <Box w="100%" display="flex" justifyContent="space-around" alignItems="center">
-                    <Image src={user.imagePath ? user.imagePath : `/images/pika.jpeg`} objectFit="cover" boxSize="90px" />
-                    <Flex display={"flex"} flexDirection={"column"} justify={"start"}>
-                      <Box fontSize="20px" fontWeight="550">
-                        {user.lastName + user.firstName}
-                      </Box>
-                      <Box fontSize="15px" fontWeight="550" mt="10px">
-                        {user.email}
-                      </Box>
-                      {currentUser && currentUser.userRole < UserRoles.Editor ? (
-                        <Select
-                          variant="filled"
-                          id={"selector" + index.toString()}
-                          defaultValue={user.userRole}
-                          w="170px"
-                          size={"sm"}
-                          mt="10px"
-                          icon={<MdArrowDropDown />}
-                          onChange={(e) => {
-                            handleFocusSelector(e, user);
-                          }}
-                        >
-                          {roleList.map((role, index) => {
-                            return (
-                              <option key={index} value={index}>
-                                {role}
-                              </option>
-                            );
-                          })}
-                        </Select>
-                      ) : (
-                        <Text fontSize="15px" fontWeight="550" mt="10px">
-                          {getKeyByValue(UserRoles, user.userRole)}
-                        </Text>
-                      )}
-                    </Flex>
-                  </Box>
+                  <Image src={user.imagePath ? user.imagePath : `/images/pika.jpeg`} objectFit="cover" boxSize="90px" />
+                  <Flex display={"flex"} flexDirection={"column"} justify={"start"}>
+                    <Box fontSize="20px" fontWeight="550">
+                      {user.lastName + user.firstName}
+                    </Box>
+                    <Box fontSize="15px" fontWeight="550" mt="10px">
+                      {user.email}
+                    </Box>
+                    {currentUser && currentUser.userRole < UserRoles.Editor ? (
+                      <Select
+                        variant="filled"
+                        id={"selector" + index.toString()}
+                        defaultValue={user.userRole}
+                        w="170px"
+                        size={"sm"}
+                        mt="10px"
+                        icon={<MdArrowDropDown />}
+                        onChange={(e) => {
+                          handleFocusSelector(e, user);
+                        }}
+                      >
+                        {roleList.map((role, index) => {
+                          return (
+                            <option key={index} value={index}>
+                              {role}
+                            </option>
+                          );
+                        })}
+                      </Select>
+                    ) : (
+                      <Text fontSize="15px" fontWeight="550" mt="10px">
+                        {getKeyByValue(UserRoles, user.userRole)}
+                      </Text>
+                    )}
+                  </Flex>
                 </Box>
               );
             })}
@@ -154,7 +148,8 @@ export default function () {
 
 const toastText = {
   cancel: {
-    title: `管理者は自身の権限を変更することはできません。権限を変更する場合は他の管理者を選定し、新しい管理者が変更してください。`,
+    title:
+      "管理者は自身の権限を変更することはできません。権限を変更する場合は他の管理者を選定し、新しい管理者が変更を行なってください。",
     status: "warning",
     isClosable: true,
   },
@@ -168,10 +163,9 @@ const style = {
   bg: "#fff",
   borderRadius: "5px",
   mt: "10px",
-  shadow: "2xl",
+  shadow: "xl",
   p: "5px",
   display: "flex",
-  justifyContent: "space-between",
+  justifyContent: "space-around",
   alignItems: "center",
-  transition: "all 0.5s ease",
 };

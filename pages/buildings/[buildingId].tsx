@@ -6,8 +6,6 @@ import Link from "next/link";
 import { useState } from "react";
 
 import BuildingTopBar from "../../components/nextComponents/buildingTopBar";
-import Header from "../../components/nextComponents/header";
-import UserName from "../../components/nextComponents/userName";
 import WebGLCanvas from "../../components/threeComponents/WebGLCanvas";
 import DrawerCommentAdd from "../../components/nextComponents/drawerCommentAdd";
 import SideBarComment from "../../components/nextComponents/sideBarComment";

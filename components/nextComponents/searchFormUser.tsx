@@ -5,12 +5,11 @@ import { MdArrowDropDown } from "react-icons/md";
 import { UserRoles } from "../../types/UserRoles";
 
 type Props = {
-  searchUserName: string;
   setSearchUserName: Dispatch<SetStateAction<string>>;
   setSearchUserRole: Dispatch<SetStateAction<string>>;
 };
 
-export default function SearchFormUser({ searchUserName, setSearchUserName, setSearchUserRole }: Props) {
+export default function SearchFormUser({ setSearchUserName, setSearchUserRole }: Props) {
   const roleList = Object.keys(UserRoles);
 
   return (
@@ -24,9 +23,8 @@ export default function SearchFormUser({ searchUserName, setSearchUserName, setS
         h="100%"
         border="none"
         color="#333333"
-        placeholder={"Search User"}
         focusBorderColor="none"
-        value={searchUserName}
+        placeholder={"Search User"}
         onChange={(e) => setSearchUserName(e.target.value)}
       />
       <Box w="5%" color="#333" borderLeft="solid 1px #333">

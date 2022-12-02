@@ -6,17 +6,6 @@ import { useEffect, useState } from 'react';
 import { useCurrentUser } from '../../context/CurrentUserContext';
 import { Company } from '../../types/Companys';
 
-const style = {
-  w: '90%',
-  h: '50',
-  py: '5',
-  ml: '5',
-  mt: '5',
-  color: '#333333',
-  borderColor: '#999999',
-  borderWidth: '2px',
-};
-
 export default function () {
   const [loading, setLoading] = useState(false);
   const currentUser = useCurrentUser();
@@ -95,3 +84,14 @@ export default function () {
     </>
   );
 }
+
+const style = {
+  w: '90%',
+  h: '50',
+  py: '5',
+  ml: '5',
+  mt: '5',
+  color: '#333333',
+  borderColor: '#999999',
+  borderWidth: '2px',
+};
