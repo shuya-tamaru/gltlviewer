@@ -7,9 +7,8 @@ import { useEffect, useState } from "react";
 
 import BuildingTopBar from "../../../components/nextComponents/buildingTopBar";
 import CommentSearchForm from "../../../components/nextComponents/commentSearchForm";
-import Header from "../../../components/nextComponents/header";
 import Post from "../../../components/nextComponents/post";
-import UserName from "../../../components/nextComponents/userName";
+import TopBar from "../../../components/nextComponents/topBar";
 import { Building } from "../../../types/Buildings";
 import { Comments } from "../../../types/Comments";
 
@@ -32,9 +31,7 @@ export default function CommentList({ building }: Props) {
 
   return (
     <>
-      <Header>
-        <UserName />
-      </Header>
+      <TopBar />
       <Flex>
         <Box w="80%" h="calc(100vh - 80px)">
           <BuildingTopBar building={building} />

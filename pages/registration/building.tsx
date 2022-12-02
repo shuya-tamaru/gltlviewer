@@ -1,12 +1,12 @@
-import { Flex, Text, Box, Button, Input, useToast } from '@chakra-ui/react';
-import axios from 'axios';
+import { Flex, Text, Box, Button, Input, useToast } from "@chakra-ui/react";
+import axios from "axios";
 
-import { useRef, useState } from 'react';
+import { useRef, useState } from "react";
 
-import Header from '../../components/nextComponents/header';
-import IconUploadForm from '../../components/nextComponents/iconUploadForm';
-import { formStyle } from '../../styles/formStyle';
-import { NewBuilding } from '../../types/Buildings';
+import Header from "../../components/nextComponents/header";
+import IconUploadForm from "../../components/nextComponents/iconUploadForm";
+import { formStyle } from "../../styles/formStyle";
+import { NewBuilding } from "../../types/Buildings";
 
 export default function Registration() {
   const toast = useToast();
@@ -20,17 +20,19 @@ export default function Registration() {
     e.preventDefault();
     try {
       setLoading(true);
-      const newBuildings: NewBuilding = {
+      //////////////////////////////////////////////////
+      const newBuildings: any = {
         name: buildingName.current!.value,
         companyId: companyId.current!.value,
       };
+      /////////////////////////////////////////////////
 
       //buildingIconUpload
       if (file) {
         const imageData = new FormData();
         const fileName = file.name;
-        imageData.append('name', fileName);
-        imageData.append('file', file);
+        imageData.append("name", fileName);
+        imageData.append("file", file);
         const imagePath: string = await axios
           .post(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/uploads/upload`, imageData)
           .then((res) => res.data);
@@ -40,9 +42,9 @@ export default function Registration() {
       //buildingRegistration
       await axios.post(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/buildings`, newBuildings);
       toast({
-        position: 'top',
-        title: '物件を登録しました',
-        status: 'success',
+        position: "top",
+        title: "物件を登録しました",
+        status: "success",
         isClosable: true,
       });
       setLoading(false);
@@ -50,9 +52,9 @@ export default function Registration() {
       const errorMessage: string = error.response.data.message;
       setLoading(false);
       toast({
-        position: 'top',
+        position: "top",
         title: `${errorMessage}`,
-        status: 'warning',
+        status: "warning",
         isClosable: true,
       });
     }
@@ -61,33 +63,33 @@ export default function Registration() {
   return (
     <>
       <Header />
-      <Flex w='100vw' h='calc(100vh - 80px)' display='flex' justify='center' alignItems='center' margin='auto'>
-        <Box w='30%' h='55%' bg='#ffffff' p='10px 10px 20px 10px' boxShadow='0px 0px 15px -5px #777777' borderRadius='5px'>
+      <Flex w="100vw" h="calc(100vh - 80px)" display="flex" justify="center" alignItems="center" margin="auto">
+        <Box w="30%" h="55%" bg="#ffffff" p="10px 10px 20px 10px" boxShadow="0px 0px 15px -5px #777777" borderRadius="5px">
           <form onSubmit={(e) => handleSubmit(e)}>
-            <Text fontSize='30px' fontWeight='800' color='#666666' textAlign='center'>
+            <Text fontSize="30px" fontWeight="800" color="#666666" textAlign="center">
               新規物件登録
             </Text>
-            <Input type='text' ref={buildingName} placeholder={'物件名'} required sx={formStyle} />
+            <Input type="text" ref={buildingName} placeholder={"物件名"} required sx={formStyle} />
             <Input
-              type='text'
+              type="text"
               ref={companyId}
-              placeholder={'会社ID'}
-              defaultValue={'224bb556-d42c-4908-b531-bf2c86983376'}
+              placeholder={"会社ID"}
+              defaultValue={"224bb556-d42c-4908-b531-bf2c86983376"}
               required
               sx={formStyle}
             />
-            <IconUploadForm setFiles={setFiles} action={'buildingRegister'} />
+            <IconUploadForm setFiles={setFiles} action={"buildingRegister"} />
             <Button
               isLoading={loading}
-              type='submit'
-              w='90%'
-              h='50'
-              py='5'
-              ml='5'
-              mt='5'
-              color='#ffffff'
-              colorScheme='red'
-              fontWeight='600'
+              type="submit"
+              w="90%"
+              h="50"
+              py="5"
+              ml="5"
+              mt="5"
+              color="#ffffff"
+              colorScheme="red"
+              fontWeight="600"
             >
               登録
             </Button>

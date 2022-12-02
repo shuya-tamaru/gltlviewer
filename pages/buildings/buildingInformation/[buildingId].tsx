@@ -3,8 +3,7 @@ import axios from "axios";
 import { GetStaticPropsContext } from "next";
 import { useRouter } from "next/router";
 import BuildingTopBar from "../../../components/nextComponents/buildingTopBar";
-import Header from "../../../components/nextComponents/header";
-import UserName from "../../../components/nextComponents/userName";
+import TopBar from "../../../components/nextComponents/topBar";
 import { useCurrentUser } from "../../../context/CurrentUserContext";
 import { Building } from "../../../types/Buildings";
 import { UserRoles } from "../../../types/UserRoles";
@@ -24,9 +23,7 @@ export default function ({ building }: Props) {
     currentUser &&
     currentUser.userRole <= UserRoles.Editor && (
       <>
-        <Header>
-          <UserName />
-        </Header>
+        <TopBar />
         <Flex>
           <Box w="100%" h="calc(100vh - 80px)">
             <BuildingTopBar building={building} />

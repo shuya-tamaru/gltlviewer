@@ -2,9 +2,6 @@ import { Box, Flex, Button } from "@chakra-ui/react";
 import axios from "axios";
 
 import BuildingTopBar from "../../../components/nextComponents/buildingTopBar";
-import DrawerCommentAdd from "../../../components/nextComponents/drawerCommentAdd";
-import Header from "../../../components/nextComponents/header";
-import UserName from "../../../components/nextComponents/userName";
 import Comment from "../../../components/nextComponents/comment";
 import { CommentRooms } from "../../../types/CommentRooms";
 import { GetStaticPropsContext } from "next";
@@ -12,6 +9,7 @@ import { Comments } from "../../../types/Comments";
 import { useEffect, useState } from "react";
 import SideBarCommentSingle from "../../../components/nextComponents/sideBarCommentSingle";
 import { Building } from "../../../types/Buildings";
+import TopBar from "../../../components/nextComponents/topBar";
 
 type Props = {
   comments: Comments[];
@@ -40,9 +38,7 @@ export default function CommentDetail({ comments }: Props) {
   return (
     building && (
       <>
-        <Header>
-          <UserName />
-        </Header>
+        <TopBar />
         <Flex>
           <Box w="80%" h="calc(100vh - 80px)">
             <BuildingTopBar building={building} />

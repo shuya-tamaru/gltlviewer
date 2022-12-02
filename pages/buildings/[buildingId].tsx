@@ -18,6 +18,7 @@ import useCommentHandleApp from "../../hooks/useCommentHandleApp";
 import useCommentTransmission from "../../components/threeComponents/stores/useCommentTransmission";
 import { useCurrentUser } from "../../context/CurrentUserContext";
 import { UserRoles } from "../../types/UserRoles";
+import TopBar from "../../components/nextComponents/topBar";
 
 type Props = {
   building: Building;
@@ -40,9 +41,7 @@ export default function ({ building }: Props) {
 
   return (
     <>
-      <Header>
-        <UserName />
-      </Header>
+      <TopBar />
       <Flex>
         <Box w="80%" h="calc(100vh - 80px)">
           <BuildingTopBar building={building} />

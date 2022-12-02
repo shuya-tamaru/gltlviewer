@@ -12,6 +12,7 @@ import { Building } from '../../types/Buildings';
 import { Company } from '../../types/Companys';
 import { useSession } from 'next-auth/react';
 import Spiner from '../../components/nextComponents/spiner';
+import SearchFormBuilding from '../../components/nextComponents/searchFormBuilding';
 
 type GetBuildings = Building[] | null;
 type Props = {
@@ -47,7 +48,9 @@ export default function ({ getbuildings, companyId }: Props) {
         <Spiner />
       ) : (
         <>
-          <TopBar searchText={searchText} />
+          <TopBar>
+            <SearchFormBuilding/>
+          </TopBar>
           <Box w='100%' h='calc(100vh - 120px)' bg='#f5f5f5' display='flex' flexDirection='column'>
             <Text h='80px' fontSize='30px' fontWeight='800' color='#666666' m='auto' my='5px'>
               物件一覧

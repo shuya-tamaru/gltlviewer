@@ -1,15 +1,15 @@
-import Header from './header';
-import SearchForm from './searchForm';
-import UserName from './userName';
+import { ReactNode } from "react";
+import Header from "./header";
+import UserName from "./userName";
 
 type Props = {
-  searchText: string;
+  children?: ReactNode;
 };
 
-export default function TopBar({ searchText }: Props) {
+export default function TopBar({ children }: Props) {
   return (
     <Header>
-      <SearchForm searchText={searchText} />
+      {children}
       <UserName />
     </Header>
   );

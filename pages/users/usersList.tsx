@@ -1,8 +1,9 @@
-import { Box, Flex, Image, Text, VStack, Select, useDisclosure, useToast, SimpleGrid } from "@chakra-ui/react";
+import { Box, Flex, Image, Text, Select, useDisclosure, useToast, SimpleGrid, UseToastOptions } from "@chakra-ui/react";
 import axios from "axios";
 import { ChangeEvent, useEffect, useState } from "react";
 import { MdArrowDropDown } from "react-icons/md";
 import AlertDialogChangeUserRole from "../../components/nextComponents/alertDialogChangeUserRole";
+import SearchFormUser from "../../components/nextComponents/searchFormUser";
 
 import TopBar from "../../components/nextComponents/topBar";
 import { useCurrentUser } from "../../context/CurrentUserContext";
@@ -11,34 +12,60 @@ import { UserRoles } from "../../types/UserRoles";
 import { User } from "../../types/Users";
 
 export default function () {
-  const searchText = "Search User";
   const roleList = Object.keys(UserRoles);
-
+  const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  //currentState
   const currentUser = useCurrentUser();
   const [company, setCompany] = useState<Company | null>(null);
-  const [users, setUsers] = useState<User[] | []>([]);
+  const [users, setUsers] = useState<User[]>([]);
+
+  //editRoleState
   const [focusSelectorId, setFocusSelectorId] = useState<string | null>(null);
   const [focusUser, setFocusUser] = useState<User | null>(null);
   const [role, setRole] = useState<number | null>(null);
 
+  //searchState
+  const [searchUsers, setSearchUsers] = useState<User[]>([]);
+  const [searchUserName, setSearchUserName] = useState<string>("");
+  const [searchUserRole, setSearchUserRole] = useState<string>("");
+
   useEffect(() => {
     const getCurrentCompany = async () => {
       if (!currentUser) return;
-      const response: Company = await axios
+      const currentCompany: Company = await axios
         .get(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/companys/${currentUser.companyId}`)
         .then((res) => res.data);
       const companyUsers: User[] = await axios
         .get(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/users/company/${currentUser.companyId}`)
         .then((res) => res.data);
+      setSearchUsers(companyUsers);
       setUsers(companyUsers);
-      setCompany(response);
+      setCompany(currentCompany);
     };
     getCurrentCompany();
   }, [currentUser]);
 
+  useEffect(() => {
+    if (users.length > 0) {
+      const filterUserList: User[] = users.filter((user) => {
+        const name: string = user.lastName + user.firstName;
+        const role: number = user.userRole;
+        const isSearchedName: boolean = name.toLowerCase().indexOf(searchUserName.trim().toLowerCase()) !== -1;
+        const isSearchedRole: boolean = searchUserRole === "" ? true : role.toString() === searchUserRole;
+        if (isSearchedName && isSearchedRole) return user;
+      });
+      setSearchUsers(filterUserList);
+    }
+  }, [searchUserName, searchUserRole]);
+
   const handleFocusSelector = (e: ChangeEvent<HTMLSelectElement>, user: User) => {
+    if (currentUser && user.id === currentUser.id && currentUser.userRole === UserRoles.CompanyAdmin) {
+      toast(toastText.cancel);
+      e.target.value = user.userRole.toString();
+      return;
+    }
     const selectorId = e.target.id;
     const selectedRole = parseInt(e.target.value);
     setFocusSelectorId(selectorId);
@@ -53,14 +80,20 @@ export default function () {
 
   return (
     <>
-      <TopBar searchText={searchText} />
+      <TopBar>
+        <SearchFormUser
+          searchUserName={searchUserName}
+          setSearchUserName={setSearchUserName}
+          setSearchUserRole={setSearchUserRole}
+        />
+      </TopBar>
       <Box w="100%" h="calc(100vh - 80px)" bg="#f5f5f5" display="flex" flexDirection="column" justifyContent="center">
         <Box w="calc(100% - 20px)" h="100%" overflowY="scroll" p="0 10px 0 10px">
           <Text fontSize="25px" fontWeight="600" textAlign="center" color="#666" py="5px">
             {company && company.name}
           </Text>
           <SimpleGrid columns={5} spacing={5}>
-            {users.map((user, index) => {
+            {searchUsers.map((user, index) => {
               return (
                 <Box key={index} sx={style}>
                   <Box w="100%" display="flex" justifyContent="space-around" alignItems="center">
@@ -72,7 +105,7 @@ export default function () {
                       <Box fontSize="15px" fontWeight="550" mt="10px">
                         {user.email}
                       </Box>
-                      {currentUser && currentUser.userRole < UserRoles.Commenter ? (
+                      {currentUser && currentUser.userRole < UserRoles.Editor ? (
                         <Select
                           variant="filled"
                           id={"selector" + index.toString()}
@@ -85,10 +118,10 @@ export default function () {
                             handleFocusSelector(e, user);
                           }}
                         >
-                          {roleList.map((form, index) => {
+                          {roleList.map((role, index) => {
                             return (
                               <option key={index} value={index}>
-                                {form}
+                                {role}
                               </option>
                             );
                           })}
@@ -118,6 +151,16 @@ export default function () {
     </>
   );
 }
+
+const toastText = {
+  cancel: {
+    title: `管理者は自身の権限を変更することはできません。権限を変更する場合は他の管理者を選定し、新しい管理者が変更してください。`,
+    status: "warning",
+    isClosable: true,
+  },
+} as {
+  cancel: UseToastOptions;
+};
 
 const style = {
   w: "100%",

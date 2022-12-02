@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import FormWithRadio from "../../components/nextComponents/formWithRadio";
 import Header from "../../components/nextComponents/header";
+import TopBar from "../../components/nextComponents/topBar";
 import { useCurrentUser } from "../../context/CurrentUserContext";
 import { UserRoles } from "../../types/UserRoles";
 
@@ -22,7 +23,7 @@ export default function () {
     currentUser &&
     currentUser.userRole <= UserRoles.Editor && (
       <>
-        <Header></Header>
+        <TopBar />
         <FormWithRadio
           inputForms={inputForms}
           radioForms={radioForms}

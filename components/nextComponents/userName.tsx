@@ -11,7 +11,7 @@ export default function UserName() {
       {currentUser && (
         <Box display="flex" justifyContent="center" alignItems="center" position="relative">
           <Image
-            src={currentUser?.imagePath ? currentUser?.imagePath : "/images/pika.jpeg"}
+            src={currentUser.imagePath ? currentUser.imagePath : "/images/pika.jpeg"}
             objectFit="cover"
             boxSize="60px"
             borderRadius="50%"

@@ -1,15 +1,15 @@
-import Form from '../../components/nextComponents/form';
-import Header from '../../components/nextComponents/header';
+import Form from "../../components/nextComponents/form";
+import TopBar from "../../components/nextComponents/topBar";
 
 export default function () {
-  const title = '招待メール送信完了';
-  const buttonText = 'Top画面に戻る';
-  const redirectPath = '/';
+  const title = "招待メール送信完了";
+  const buttonText = "Top画面に戻る";
+  const redirectPath = "/";
   const redirectPage = true;
 
   return (
     <>
-      <Header></Header>
+      <TopBar />
       <Form title={title} buttonText={buttonText} redirectPath={redirectPath} redirectPage={redirectPage} />
     </>
   );
