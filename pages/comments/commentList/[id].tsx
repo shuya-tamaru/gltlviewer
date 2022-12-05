@@ -6,9 +6,10 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import BuildingTopBar from "../../../components/nextComponents/buildingTopBar";
-import CommentSearchForm from "../../../components/nextComponents/commentSearchForm";
 import Post from "../../../components/nextComponents/post";
+import SearchFormComment from "../../../components/nextComponents/searchFormComment";
 import TopBar from "../../../components/nextComponents/topBar";
+import useDateFilter from "../../../hooks/useDateFilter";
 import { Building } from "../../../types/Buildings";
 import { Comments } from "../../../types/Comments";
 
@@ -16,8 +17,20 @@ type Props = {
   building: Building;
 };
 
+export type SearchInput = {
+  title: string;
+  startDate: string;
+  endDate: string;
+};
+
 export default function CommentList({ building }: Props) {
   const [comments, setComments] = useState<Comments[] | []>([]);
+  const [searchComments, setSearchComments] = useState<Comments[] | []>([]);
+  const [searhInput, setSearchInput] = useState<SearchInput>({
+    title: "",
+    startDate: "",
+    endDate: "",
+  });
 
   useEffect(() => {
     const getFirstCommentInRoom = async () => {
@@ -29,14 +42,30 @@ export default function CommentList({ building }: Props) {
     getFirstCommentInRoom();
   }, []);
 
+  useEffect(() => {
+    const filterCommentList = comments.filter((comment) => {
+      const title = comment.title;
+      const isSearchTitle: boolean = title.toLowerCase().indexOf(searhInput.title.trim().toLowerCase()) !== -1;
+
+      const createdAt = new Date(comment.createdAt.substring(0, 10));
+      const isSearchDate: boolean = useDateFilter(searhInput, createdAt);
+
+      if (isSearchTitle && isSearchDate) return comment;
+    });
+
+    setSearchComments(filterCommentList);
+  }, [comments, searhInput]);
+
   return (
     <>
-      <TopBar />
+      <TopBar>
+        <SearchFormComment setSearchInput={setSearchInput} />
+      </TopBar>
       <Flex>
-        <Box w="80%" h="calc(100vh - 80px)">
+        <Box w="100%" h="calc(100vh - 80px)">
           <BuildingTopBar building={building} />
-          <SimpleGrid w="100%" h="92%" columns={3} spacing={10} overflowY="scroll" py="5" px="5">
-            {comments.map((comment) => (
+          <SimpleGrid w="100%" h="92%" columns={4} spacing={10} overflowY="scroll" py="5" px="5">
+            {searchComments.map((comment) => (
               <Link href={`/comments/commentDetail/${comment.commentRoomId}`} key={comment.id}>
                 <Box
                   cursor="pointer"
@@ -53,18 +82,6 @@ export default function CommentList({ building }: Props) {
               </Link>
             ))}
           </SimpleGrid>
-        </Box>
-        <Box
-          w="20%"
-          h="calc(100vh - 80px)"
-          boxShadow="2xl"
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          pt="5"
-          bg="#fffafa"
-        >
-          <CommentSearchForm />
         </Box>
       </Flex>
     </>

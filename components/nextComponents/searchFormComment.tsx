@@ -1,27 +1,26 @@
 import { Box, Input } from "@chakra-ui/react";
 import { Search2Icon } from "@chakra-ui/icons";
 
-import { Dispatch } from "react";
-
-import { SearchBuilding } from "../../pages/topPage/[companyId]";
+import { Dispatch, SetStateAction } from "react";
+import { SearchInput } from "../../pages/comments/commentList/[id]";
 
 type Props = {
-  setSearchInput: Dispatch<React.SetStateAction<SearchBuilding>>;
+  setSearchInput: Dispatch<SetStateAction<SearchInput>>;
 };
 
-export default function SearchFormBuilding({ setSearchInput }: Props) {
+export default function searchFormComment({ setSearchInput }: Props) {
   return (
     <>
       <Box w="65%" bg="#ffffff" display="flex" py="10px" alignItems="center" borderRadius="5px">
         <Search2Icon fontSize="20" color="#696969" ml="5" />
         <Box w="8%" color="#333" ml="10px" borderLeft="solid 1px #333">
-          &nbsp;&nbsp;物件名 :
+          &nbsp;&nbsp;タイトル :
         </Box>
         <Input
           sx={{ ...inputStyle, width: "40%", cursor: "" }}
           focusBorderColor="none"
-          placeholder={"Search Building"}
-          onChange={(e) => setSearchInput((prev) => ({ ...prev, buildingName: e.target.value }))}
+          placeholder={"Comment Search"}
+          onChange={(e) => setSearchInput((prev) => ({ ...prev, title: e.target.value }))}
         />
         <Box w="10%" color={inputStyle.color} borderLeft="solid 1px #333">
           &nbsp;&nbsp;開始日付 :

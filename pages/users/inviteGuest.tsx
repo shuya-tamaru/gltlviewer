@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 import FormWithRadio from "../../components/nextComponents/formWithRadio";
-import Header from "../../components/nextComponents/header";
 import TopBar from "../../components/nextComponents/topBar";
 import { useCurrentUser } from "../../context/CurrentUserContext";
 import { UserRoles } from "../../types/UserRoles";

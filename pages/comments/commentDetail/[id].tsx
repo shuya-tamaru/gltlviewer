@@ -1,4 +1,4 @@
-import { Box, Flex, Button } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import axios from "axios";
 
 import BuildingTopBar from "../../../components/nextComponents/buildingTopBar";
@@ -7,7 +7,6 @@ import { CommentRooms } from "../../../types/CommentRooms";
 import { GetStaticPropsContext } from "next";
 import { Comments } from "../../../types/Comments";
 import { useEffect, useState } from "react";
-import SideBarCommentSingle from "../../../components/nextComponents/sideBarCommentSingle";
 import { Building } from "../../../types/Buildings";
 import TopBar from "../../../components/nextComponents/topBar";
 
@@ -40,24 +39,13 @@ export default function CommentDetail({ comments }: Props) {
       <>
         <TopBar />
         <Flex>
-          <Box w="80%" h="calc(100vh - 80px)">
+          <Box w="100%" h="calc(100vh - 80px)">
             <BuildingTopBar building={building} />
             <Box p="5" w="100%" h="92%" overflowY="scroll" color="#333">
               {comments.map((comment) => (
                 <Comment key={comment.id} comment={comment} setfocusComment={setfocusComment} />
               ))}
             </Box>
-          </Box>
-          <Box w="20%" h="calc(100vh - 80px)" boxShadow="0px 0px 15px -5px #777777">
-            <Box w="100%" h="70%" px="3" pt="3" display="flex" flexDirection="column" alignItems="center">
-              <Box w="100%" h="calc(100% - 40px)" mb="2" overflowY="scroll">
-                {focusComment ? <SideBarCommentSingle comment={focusComment} /> : null}
-              </Box>
-              <Button colorScheme="red" w="90%" h="40px">
-                Read More
-              </Button>
-            </Box>
-            {/* <DrawerCommentAdd /> */}
           </Box>
         </Flex>
       </>

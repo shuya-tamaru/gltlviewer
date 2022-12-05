@@ -13,8 +13,9 @@ import { Company } from "../../types/Companys";
 import { useSession } from "next-auth/react";
 import Spiner from "../../components/nextComponents/spiner";
 import SearchFormBuilding from "../../components/nextComponents/searchFormBuilding";
+import useDateFilter from "../../hooks/useDateFilter";
 
-export type Search = {
+export type SearchBuilding = {
   buildingName: string;
   startDate: string;
   endDate: string;
@@ -30,7 +31,7 @@ export default function ({ getbuildings }: Props) {
   const [pageCount, setPageCount] = useState(0);
   const [itemOffset, setItemOffset] = useState(0);
   const { status } = useSession();
-  const [searchInput, setSearchInput] = useState<Search>({ buildingName: "", startDate: "", endDate: "" });
+  const [searchInput, setSearchInput] = useState<SearchBuilding>({ buildingName: "", startDate: "", endDate: "" });
 
   const itemsPerPage = 6;
 
@@ -53,21 +54,8 @@ export default function ({ getbuildings }: Props) {
       const name = building.name;
       const isSearchName: boolean = name.toLowerCase().indexOf(searchInput.buildingName.trim().toLowerCase()) !== -1;
 
-      let isSearchDate: boolean;
       const createdAt = new Date(building.createdAt.substring(0, 10));
-      if (searchInput.startDate === "" && searchInput.endDate === "") {
-        isSearchDate = true;
-      } else if (searchInput.startDate !== "" && searchInput.endDate !== "") {
-        const searchStartDate = new Date(searchInput.startDate);
-        const searchEndtDate = new Date(searchInput.endDate);
-        isSearchDate = searchStartDate <= createdAt && createdAt <= searchEndtDate ? true : false;
-      } else if (searchInput.startDate !== "") {
-        const searchStartDate = new Date(searchInput.startDate);
-        isSearchDate = searchStartDate <= createdAt ? true : false;
-      } else {
-        const searchEndtDate = new Date(searchInput.endDate);
-        isSearchDate = createdAt <= searchEndtDate ? true : false;
-      }
+      const isSearchDate: boolean = useDateFilter(searchInput, createdAt);
 
       if (isSearchName && isSearchDate) return building;
     });
