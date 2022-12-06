@@ -1,8 +1,9 @@
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
 import { BiImageAdd } from "react-icons/bi";
+import { useDropzone } from "react-dropzone";
 
 import { Dispatch, SetStateAction, useCallback, useState } from "react";
-import { useDropzone } from "react-dropzone";
+
 import { useCurrentUser } from "../../context/CurrentUserContext";
 import { Building } from "../../types/Buildings";
 

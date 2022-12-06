@@ -1,11 +1,11 @@
-import { Box, Flex, Text, Button, Input } from "@chakra-ui/react";
+import { Box, Flex, Text, Button, Input, useToast } from "@chakra-ui/react";
 import axios from "axios";
 
 import { useRouter } from "next/router";
 import { useState } from "react";
 
 import Header from "../../components/nextComponents/header";
-import { User } from "../../types/Users";
+import { toastText } from "../../components/utils/toastStatus";
 
 export default function () {
   const inputForms = "Email";
@@ -13,18 +13,17 @@ export default function () {
   const buttonText = "パスワードリセットフォームを送信";
   const redirectPath = "/login/checkEmail";
 
+  const toast = useToast();
   const router = useRouter();
   const [inputEmail, setInputEmail] = useState<string>("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const existUser: User = await axios
-        .get(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/users`, { params: { email: `${inputEmail}` } })
-        .then((res) => res.data);
-      existUser && router.push(redirectPath);
+      await axios.post(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/password/forgot`, { email: inputEmail });
+      router.push(redirectPath);
     } catch (error) {
-      console.log(error);
+      toast({ ...toastText.error, title: "入力されたメールアドレスは登録されておりません。" });
     }
   };
 
