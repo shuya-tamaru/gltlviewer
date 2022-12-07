@@ -50,8 +50,8 @@ export default function () {
             <Text fontSize="25px" fontWeight="800" color="#666666" textAlign="center">
               パスワードをリセット
             </Text>
-            <Input ref={passwordRef} type="text" placeholder={"パスワード"} required sx={inputStyle} onChange={(e) => {}} />
-            <Input ref={confirmRef} type="text" placeholder={"確認パスワード"} required sx={inputStyle} />
+            <Input ref={passwordRef} type="password" placeholder={"パスワード"} required sx={inputStyle} onChange={(e) => {}} />
+            <Input ref={confirmRef} type="password" placeholder={"確認パスワード"} required sx={inputStyle} />
             <Button type="submit" w="90%" h="50" py="5" ml="5" mt="5" color="#ffffff" colorScheme="red" fontWeight="800">
               リセット
             </Button>

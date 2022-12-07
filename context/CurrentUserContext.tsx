@@ -1,7 +1,7 @@
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
-import React, { createContext, useState, Dispatch, SetStateAction, ReactNode, useContext, useEffect } from 'react';
-import { User } from '../types/Users';
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import React, { createContext, useState, Dispatch, SetStateAction, ReactNode, useContext, useEffect } from "react";
+import { User } from "../types/Users";
 
 type CurrnetUserContextType = User | null;
 type CurrnetUserUpdateContextType = Dispatch<SetStateAction<User | null>>;
@@ -17,15 +17,19 @@ export const CurrentUserProvider = (props: { children: ReactNode }) => {
 
   //check user login state
   useEffect(() => {
-    if (status === 'loading') {
+    if (status === "loading") {
       return;
-    } else if (router.pathname === '/registration') {
+    } else if (
+      router.pathname === "/registration" ||
+      router.pathname.indexOf("companyRegistration") !== -1 ||
+      router.pathname.indexOf("passwordReset") !== -1
+    ) {
       return;
-    } else if (status === 'authenticated') {
+    } else if (status === "authenticated") {
       const user = session.userData as User;
       user && setCurrentUser(user);
     } else {
-      router.push('/login');
+      router.push("/login");
     }
   }, [status]);
 

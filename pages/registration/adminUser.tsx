@@ -1,8 +1,7 @@
-import { Flex, Text, Box, Button, Input, Image, useToast } from "@chakra-ui/react";
+import { Flex, Text, Box, Button, Input, useToast } from "@chakra-ui/react";
 import axios from "axios";
 
 import { getSession, signIn } from "next-auth/react";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 
@@ -11,6 +10,10 @@ import { useCurrentUserUpdate } from "../../context/CurrentUserContext";
 import { User } from "../../types/Users";
 import { formStyle } from "../../styles/formStyle";
 import IconUploadForm from "../../components/nextComponents/iconUploadForm";
+import { Company } from "../../types/Companys";
+import { toastText } from "../../components/utils/toastStatus";
+import { UserRoles } from "../../types/UserRoles";
+import { RegistrationToken } from "../../types/RegistrationToken";
 
 export default function Registration() {
   const router = useRouter();
@@ -23,26 +26,40 @@ export default function Registration() {
   const email = useRef<HTMLInputElement | null>(null);
   const password = useRef<HTMLInputElement | null>(null);
   const passwordConfirmation = useRef<HTMLInputElement | null>(null);
-  const companyId = useRef<HTMLInputElement | null>(null);
-  const userState = useRef<HTMLInputElement | null>(null);
+
   const [file, setFiles] = useState<File | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (password.current!.value !== passwordConfirmation.current!.value) {
-      passwordConfirmation.current!.setCustomValidity("確認用パスワードが一致しません");
+      toast({ ...toastText.error, title: "確認用パスワードが一致しません" });
     } else {
       try {
         setLoading(true);
+        const query = router.query;
+
+        const token = query.token as string;
+        const isValidToken: RegistrationToken = await axios
+          .post(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/registration/checkToken`, { token })
+          .then((res) => res.data);
+        if (!isValidToken) {
+          toast({ ...toastText.error, title: "URLの有効期限が切れています。" });
+          return;
+        }
+
+        const queryCompany: Pick<Company, "name" | "address" | "phoneNumber"> = JSON.parse(query.company as string);
+        const company: Company = await axios
+          .post(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/companys`, queryCompany)
+          .then((res) => res.data);
 
         const newUser: Omit<User, "id" | "createdAt" | "updatedAt"> = {
           lastName: lastName.current!.value,
           firstName: firstName.current!.value,
           email: email.current!.value,
           password: password.current!.value,
-          companyId: companyId.current!.value,
-          userRole: 0,
+          companyId: company.id,
+          userRole: UserRoles.CompanyAdmin,
         };
 
         //userIconUpload
@@ -60,6 +77,9 @@ export default function Registration() {
         //signUp
         await axios.post(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/users/auth/signup`, newUser);
 
+        //deleteToken
+        await axios.delete(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/registration/deleteToken/${isValidToken.id}`);
+
         //signIn
         await signIn("credentials", {
           email: newUser.email,
@@ -71,23 +91,13 @@ export default function Registration() {
           setLoading(true);
           setCurrentUser(user);
           const companyId: string = user!.companyId;
-          toast({
-            position: "top",
-            title: "ユーザー登録に成功しました",
-            status: "success",
-            isClosable: true,
-          });
+          toast({ ...toastText.success, title: '"ユーザー登録に成功しました' });
           router.push(`/topPage/${companyId}`);
         });
       } catch (error: any) {
         const errorMessage: string = error.response.data.message;
         setLoading(false);
-        toast({
-          position: "top",
-          title: `${errorMessage}`,
-          status: "warning",
-          isClosable: true,
-        });
+        toast({ ...toastText.error, title: `${errorMessage}` });
       }
     }
   };
@@ -106,38 +116,24 @@ export default function Registration() {
             <Input type="email" ref={email} placeholder={"メールアドレス"} required sx={formStyle} />
             <Input type="password" ref={password} placeholder={"パスワード"} required sx={formStyle} />
             <Input type="password" ref={passwordConfirmation} placeholder={"パスワード確認"} required sx={formStyle} />
-            <Input
-              type="text"
-              ref={companyId}
-              placeholder={"会社ID"}
-              defaultValue={"224bb556-d42c-4908-b531-bf2c86983376"}
-              required
-              sx={formStyle}
-            />
-            <Input type="text" ref={userState} placeholder={"ユーザー権限"} required defaultValue={"OnlyWatch"} sx={formStyle} />
+            <Input type="text" value="管理者ユーザーとして登録" required sx={formStyle} isDisabled />
             <IconUploadForm setFiles={setFiles} action={"userSignin"} />
-            <Button
-              isLoading={loading}
-              type="submit"
-              w="90%"
-              h="50"
-              py="5"
-              ml="5"
-              mt="5"
-              color="#ffffff"
-              colorScheme="red"
-              fontWeight="600"
-            >
+            <Button isLoading={loading} type="submit" sx={buttonStyle} colorScheme="red">
               新規登録
             </Button>
           </form>
-          <Link href="/login">
-            <Text color="blue" mt="5" textAlign="center" cursor="pointer">
-              登録済みの方はこちら
-            </Text>
-          </Link>
         </Box>
       </Flex>
     </>
   );
 }
+
+const buttonStyle = {
+  w: "90%",
+  h: "50",
+  py: "5",
+  ml: "5",
+  mt: "5",
+  color: "#ffffff",
+  fontWeight: "600",
+};

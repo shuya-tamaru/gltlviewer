@@ -1,18 +1,35 @@
-import { Box, Button, Flex, Link, Text } from "@chakra-ui/react";
-import Form from "../../components/nextComponents/form";
+import { Box, Button, Flex, Input, Text } from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import { useEffect, useRef, useState } from "react";
 import Header from "../../components/nextComponents/header";
-import RegisterInputForm from "../../components/nextComponents/registerInputForm";
 
 export default function () {
-  const inputForms = ["会社名", "会社住所", "電話番号"];
-  const title = "会社登録";
-  const buttonText = "登録";
-  const redirectPath = "/registration";
-  const redirectPage = true;
+  const name = useRef<HTMLInputElement | null>(null);
+  const address = useRef<HTMLInputElement | null>(null);
+  const phoneNumber = useRef<HTMLInputElement | null>(null);
+  const [token, setToken] = useState<string>("");
+
+  const router = useRouter();
+  const redirectPath = "/registration/adminUser";
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const companyData = {
+      name: name.current!.value,
+      address: address.current!.value,
+      phoneNumber: phoneNumber.current!.value,
+    };
+    const companyDataJSON = JSON.stringify(companyData);
+    router.push({
+      pathname: redirectPath,
+      query: { company: companyDataJSON, token },
+    });
   };
+
+  useEffect(() => {
+    const getToken: string = router.query.token as string;
+    setToken(getToken);
+  }, [router.query]);
 
   return (
     <>
@@ -21,30 +38,38 @@ export default function () {
         <Box w="30%" bg="#ffffff" p="10px 10px 20px 10px" shadow="dark-lg" borderRadius="5px">
           <form onSubmit={(e) => handleSubmit(e)}>
             <Text fontSize="25px" fontWeight="800" color="#666666" textAlign="center">
-              {title}
+              会社登録
             </Text>
-            {inputForms && inputForms.map((form: string) => <RegisterInputForm key={form} form={form} />)}
-            {redirectPage ? (
-              <Link href={redirectPath}>
-                <Button type="submit" w="90%" h="50" py="5" ml="5" mt="5" color="#ffffff" colorScheme="red" fontWeight="800">
-                  {buttonText}
-                </Button>
-              </Link>
-            ) : (
-              <Button type="submit" w="90%" h="50" py="5" ml="5" mt="5" color="#ffffff" colorScheme="red" fontWeight="800">
-                {buttonText}
-              </Button>
-            )}
+            <Input type="text" ref={name} placeholder={"会社名"} required sx={inputStyle} />
+            <Input type="text" ref={address} placeholder={"会社住所"} required sx={inputStyle} />
+            <Input type="text" ref={phoneNumber} placeholder={"電話番号"} required sx={inputStyle} />
+            <Button type="submit" sx={buttonStyle} colorScheme="red">
+              登録
+            </Button>
           </form>
         </Box>
       </Flex>
-      <Form
-        inputForms={inputForms}
-        title={title}
-        buttonText={buttonText}
-        redirectPath={redirectPath}
-        redirectPage={redirectPage}
-      />
     </>
   );
 }
+
+const inputStyle = {
+  w: "90%",
+  h: "50",
+  py: "5",
+  ml: "5",
+  mt: "5",
+  color: "#333333",
+  borderColor: "#999999",
+  borderWidth: "2px",
+};
+
+const buttonStyle = {
+  w: "90%",
+  h: "50",
+  py: "5",
+  ml: "5",
+  mt: "5",
+  color: "#ffffff",
+  fontWeight: "800",
+};
