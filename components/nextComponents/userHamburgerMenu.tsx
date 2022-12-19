@@ -44,22 +44,13 @@ export default function UserHamburgerMenu() {
       {currentUser && (
         <>
           <HamburgerIcon ml="10px" fontSize="40px" cursor="pointer" ref={clickedElement} />
-          <Box
-            display={menuState}
-            flexDirection="column"
-            bg="#fff"
-            position="absolute"
-            right="-10px"
-            top="70px"
-            zIndex="10"
-            shadow="md"
-          >
+          <Box display={menuState} flexDirection="column" bg="#fff" position="absolute" right="-10px" top="70px" shadow="md">
             <ModalUserUpdate iconSize={iconSize} buttonStyles={buttonStyles} hoverStyles={hoverStyles} />
             {currentUser.userRole < UserRoles.Commenter && (
               <ModalCompanyUpdate iconSize={iconSize} buttonStyles={buttonStyles} hoverStyles={hoverStyles} />
             )}
             {currentUser.userRole < UserRoles.Commenter && (
-              <Link href={"/users/inviteUser"}>
+              <Link href={`/users/inviteUser/${currentUser.companyId}`}>
                 <Button sx={buttonStyles} _hover={hoverStyles} leftIcon={<BiUserPlus style={{ fontSize: iconSize }} />}>
                   新規ユーザーの招待
                 </Button>

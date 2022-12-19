@@ -44,7 +44,7 @@ export default function Post({ comment, commentsLength, setComments, index }: Pr
           <Box w="100%" mb="5">
             <Flex alignItems="center" justify="space-between" borderBottom="2px" borderColor="#999">
               <Flex>
-                <Image src="/images/pika.jpeg" objectFit="cover" boxSize="60px" borderRadius="50%" />
+                <Image src="/images/avator.png" objectFit="cover" boxSize="60px" borderRadius="50%" />
                 <Box ml="5" color="#333">
                   <Text fontSize="lg">{commentUser ? commentUser.lastName + commentUser.firstName : ""}</Text>
                   <Text fontSize="xs">{displayComment ? displayComment.createdAt : ""}</Text>
@@ -73,7 +73,7 @@ export default function Post({ comment, commentsLength, setComments, index }: Pr
               <Text my="2" mx="2">
                 {displayComment ? displayComment.description : ""}
               </Text>
-              <Image src="/images/building.jpeg" objectFit="cover" boxSize="100%" />
+              <Image src="/images/building.png" objectFit="cover" boxSize="100%" />
             </Box>
           </Box>
           <DrawerCommentUpdate

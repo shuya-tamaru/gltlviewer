@@ -5,6 +5,7 @@ import { useCurrentUser } from "../../context/CurrentUserContext";
 import { Building } from "../../types/Buildings";
 import { UserRoles } from "../../types/UserRoles";
 import ModalBuildingUpdate from "./modalBuildingUpdate";
+import Spiner from "./spiner";
 import { buildingState } from "./store/Building/building";
 
 type Props = {
@@ -35,10 +36,11 @@ export default function BuildingLink({ building }: Props) {
       >
         <a href={`/buildings/${building.id}`} onClick={setCurrentBuilding}>
           <Image
-            src={building.imagePath ? building.imagePath : "/images/building.jpeg"}
+            src={building.imagePath ? building.imagePath : "/images/building.png"}
             objectFit="cover"
             boxSize="100px"
             cursor="pointer"
+            fallback={<Spiner containerWidth={"100%"} containerHeight={"100%"} iconWidth={"100"} iconHeight={"100"} />}
           />
         </a>
         <Box h="100%" w="100%">

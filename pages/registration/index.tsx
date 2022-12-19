@@ -11,6 +11,8 @@ import { useCurrentUserUpdate } from "../../context/CurrentUserContext";
 import { User } from "../../types/Users";
 import { formStyle } from "../../styles/formStyle";
 import IconUploadForm from "../../components/nextComponents/iconUploadForm";
+import { RegistrationToken } from "../../types/RegistrationToken";
+import { toastText } from "../../components/utils/toastStatus";
 
 export default function Registration() {
   const router = useRouter();
@@ -23,8 +25,6 @@ export default function Registration() {
   const email = useRef<HTMLInputElement | null>(null);
   const password = useRef<HTMLInputElement | null>(null);
   const passwordConfirmation = useRef<HTMLInputElement | null>(null);
-  const companyId = useRef<HTMLInputElement | null>(null);
-  const userState = useRef<HTMLInputElement | null>(null);
   const [file, setFiles] = useState<File | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -35,14 +35,23 @@ export default function Registration() {
     } else {
       try {
         setLoading(true);
+        const query = router.query;
+        const token = query.token as string;
+        const isValidToken: RegistrationToken = await axios
+          .post(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/registration/checkToken`, { token })
+          .then((res) => res.data);
+        if (!isValidToken) {
+          toast({ ...toastText.error, title: "URLの有効期限が切れています。管理者に再度登録フォームを発行依頼してください" });
+          return;
+        }
 
         const newUser: Omit<User, "id" | "createdAt" | "updatedAt"> = {
           lastName: lastName.current!.value,
           firstName: firstName.current!.value,
           email: email.current!.value,
           password: password.current!.value,
-          companyId: companyId.current!.value,
-          userRole: 0,
+          companyId: isValidToken.companyId,
+          userRole: isValidToken.role,
         };
 
         //userIconUpload
@@ -106,28 +115,8 @@ export default function Registration() {
             <Input type="email" ref={email} placeholder={"メールアドレス"} required sx={formStyle} />
             <Input type="password" ref={password} placeholder={"パスワード"} required sx={formStyle} />
             <Input type="password" ref={passwordConfirmation} placeholder={"パスワード確認"} required sx={formStyle} />
-            <Input
-              type="text"
-              ref={companyId}
-              placeholder={"会社ID"}
-              defaultValue={"224bb556-d42c-4908-b531-bf2c86983376"}
-              required
-              sx={formStyle}
-            />
-            <Input type="text" ref={userState} placeholder={"ユーザー権限"} required defaultValue={"OnlyWatch"} sx={formStyle} />
             <IconUploadForm setFiles={setFiles} action={"userSignin"} />
-            <Button
-              isLoading={loading}
-              type="submit"
-              w="90%"
-              h="50"
-              py="5"
-              ml="5"
-              mt="5"
-              color="#ffffff"
-              colorScheme="red"
-              fontWeight="600"
-            >
+            <Button isLoading={loading} type="submit" sx={buttonStyle} colorScheme="red">
               新規登録
             </Button>
           </form>
@@ -141,3 +130,13 @@ export default function Registration() {
     </>
   );
 }
+
+const buttonStyle = {
+  w: "90%",
+  h: "50",
+  py: "5",
+  ml: "5",
+  mt: "5",
+  color: "#ffffff",
+  fontWeight: "600",
+};

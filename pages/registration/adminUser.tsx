@@ -40,7 +40,8 @@ export default function Registration() {
         const query = router.query;
 
         const token = query.token as string;
-        const isValidToken: RegistrationToken = await axios
+
+        const isValidToken: Omit<RegistrationToken, "role" | "companyId"> = await axios
           .post(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/registration/checkToken`, { token })
           .then((res) => res.data);
         if (!isValidToken) {

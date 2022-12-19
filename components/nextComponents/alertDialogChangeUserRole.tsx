@@ -42,7 +42,7 @@ const alertDialogChangeUserRole = ({ isOpen, focusUser, role, focusSelectorId, s
   const handleUserRole = async () => {
     setLoading(true);
     try {
-      role && focusUser && userRoleUpdate();
+      role !== null && focusUser && userRoleUpdate();
     } catch (error) {
       console.log(error);
       toast({ ...toastText.error, title: "権限の更新に失敗しました" });

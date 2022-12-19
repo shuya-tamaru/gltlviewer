@@ -1,7 +1,7 @@
 import { Box, Text } from "@chakra-ui/react";
 import axios from "axios";
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { GetStaticPropsContext } from "next";
 
 import BuildingLink from "../../components/nextComponents/buildingLink";
@@ -76,8 +76,7 @@ export default function ({ getbuildings }: Props) {
               物件一覧
             </Text>
             <Box h="calc(100vh)" display="flex" flexDirection="column">
-              {currentItems &&
-                currentItems.map((building: Building) => <BuildingLink key={building.id} building={building}></BuildingLink>)}
+              {currentItems && currentItems.map((building: Building) => <BuildingLink key={building.id} building={building} />)}
             </Box>
             <Pagination pageCount={pageCount} handlePageClick={handlePageClick}></Pagination>
           </Box>

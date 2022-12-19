@@ -1,10 +1,10 @@
-import { Box, Button, Flex, VStack, Text } from '@chakra-ui/react';
-import { Radio, RadioGroup } from '@chakra-ui/react';
+import { Box, Button, Flex, VStack, Text } from "@chakra-ui/react";
+import { Radio, RadioGroup } from "@chakra-ui/react";
 
-import Link from 'next/link';
-import { useCallback, useState } from 'react';
+import Link from "next/link";
+import { useState } from "react";
 
-import RegisterInputForm from './registerInputForm';
+import RegisterInputForm from "./registerInputForm";
 
 type inputForms = {
   inputForms?: string[];
@@ -20,23 +20,23 @@ export default function ({ inputForms, radioForms, title, buttonText, redirectPa
     e.preventDefault();
   };
 
-  const [value, setValue] = useState<string>('0');
+  const [value, setValue] = useState<string>("0");
 
   return (
     <>
-      <Flex w='100vw' h='calc(100vh - 80px)' display='flex' justify='center' alignItems='center' margin='auto'>
-        <Box w='30%' bg='#ffffff' p='10px 10px 20px 10px' shadow='dark-lg' borderRadius='5px'>
+      <Flex w="100vw" h="calc(100vh - 80px)" display="flex" justify="center" alignItems="center" margin="auto">
+        <Box w="30%" bg="#ffffff" p="10px 10px 20px 10px" shadow="dark-lg" borderRadius="5px">
           <form onSubmit={(e) => handleSubmit(e)}>
-            <Text fontSize='25px' fontWeight='800' color='#666666' textAlign='center'>
+            <Text fontSize="25px" fontWeight="800" color="#666666" textAlign="center">
               {title}
             </Text>
             {inputForms && inputForms.map((form: string) => <RegisterInputForm key={form} form={form} />)}
-            <RadioGroup onChange={setValue} value={value} name='radio' display='flex' justifyContent='center'>
-              <Box py='5'>
-                <VStack align='stretch'>
+            <RadioGroup onChange={setValue} value={value} name="radio" display="flex" justifyContent="center">
+              <Box py="5">
+                <VStack align="stretch">
                   {radioForms.map((form, index) => {
                     return (
-                      <Radio key={index} size='lg' value={index.toString()}>
+                      <Radio key={index} size="lg" value={index.toString()}>
                         {form}
                       </Radio>
                     );
@@ -46,12 +46,12 @@ export default function ({ inputForms, radioForms, title, buttonText, redirectPa
             </RadioGroup>
             {redirectPage ? (
               <Link href={redirectPath}>
-                <Button type='submit' w='90%' h='50' py='5' ml='5' color='#ffffff' colorScheme='red' fontWeight='800'>
+                <Button type="submit" w="90%" h="50" py="5" ml="5" color="#ffffff" colorScheme="red" fontWeight="800">
                   {buttonText}
                 </Button>
               </Link>
             ) : (
-              <Button type='submit' w='90%' h='50' py='5' ml='5' mt='5' color='#ffffff' colorScheme='red' fontWeight='800'>
+              <Button type="submit" w="90%" h="50" py="5" ml="5" mt="5" color="#ffffff" colorScheme="red" fontWeight="800">
                 {buttonText}
               </Button>
             )}

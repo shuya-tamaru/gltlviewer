@@ -6,6 +6,7 @@ import AlertDialogChangeUserRole from "../../components/nextComponents/alertDial
 import SearchFormUser from "../../components/nextComponents/searchFormUser";
 
 import TopBar from "../../components/nextComponents/topBar";
+import { toastText } from "../../components/utils/toastStatus";
 import { useCurrentUser } from "../../context/CurrentUserContext";
 import { Company } from "../../types/Companys";
 import { UserRoles } from "../../types/UserRoles";
@@ -62,7 +63,7 @@ export default function () {
 
   const handleFocusSelector = (e: ChangeEvent<HTMLSelectElement>, user: User) => {
     if (currentUser && user.id === currentUser.id && currentUser.userRole === UserRoles.CompanyAdmin) {
-      toast(toastText.cancel);
+      toast({ ...toastText.error, title: alertText });
       e.target.value = user.userRole.toString();
       return;
     }
@@ -92,7 +93,7 @@ export default function () {
             {searchUsers.map((user, index) => {
               return (
                 <Box key={index} sx={style}>
-                  <Image src={user.imagePath ? user.imagePath : `/images/pika.jpeg`} objectFit="cover" boxSize="90px" />
+                  <Image src={user.imagePath ? user.imagePath : `/images/avator.png`} objectFit="cover" boxSize="90px" />
                   <Flex display={"flex"} flexDirection={"column"} justify={"start"}>
                     <Box fontSize="20px" fontWeight="550">
                       {user.lastName + user.firstName}
@@ -146,16 +147,8 @@ export default function () {
   );
 }
 
-const toastText = {
-  cancel: {
-    title:
-      "管理者は自身の権限を変更することはできません。権限を変更する場合は他の管理者を選定し、新しい管理者が変更を行なってください。",
-    status: "warning",
-    isClosable: true,
-  },
-} as {
-  cancel: UseToastOptions;
-};
+const alertText =
+  "管理者は自身の権限を変更することはできません。権限を変更する場合は他の管理者を選定し、新しい管理者が変更を行なってください。";
 
 const style = {
   w: "100%",
