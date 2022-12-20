@@ -9,6 +9,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { FaUserEdit } from "react-icons/fa";
+
 import UserEditForm from "./userEditForm";
 import { ButtonStyles, HoverStyles, IconSize } from "./userHamburgerMenu";
 

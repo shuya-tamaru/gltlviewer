@@ -9,6 +9,7 @@ import { useRef } from "react";
 import TopBar from "../../../components/nextComponents/topBar";
 import { Company } from "../../../types/Companys";
 import { UserRoles } from "../../../types/UserRoles";
+import { formStyle } from "../../../styles/formStyle";
 
 type Props = {
   companyId: string;
@@ -42,7 +43,7 @@ export default function ({ companyId }: Props) {
             <Text fontSize="25px" fontWeight="800" color="#666666">
               新規ユーザーを招待
             </Text>
-            <Input type="email" ref={emailRef} placeholder="email" required sx={inputStyle} />
+            <Input type="email" ref={emailRef} placeholder="email" required sx={{ ...formStyle, ml: "0" }} />
             <Select
               ref={roleRef}
               w="90%"
@@ -86,13 +87,3 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params }: GetStaticPropsContext) {
   return { props: { companyId: params!.id } };
 }
-
-const inputStyle = {
-  w: "90%",
-  h: "50",
-  py: "5",
-  mt: "5",
-  color: "#333333",
-  borderColor: "#999999",
-  borderWidth: "2px",
-};

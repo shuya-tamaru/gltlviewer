@@ -1,9 +1,9 @@
-import { Box, Flex, Image, Text } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import { BiImageAdd } from "react-icons/bi";
-import { MdCancel } from "react-icons/md";
 import { useDropzone } from "react-dropzone";
 
 import { Dispatch, SetStateAction } from "react";
+
 import { ImagePreview } from "./imagePreview";
 
 type Props = {

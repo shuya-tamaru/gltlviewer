@@ -1,7 +1,8 @@
 import { Search2Icon } from "@chakra-ui/icons";
 import { Box, Input, Select } from "@chakra-ui/react";
-import React, { Dispatch, SetStateAction, useState } from "react";
 import { MdArrowDropDown } from "react-icons/md";
+import React, { Dispatch, SetStateAction } from "react";
+
 import { UserRoles } from "../../types/UserRoles";
 
 type Props = {

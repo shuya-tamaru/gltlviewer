@@ -1,11 +1,11 @@
 import { Button, Input, useToast } from "@chakra-ui/react";
+import axios from "axios";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/react";
 
 import { useCurrentUser, useCurrentUserUpdate } from "../../context/CurrentUserContext";
-import axios from "axios";
 import { formStyle } from "../../styles/formStyle";
 import IconUploadForm from "./iconUploadForm";
 import { toastText } from "../utils/toastStatus";

@@ -4,9 +4,7 @@ import { GetStaticPropsContext } from "next";
 import { useRouter } from "next/router";
 
 import BuildingTopBar from "../../../components/nextComponents/buildingTopBar";
-import Header from "../../../components/nextComponents/header";
 import TopBar from "../../../components/nextComponents/topBar";
-import UserName from "../../../components/nextComponents/userName";
 import { useCurrentUser } from "../../../context/CurrentUserContext";
 import { Building } from "../../../types/Buildings";
 import { UserRoles } from "../../../types/UserRoles";

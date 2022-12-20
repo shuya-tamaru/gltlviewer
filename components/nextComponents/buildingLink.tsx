@@ -1,7 +1,7 @@
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
 import { useSetRecoilState } from "recoil";
-import { useCurrentUser } from "../../context/CurrentUserContext";
 
+import { useCurrentUser } from "../../context/CurrentUserContext";
 import { Building } from "../../types/Buildings";
 import { UserRoles } from "../../types/UserRoles";
 import ModalBuildingUpdate from "./modalBuildingUpdate";

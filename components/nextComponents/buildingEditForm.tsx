@@ -2,6 +2,7 @@ import { Button, Input, useToast } from "@chakra-ui/react";
 import axios from "axios";
 
 import { useState } from "react";
+import { formStyle } from "../../styles/formStyle";
 
 import { Building } from "../../types/Buildings";
 import { toastText } from "../utils/toastStatus";
@@ -73,32 +74,22 @@ export default function ({ inputForms, data }: inputForms) {
               type="text"
               placeholder={form}
               required
-              w="90%"
-              h="50"
-              py="5"
-              ml="5"
-              mt="5"
-              color="#333333"
-              borderColor="#999999"
-              borderWidth="2px"
+              sx={formStyle}
             />
           ))}
         <IconUploadForm setFiles={setFiles} action={"buildingUpdate"} building={data} />
-        <Button
-          isLoading={loading}
-          type="submit"
-          w="90%"
-          h="50"
-          py="5"
-          ml="5"
-          mt="5"
-          color="#ffffff"
-          colorScheme="red"
-          fontWeight="800"
-        >
+        <Button isLoading={loading} type="submit" sx={style} color="#ffffff" colorScheme="red" fontWeight="800">
           更新
         </Button>
       </form>
     </>
   );
 }
+
+const style = {
+  w: "90%",
+  h: "50",
+  py: "5",
+  ml: "5",
+  mt: "5",
+};

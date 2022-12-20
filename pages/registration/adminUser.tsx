@@ -15,7 +15,7 @@ import { toastText } from "../../components/utils/toastStatus";
 import { UserRoles } from "../../types/UserRoles";
 import { RegistrationToken } from "../../types/RegistrationToken";
 
-export default function Registration() {
+export default function () {
   const router = useRouter();
   const toast = useToast();
   const setCurrentUser = useCurrentUserUpdate();
@@ -26,7 +26,6 @@ export default function Registration() {
   const email = useRef<HTMLInputElement | null>(null);
   const password = useRef<HTMLInputElement | null>(null);
   const passwordConfirmation = useRef<HTMLInputElement | null>(null);
-
   const [file, setFiles] = useState<File | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -38,8 +37,8 @@ export default function Registration() {
       try {
         setLoading(true);
         const query = router.query;
-
         const token = query.token as string;
+        const queryCompany: Pick<Company, "name" | "address" | "phoneNumber"> = JSON.parse(query.company as string);
 
         const isValidToken: Omit<RegistrationToken, "role" | "companyId"> = await axios
           .post(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/registration/checkToken`, { token })
@@ -49,7 +48,6 @@ export default function Registration() {
           return;
         }
 
-        const queryCompany: Pick<Company, "name" | "address" | "phoneNumber"> = JSON.parse(query.company as string);
         const company: Company = await axios
           .post(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/companys`, queryCompany)
           .then((res) => res.data);
@@ -81,7 +79,7 @@ export default function Registration() {
         //deleteToken
         await axios.delete(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/registration/deleteToken/${isValidToken.id}`);
 
-        //signIn
+        // signIn
         await signIn("credentials", {
           email: newUser.email,
           password: newUser.password,
@@ -89,7 +87,6 @@ export default function Registration() {
         }).then(async () => {
           const session = await getSession();
           const user = session ? (session.userData as User) : null;
-          setLoading(true);
           setCurrentUser(user);
           const companyId: string = user!.companyId;
           toast({ ...toastText.success, title: '"ユーザー登録に成功しました' });

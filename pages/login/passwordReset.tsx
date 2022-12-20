@@ -1,9 +1,12 @@
-import { Box, Button, Flex, Input, Link, Text, useToast } from "@chakra-ui/react";
+import { Box, Button, Flex, Input, Text, useToast } from "@chakra-ui/react";
 import axios from "axios";
+
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
+
 import Header from "../../components/nextComponents/header";
 import { toastText } from "../../components/utils/toastStatus";
+import { formStyle } from "../../styles/formStyle";
 
 export default function () {
   const router = useRouter();
@@ -11,8 +14,6 @@ export default function () {
   const passwordRef = useRef<HTMLInputElement>(null);
   const confirmRef = useRef<HTMLInputElement>(null);
   const [token, setToken] = useState<string>("");
-
-  const redirectPath = "/login";
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,7 +31,7 @@ export default function () {
       };
       await axios.post(`${process.env.NEXT_PUBLIC_LOCAL_PATH}/password/reset`, resetPassword);
       toast({ ...toastText.success, title: "パスワードのリセットが完了しました。ログインフォームからログインしてください" });
-      router.push(redirectPath);
+      router.push("/login");
     } catch (error) {
       toast({ ...toastText.error, title: "error" });
     }
@@ -43,16 +44,16 @@ export default function () {
 
   return (
     <>
-      <Header></Header>
+      <Header />
       <Flex w="100vw" h="calc(100vh - 80px)" display="flex" justify="center" alignItems="center" margin="auto">
         <Box w="30%" bg="#ffffff" p="10px 10px 20px 10px" shadow="dark-lg" borderRadius="5px">
           <form onSubmit={(e) => handleSubmit(e)}>
             <Text fontSize="25px" fontWeight="800" color="#666666" textAlign="center">
               パスワードをリセット
             </Text>
-            <Input ref={passwordRef} type="password" placeholder={"パスワード"} required sx={inputStyle} onChange={(e) => {}} />
-            <Input ref={confirmRef} type="password" placeholder={"確認パスワード"} required sx={inputStyle} />
-            <Button type="submit" w="90%" h="50" py="5" ml="5" mt="5" color="#ffffff" colorScheme="red" fontWeight="800">
+            <Input ref={passwordRef} type="password" placeholder={"新しいパスワード"} required sx={formStyle} />
+            <Input ref={confirmRef} type="password" placeholder={"新しいパスワードの確認 再入力"} required sx={formStyle} />
+            <Button type="submit" sx={buttonStyle} colorScheme="red">
               リセット
             </Button>
           </form>
@@ -62,13 +63,12 @@ export default function () {
   );
 }
 
-const inputStyle = {
+const buttonStyle = {
   w: "90%",
   h: "50",
   py: "5",
   ml: "5",
   mt: "5",
-  color: "#333333",
-  borderColor: "#999999",
-  borderWidth: "2px",
+  color: "#ffffff",
+  fontWeight: "800",
 };

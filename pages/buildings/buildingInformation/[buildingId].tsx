@@ -1,7 +1,9 @@
 import { Box, Flex } from "@chakra-ui/react";
 import axios from "axios";
+
 import { GetStaticPropsContext } from "next";
 import { useRouter } from "next/router";
+
 import BuildingTopBar from "../../../components/nextComponents/buildingTopBar";
 import TopBar from "../../../components/nextComponents/topBar";
 import { useCurrentUser } from "../../../context/CurrentUserContext";

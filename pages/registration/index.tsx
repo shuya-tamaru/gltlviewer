@@ -1,8 +1,7 @@
-import { Flex, Text, Box, Button, Input, Image, useToast } from "@chakra-ui/react";
+import { Flex, Text, Box, Button, Input, useToast } from "@chakra-ui/react";
 import axios from "axios";
 
 import { getSession, signIn } from "next-auth/react";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 
@@ -14,7 +13,7 @@ import IconUploadForm from "../../components/nextComponents/iconUploadForm";
 import { RegistrationToken } from "../../types/RegistrationToken";
 import { toastText } from "../../components/utils/toastStatus";
 
-export default function Registration() {
+export default function () {
   const router = useRouter();
   const toast = useToast();
   const setCurrentUser = useCurrentUserUpdate();
@@ -120,11 +119,6 @@ export default function Registration() {
               新規登録
             </Button>
           </form>
-          <Link href="/login">
-            <Text color="blue" mt="5" textAlign="center" cursor="pointer">
-              登録済みの方はこちら
-            </Text>
-          </Link>
         </Box>
       </Flex>
     </>

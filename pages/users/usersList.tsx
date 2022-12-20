@@ -93,7 +93,7 @@ export default function () {
             {searchUsers.map((user, index) => {
               return (
                 <Box key={index} sx={style}>
-                  <Image src={user.imagePath ? user.imagePath : `/images/avator.png`} objectFit="cover" boxSize="90px" />
+                  <Image src={user.imagePath ? user.imagePath : `/images/avator.png`} objectFit="cover" boxSize="80px" />
                   <Flex display={"flex"} flexDirection={"column"} justify={"start"}>
                     <Box fontSize="20px" fontWeight="550">
                       {user.lastName + user.firstName}
