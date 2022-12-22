@@ -23,7 +23,6 @@
     "framer-motion": "^6.5.1",
     "leva": "^0.9.34",
     "next": "12.2.5",
-    "next-auth": "^4.12.2",
     "r3f-perf": "^6.5.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
