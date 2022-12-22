@@ -5,6 +5,7 @@ const nextConfig = {
   experimental: {
     optimizeFonts: true,
   },
+  distDir: "build",
 };
 
 module.exports = nextConfig;

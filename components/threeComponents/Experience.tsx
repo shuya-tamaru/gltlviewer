@@ -7,10 +7,9 @@ import useViewEvent from "./stores/useViewEvent";
 import useLoadingModel, { BuildingModel } from "../../hooks/threeHooks/useLoadingModel";
 import SettingModel from "./SettingModel";
 import useCameraAction from "../../hooks/threeHooks/useCameraAction";
-import { Building } from "../../types/Buildings";
 
-function Experience({ building }: { building: Building }) {
-  const buildingModel: BuildingModel = useLoadingModel(building);
+function Experience() {
+  const buildingModel: BuildingModel = useLoadingModel();
   const cameraRef = useRef<OrbitControlsImpl>(null);
   const isPerspective = useViewEvent((state) => state.isPerspective);
 
@@ -20,16 +19,7 @@ function Experience({ building }: { building: Building }) {
     <>
       <OrbitControls ref={cameraRef} enableZoom={isPerspective ? true : false} makeDefault />
       <SettingModel buildingModel={buildingModel} />
-      <Environment
-        files={[
-          "/environmentMap/px.jpg",
-          "/environmentMap/nx.jpg",
-          "/environmentMap/py.jpg",
-          "/environmentMap/ny.jpg",
-          "/environmentMap/pz.jpg",
-          "/environmentMap/nz.jpg",
-        ]}
-      />
+      <Environment preset="forest" />
     </>
   );
 }

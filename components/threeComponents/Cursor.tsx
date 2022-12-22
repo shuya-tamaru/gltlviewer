@@ -3,11 +3,11 @@ import { useThree } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { BuildingModel } from "../../hooks/threeHooks/useLoadingModel";
-import useCommentModeState, { CommentModeStates } from "./stores/useCommentModeState";
 
 type Props = {
   buildingModel: BuildingModel;
 };
+
 const palneGeometry = new THREE.PlaneGeometry(0.5, 0.5);
 const palneMaterial = new THREE.MeshBasicMaterial({
   color: "red",
@@ -20,7 +20,6 @@ export default function Cursor({ buildingModel }: Props) {
   palneMaterial.map = texture;
   const ref = useRef<THREE.Mesh | null>(null);
   const { raycaster } = useThree();
-  const { commentModeState } = useCommentModeState((state) => state);
 
   useEffect(() => {
     window.addEventListener("mousemove", () => {
@@ -39,14 +38,5 @@ export default function Cursor({ buildingModel }: Props) {
     });
   }, []);
 
-  return (
-    <mesh
-      ref={ref}
-      visible={commentModeState !== CommentModeStates.ACTIVE ? true : false}
-      geometry={palneGeometry}
-      material={palneMaterial}
-      rotation-x={Math.PI * -0.5}
-      position-y={0.02}
-    />
-  );
+  return <mesh ref={ref} geometry={palneGeometry} material={palneMaterial} rotation-x={Math.PI * -0.5} position-y={0.02} />;
 }

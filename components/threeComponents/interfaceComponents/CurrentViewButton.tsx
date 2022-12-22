@@ -3,7 +3,6 @@ import { BiWalk } from "react-icons/bi";
 import { GiCube } from "react-icons/gi";
 
 import { ButtonStyles, HoverColor, IconStyle } from "./BottomMenu";
-import useCommentModeState, { CommentModeStates } from "../stores/useCommentModeState";
 import useViewEvent from "../stores/useViewEvent";
 
 type Props = {
@@ -17,10 +16,8 @@ function CurrentViewButton({ styleProps }: Props) {
   const setIsPerspective = useViewEvent((state) => state.setIsPerspective);
 
   const cameraMovingToggle = useViewEvent((state) => state.cameraMovingToggle);
-  const commentModeState = useCommentModeState((state) => state.commentModeState);
 
   const handleIcon = () => {
-    if (commentModeState === CommentModeStates.ACTIVE) return;
     setIsPerspective(!isPerspective);
     cameraMovingToggle(true);
   };
