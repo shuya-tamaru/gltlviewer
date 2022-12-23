@@ -7,12 +7,11 @@ import useDefaultFloorPosition from "./useDefaultFloorPosition";
 import useMaterialSetup from "./useMaterialSetup";
 import useSetFloorList from "./useSetFloorList";
 import usePerspectiveCameraPos from "./usePerspectiveCameraPos";
+
 export type BuildingModel = GLTF & ObjectMap;
 
-function useLoadingModel() {
-  const buildingModel: BuildingModel = useGLTF(
-    "https://building-model-user.s3.ap-northeast-1.amazonaws.com/higashi_shinjuku.glb"
-  );
+function useLoadingModel(modelPath: string) {
+  const buildingModel: BuildingModel = useGLTF(modelPath);
 
   const { active, item } = useProgress();
 

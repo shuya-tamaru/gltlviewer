@@ -1,6 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import { Suspense } from "react";
 import * as THREE from "three";
+import { ModelPath } from "../../types/ModelPath";
 
 import Debug from "./Debug";
 import Experience from "./Experience";
@@ -8,7 +9,7 @@ import CanvasSpinner from "./interfaceComponents/CanvasSpinner";
 import Interface from "./interfaceComponents/Interface";
 import useViewEvent from "./stores/useViewEvent";
 
-export default function WebGLCanvas() {
+export default function WebGLCanvas({ modelPath }: ModelPath) {
   const perspectiveCameraPos = useViewEvent((state) => state.perspectiveCameraPos);
 
   return (
@@ -29,7 +30,7 @@ export default function WebGLCanvas() {
       >
         {/* <Debug /> */}
         <Suspense fallback={<CanvasSpinner />}>
-          <Experience />
+          <Experience modelPath={modelPath} />
         </Suspense>
       </Canvas>
       <Interface />
