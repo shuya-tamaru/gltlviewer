@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { buildingList } from "./utils/paths";
 
 export const config = {
-  matcher: ["/", "/building/:path*"],
+  matcher: ["/"],
+  // matcher: ["/", "/building/:path*"],
 };
 
 export function middleware(req: NextRequest) {

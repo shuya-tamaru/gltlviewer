@@ -1,14 +1,14 @@
 export const buildingList = [
   {
-    id: "shinjuku",
+    id: `${process.env.NEXT_PUBLIC_LOCAL_SHINJUKU_ID}`,
+    name: "shinjuku",
     url: `${process.env.NEXT_PUBLIC_LOCAL_SHINJUKU}`,
-    user: `${process.env.NEXT_PUBLIC_LOCAL_SHINJUKU_UER}`,
     password: `${process.env.NEXT_PUBLIC_LOCAL_SHINJUKU_PASSWORD}`,
   },
   {
-    id: "azabu",
+    id: `${process.env.NEXT_PUBLIC_LOCAL_AZABU_ID}`,
+    name: "azabu",
     url: `${process.env.NEXT_PUBLIC_LOCAL_AZABU}`,
-    user: `${process.env.NEXT_PUBLIC_LOCAL_AZABU_UER}`,
     password: `${process.env.NEXT_PUBLIC_LOCAL_AZABU_PASSWORD}`,
   },
 ];

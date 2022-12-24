@@ -1,4 +1,6 @@
 import { GetStaticPropsContext } from "next";
+import { useState } from "react";
+import Form from "../../components/nextComponents/Form";
 import WebGLCanvas from "../../components/threeComponents/WebGLCanvas";
 import { buildingList, paths } from "../../utils/paths";
 
@@ -8,19 +10,28 @@ type Props = {
 
 type FilteredList = {
   id: string;
+  name: string;
   url: string;
+  password: string;
 };
 
 export default function BuildingPage({ id }: Props) {
+  const [password, setPassword] = useState("");
   const filteredList: FilteredList[] = buildingList.filter((value) => {
     if (value.id === id) return value;
   });
 
+  const modelName = filteredList[0].name;
   const modelPath = filteredList[0].url;
+  const modelPassword = filteredList[0].password;
 
   return (
     <>
-      <WebGLCanvas modelPath={modelPath} />
+      {password !== filteredList[0].password ? (
+        <Form modelName={modelName} correctPwd={modelPassword} setPassword={setPassword} />
+      ) : (
+        <WebGLCanvas modelPath={modelPath} />
+      )}
     </>
   );
 }

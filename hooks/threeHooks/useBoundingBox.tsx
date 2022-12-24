@@ -1,5 +1,5 @@
-import * as THREE from 'three';
-import { BuildingModel } from './useLoadingModel';
+import * as THREE from "three";
+import { BuildingModel } from "./useLoadingModel";
 
 const bbBox = new THREE.Box3();
 const perspectiveLookAt = new THREE.Vector3();
@@ -12,7 +12,7 @@ function useBoundingBox(buildingModel: BuildingModel) {
   const perspectiveTargetZ = (bbBox.max.z + bbBox.min.z) * 0.5;
   perspectiveLookAt.set(perspectiveTargetX, 0, perspectiveTargetZ);
 
-  const cameraOffsetDistance = 5;
+  const cameraOffsetDistance = 10;
 
   const cameraOffsetX = bbBox.min.x - cameraOffsetDistance;
   const cameraOffsetY = bbBox.max.y + cameraOffsetDistance;
