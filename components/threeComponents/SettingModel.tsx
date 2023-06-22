@@ -13,11 +13,10 @@ export default function SettingModel({ buildingModel }: Props) {
     }
   });
   const twoFour = buildingModel.scene.children.filter((element) => element.name === "twofour")[0];
-  let defaultPosition = twoFour.position;
   useFrame((state) => {
     const time = state.clock.elapsedTime;
     const offset = 0.0013 * Math.sin(time);
-    twoFour.position.set(twoFour.position.x, defaultPosition.y + offset, twoFour.position.z);
+    twoFour.position.set(twoFour.position.x, twoFour.position.y + offset, twoFour.position.z);
   });
   return <primitive object={buildingModel.scene} />;
 }

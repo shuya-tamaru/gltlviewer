@@ -8,7 +8,7 @@ function Experience() {
     <>
       <OrbitControls makeDefault target={[0, 2, 0]} />
       <SettingModel buildingModel={buildingModel} />
-      <directionalLight intensity={2.3} position={[-5, 3, 5]} castShadow />
+      <directionalLight intensity={1.3} position={[-5, 5, 5]} castShadow />
       <Environment
         files={[
           "/environmentMap/px.jpg",
