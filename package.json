@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 8000",
+    "dev": "next dev -p 8001",
     "build": "next build",
     "start": "next start -p 8000",
     "lint": "next lint"
@@ -24,6 +24,7 @@
     "framer-motion": "^6.5.1",
     "leva": "^0.9.34",
     "next": "12.2.5",
+    "next-transpile-modules": "^10.0.0",
     "r3f-perf": "^6.5.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
