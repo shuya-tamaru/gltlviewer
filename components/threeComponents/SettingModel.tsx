@@ -14,7 +14,6 @@ export default function SettingModel({ buildingModel }: Props) {
   });
   const twoFour = buildingModel.scene.children.filter((element) => element.name === "twofour")[0];
   let defaultPosition = twoFour.position;
-  console.log(defaultPosition);
   useFrame((state) => {
     const time = state.clock.elapsedTime;
     const offset = 0.0013 * Math.sin(time);

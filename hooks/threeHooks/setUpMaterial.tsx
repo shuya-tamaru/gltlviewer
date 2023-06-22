@@ -80,7 +80,7 @@ function setUpMaterial(buildingModel: BuildingModel) {
       material.color.set(new THREE.Color("#777777"));
       material.roughness = 0;
     }
-    material.envMapIntensity = 3.0;
+    material.envMapIntensity = 6.0;
   });
 
   return;

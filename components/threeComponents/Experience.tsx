@@ -4,12 +4,11 @@ import SettingModel from "./SettingModel";
 
 function Experience() {
   const buildingModel = useLoadingModel();
-
   return (
     <>
       <OrbitControls makeDefault target={[0, 2, 0]} />
       <SettingModel buildingModel={buildingModel} />
-      <directionalLight intensity={3.3} position={[-5, 5, -5]} castShadow />
+      <directionalLight intensity={2.3} position={[-5, 3, 5]} castShadow />
       <Environment
         files={[
           "/environmentMap/px.jpg",

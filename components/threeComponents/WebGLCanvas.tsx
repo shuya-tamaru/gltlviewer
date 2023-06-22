@@ -1,13 +1,17 @@
 import { Canvas } from "@react-three/fiber";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import * as THREE from "three";
-
+import { useNProgress } from "@tanem/react-nprogress";
 import Debug from "./Debug";
 import Experience from "./Experience";
 import CanvasSpinner from "./interfaceComponents/CanvasSpinner";
 import Interface from "./interfaceComponents/Interface";
+import { useProgress, Html } from "@react-three/drei";
 
 export default function WebGLCanvas() {
+  const { loaded } = useProgress();
+  const progress = loaded / 20;
+
   return (
     <>
       <Canvas
@@ -26,7 +30,7 @@ export default function WebGLCanvas() {
         shadows
       >
         {/* <Debug /> */}
-        <Suspense fallback={<CanvasSpinner />}>
+        <Suspense fallback={<CanvasSpinner progress={progress} />}>
           <Experience />
         </Suspense>
       </Canvas>

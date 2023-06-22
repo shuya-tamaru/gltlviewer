@@ -16,6 +16,7 @@
     "@react-three/drei": "^9.40.0",
     "@react-three/fiber": "^8.9.1",
     "@react-three/rapier": "^0.10.0",
+    "@tanem/react-nprogress": "^5.0.43",
     "@tweenjs/tween.js": "^18.6.4",
     "@types/three": "^0.146.0",
     "@types/tweenjs": "^1.0.4",
