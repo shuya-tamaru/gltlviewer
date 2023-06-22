@@ -28,7 +28,7 @@ function CanvasSpinner({ progress }: { progress: number }) {
           marginRight: "5px",
         }}
       >
-        {progress * 100 + "%"}
+        {(progress * 100).toFixed(0) + "%"}
       </h1>
     </Html>
   );
